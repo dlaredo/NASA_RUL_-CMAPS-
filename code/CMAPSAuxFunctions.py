@@ -73,20 +73,20 @@ def get_X_y_from_df(df, time_window, features, num_units, dataset_type):
         if (dataset_type == 'train' or dataset_type == 'cross_validation'):
             for j in range(num_samples_unit[i]-time_window+1):
 
-                time_window_samples = df_unit_values[i][j:j+time_window]
+                time_window_samples = df_unit_values[i][j:j+time_window,:]
                 X[k,:] = np.squeeze(time_window_samples.reshape(1,-1))
                 y[k] = targets_unit[i][j+time_window-1]
                 k = k + 1
         else:
             #print(dataset_type)
-            time_window_samples = df_unit_values[i][-time_window:]
+            time_window_samples = df_unit_values[i][-time_window:,:]
             X[k,:] = np.squeeze(time_window_samples.reshape(1,-1))
             k = k + 1
     
     return X, y
 
 
-def retrieve_and_reshape_data(from_file, selected_features, time_window, dataset_type, constRUL = 125, unit_Number=None):
+def retrieve_and_reshape_data(from_file, selected_features, time_window, dataset_type, constRUL = 125, unit_number=None, scaler=None, fit_transform=True):
     '''
     5    T2        - Total temperature at fan inlet      R
     6    T24       - Total temperature at lpc outlet     R
@@ -119,11 +119,27 @@ def retrieve_and_reshape_data(from_file, selected_features, time_window, dataset
                 16:'phi', 17:'NRf', 18:'NRc', 19:'BPR', 20:'farB', 21:'htBleed', 22:'Nf_dmd', 23:'PCNfR_dmd', 
                 24:'W31', 25:'W32'}
 
+    #To replicate the way Xiang does his standarization
+    if scaler != None:
+        df_values = df.values
+        engineNumbers = df_values[:,0] 
+        cycleNumbers = df_values[:,1]
+
+        if fit_transform == True:
+            df_values = scaler.fit_transform(df_values)
+        else:
+            df_values = scaler.transform(df_values)
+
+        df = pd.DataFrame(df_values)
+        df.iloc[:, 0] = engineNumbers[:].astype(int)
+        df.iloc[:, 1] = cycleNumbers[:].astype(int)
+    #Up to here Xiang standarization
+
     df.rename(columns=col_names, inplace=True)
 
     #In case a specific unit number is needed
-    if unit_Number != None:
-        df = df[df['Unit Number'] == unit_Number]
+    if unit_number != None:
+        df = df[df['Unit Number'] == unit_number]
         df['Unit Number'] = 1
 
     gruoped_by_unit = df.groupby('Unit Number')
@@ -137,7 +153,7 @@ def retrieve_and_reshape_data(from_file, selected_features, time_window, dataset
 
     X, y = get_X_y_from_df(df_selected_features, time_window, selected_features, num_units, dataset_type)
     
-    return X, y
+    return X, y, scaler
 
 
 def get_X_y_from_Dataset(Dataset, dataSetLocation, constRUL, TW):
