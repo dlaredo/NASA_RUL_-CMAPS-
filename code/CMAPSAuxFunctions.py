@@ -36,7 +36,7 @@ def compute_training_RUL(df_row, *args):
         return rul_vector[int(df_row['Unit Number']) - 1] - df_row['Cycle']
 
 
-def get_X_y_from_df(df, time_window, features, num_units, dataset_type):
+def get_X_y_from_df(df, time_window, features, num_units, dataset_type, stride=1):
     
     n_m = df.shape[0]
     n_x = len(features)
@@ -48,6 +48,7 @@ def get_X_y_from_df(df, time_window, features, num_units, dataset_type):
     df_unit_values = []
     targets_unit = []
     num_samples_unit = []
+    engine_windows = []
     
     #Count number of elements at each group so that we can create the matrix to hold them all. 
     #Also store each matrix in temporary arrays to access them faster
@@ -57,7 +58,8 @@ def get_X_y_from_df(df, time_window, features, num_units, dataset_type):
         df_unit_values.append(df_unit[features].values) #is this a view or a copy of the df?
         targets_unit.append(df_unit['RUL'].values) #is this a view or a copy of the df?
         num_samples_unit.append(df_unit.shape[0])
-        n_m = n_m + num_samples_unit[i-1]-time_window+1
+        engine_windows.append(math.floor((num_samples_unit[i-1]-time_window)/stride) + 1)
+        n_m = n_m + engine_windows[-1]
     
     #Create the numpy arrays to hold the features
     if (dataset_type == 'train' or dataset_type == 'cross_validation'):
@@ -71,11 +73,11 @@ def get_X_y_from_df(df, time_window, features, num_units, dataset_type):
     for i in range(num_units):
     
         if (dataset_type == 'train' or dataset_type == 'cross_validation'):
-            for j in range(num_samples_unit[i]-time_window+1):
+            for j in range(engine_windows[i]):
 
-                time_window_samples = df_unit_values[i][j:j+time_window,:]
+                time_window_samples = df_unit_values[i][j*stride:j*stride+time_window,:]
                 X[k,:] = np.squeeze(time_window_samples.reshape(1,-1))
-                y[k] = targets_unit[i][j+time_window-1]
+                y[k] = targets_unit[i][j*stride+time_window-1]
                 k = k + 1
         else:
             #print(dataset_type)
@@ -86,7 +88,8 @@ def get_X_y_from_df(df, time_window, features, num_units, dataset_type):
     return X, y
 
 
-def retrieve_and_reshape_data(from_file, selected_features, time_window, dataset_type, constRUL = 125, unit_number=None, scaler=None, fit_transform=True):
+def retrieve_and_reshape_data(from_file, selected_features, time_window, dataset_type, constRUL = 125, unit_number=None, 
+                              scaler=None, fit_transform=True, stride=1):
     '''
     5    T2        - Total temperature at fan inlet      R
     6    T24       - Total temperature at lpc outlet     R
@@ -151,7 +154,7 @@ def retrieve_and_reshape_data(from_file, selected_features, time_window, dataset
     selected_features_rul.extend(['Unit Number', 'RUL'])
     df_selected_features = df[selected_features_rul]
 
-    X, y = get_X_y_from_df(df_selected_features, time_window, selected_features, num_units, dataset_type)
+    X, y = get_X_y_from_df(df_selected_features, time_window, selected_features, num_units, dataset_type, stride=stride)
     
     return X, y, scaler
 
