@@ -1,0 +1,157 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Journal Article
+% LaTeX Template
+% Version 1.3 (9/9/13)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Frits Wenneker (http://www.howtotex.com)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass{article}
+
+\usepackage{mathtools} %tools for mathematical writing
+\usepackage{caption}
+\usepackage{subfig}
+\usepackage{float}
+\usepackage{color}
+\usepackage{adjustbox}
+\usepackage{comment}
+
+\usepackage[sc]{mathpazo} % Use the Palatino font
+\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+\linespread{1.05} % Line spacing - Palatino needs more space between lines
+\usepackage{microtype} % Slightly tweak font spacing for aesthetics
+
+\usepackage[hmarginratio=1:1,top=32mm,columnsep=20pt]{geometry} % Document margins
+%\usepackage{multicol} % Used for the two-column layout of the document
+%\usepackage[hang, small,labelfont=bf,up,textfont=it,up]{caption} % Custom captions under/above floats in tables or figures
+\usepackage{booktabs} % Horizontal rules in tables
+%\usepackage{float} % Required for tables and figures in the multi-column environment - they need to be placed in specific locations with the [H] (e.g. \begin{table}[H])
+\usepackage{hyperref} % For hyperlinks in the PDF
+
+\usepackage{lettrine} % The lettrine is the first enlarged letter at the beginning of the text
+\usepackage{paralist} % Used for the compactitem environment which makes bullet points with less space between them
+
+\usepackage{abstract} % Allows abstract customization
+\renewcommand{\abstractnamefont}{\normalfont\bfseries} % Set the "Abstract" text to bold
+\renewcommand{\abstracttextfont}{\normalfont\small\itshape} % Set the abstract itself to small italic text
+
+\usepackage{titlesec} % Allows customization of titles
+%\renewcommand\thesection{\Roman{section}} % Roman numerals for the sections
+%\renewcommand\thesubsection{\Roman{subsection}} % Roman numerals for subsections
+\titleformat{\section}[block]{\large\scshape\centering}{\thesection.}{1em}{} % Change the look of the section titles
+\titleformat{\subsection}[block]{\large}{\thesubsection.}{1em}{} % Change the look of the section titles
+
+\usepackage{fancyhdr} % Headers and footers
+\pagestyle{fancy} % All pages have headers and footers
+\fancyhead{} % Blank out the default header
+\fancyfoot{} % Blank out the default footer
+\fancyhead[C]{Running title $\bullet$ April 2018 $\bullet$ Vol. XXI, No. 1} % Custom header text
+\fancyfoot[RO,LE]{\thepage} % Custom footer text
+
+\usepackage{algorithm}% http://ctan.org/pkg/algorithms
+\usepackage{algpseudocode}% http://ctan.org/pkg/algorithmicx
+
+\usepackage[acronym]{glossaries} %Used for the acronyms
+
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+%My definitions
+%\renewcommand{\tablename}{Table}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{remark}{Remark}
+\newenvironment{proof}{\begin{trivlist} \item[]\textbf{Proof}
+\hspace{0cm} }{\hfill $\Box$ \end{trivlist}}
+\newtheorem{mydef}{Definition}[section]
+%\newcommand{\eqref}[1]{\mbox{(\ref{#1})}}
+\newcommand{\Tr}{\mbox{Tr}}
+
+%Set space between paragraphs
+\setlength{\parskip}{2ex}
+
+\usepackage{authblk}
+
+\providecommand{\keywords}[1]{\textbf{\textit{Index terms---}} #1}
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\title{Technical Report on the solution of the CMAPSS-RUL dataset using Neural Networks}
+\author[1]{David Laredo\thanks{dlaredorazo@ucmerced.edu}}
+%\author[2]{Honggang Wang\thanks{honggang.w@rutgers.edu}}
+\author[1]{Jian-qiao Sun\thanks{jqsun3@ucmerced.edu}}
+\affil[1]{School of Mechanical Engineering, University of California, Merced}
+%\affil[2]{Department of Systems \& Industrial Engineering, Rutgers University, New Jersey, USA}
+
+\date{}
+%\renewcommand\Authands{ and }
+
+% Generate the glossary
+\makeglossaries
+\renewcommand*{\acronymname}{Acronyms}
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+\maketitle % Insert title
+
+\thispagestyle{fancy} % All pages have headers and footers
+
+\input{acronyms} %Insert acronym list
+
+%Used to not expand the first acronym
+\glsunsetall
+
+%----------------------------------------------------------------------------------------
+%	ABSTRACT
+%----------------------------------------------------------------------------------------
+
+\begin{abstract}
+
+\noindent 
+
+In this report we present an a data-driven approach for estimating the Remaining Useful Life (\gls{rul}) of aero-engines. A ``strided'' time window approach is employed to generate training and test sets to be used with a conventional Multi-layer Percepton (\gls{mlp}) which will serve as the main regressor for this application, no model for the engine is required . The proposed approach is evaluated on the publicly available \gls{cmaps} dataset. The accuracy of the proposed method is compared against other state-of-the art methods available in the literature. 
+\end{abstract}
+
+\keywords{Artificial Neural Networks (\gls{ann}), Moving Time Window, \gls{rul} Estimation, \gls{cmaps}, Prognostics}
+
+%----------------------------------------------------------------------------------------
+%	ARTICLE CONTENTS
+%----------------------------------------------------------------------------------------
+
+\input{rul_paper_intro}
+\input{rul_paper_background}
+\input{rul_paper_method}
+\input{rul_paper_results}
+\input{rul_paper_conclusions}
+
+%------------------------------------------------
+
+
+%----------------------------------------------------------------------------------------
+%	REFERENCE LIST
+%----------------------------------------------------------------------------------------
+
+\addcontentsline{toc}{section}{References}
+\bibliographystyle{unsrt}
+\bibliography{reference_rul_paper}
+
+%----------------------------------------------------------------------------------------
+
+\end{document}

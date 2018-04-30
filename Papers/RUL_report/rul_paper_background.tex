@@ -1,0 +1,205 @@
+\section{Problem Statement and Background}
+\label{sec:background}
+
+A multi-objective optimization problem (\gls{mmop}) can be formally stated as:
+
+\begin{equation}
+	\begin{aligned}
+	\underset{x \in \mathbb{R}^n}{\text{min}}
+	& \quad F(x)\\
+	\text{s. t.} \\
+	& \quad h_i(x) = 0, \; i = 1 \ldots m\\
+	& \quad h_j(x) \leq 0, \; j = 1 \ldots p,\\
+	\end{aligned}
+	\label{eq:mop}
+\end{equation}
+
+\noindent where $F:\mathbb{R}^n \rightarrow \mathbb{R}^k$, $F(x) = (f_1(x), \ldots,f_k(x))^T$ represents a vector of $k \geq 2$ \emph{objective functions}. The \emph{feasible decision vectors}, that form the set $\mathbb{X}$, are those $x \in \mathbb{R}^{n}$ that comply with the equality $h_i(x)$ and inequality $h_j(x)$ constraints.\\
+
+The optimality of a \gls{mop} is defined by the concept of dominance \cite{pareto_set}.
+
+\begin{mydef}[Pareto Dominance]
+A point $y \in \mathbb{X}$ is dominated by a point  $x \in \mathbb{X} \; (x \prec y)$ with respect to Eq. \eqref{eq:mop} if $x$ is partially less than $y$, i.e., if $f_{i}(x) \leq f_{i}(y)$, for all $i \in 1, \ldots, k$, and $f_{j}(x) < f_{j}(y)$ for some $j \in 1, \ldots, k$. Otherwise it is non-dominated by $x$. 
+\end{mydef}
+
+\begin{mydef}[Pareto Optimality]
+A decision vector $x^{*} \in \mathbb{X}$ is Pareto optimal with respect to Eq. \eqref{eq:mop} if there does not exist another decision vector $x \in \mathbb{X}$ such that  $x \prec x^{*}$.
+\end{mydef}
+
+\begin{mydef}[Pareto Weak Optimality]
+A decision vector $x^{*} \in \mathbb{X}$ is \emph{weakly} Pareto optimal with respect to Eq. \eqref{eq:mop} if there does not exist another decision vector $x \in \mathbb{X}$, such that  $f_i(x) < f_i(x^{*}) \quad \forall i = 1, ... , k$.
+\end{mydef}
+
+In general, the solution of a \gls{mop} consists not only of a single solution but of a set of solutions which have to be considered as optimal. The solution set is called the \emph{Pareto set} and its corresponding image is called the \emph{Pareto front} which typically forms a ($k-1$)-dimensional manifold \cite{hillermeier01}, where $k$ is the number of objectives involved in the problem. The concepts of Pareto set and Pareto front are formalized in the following definition:
+
+\begin{mydef}[Pareto set and Pareto front]
+The set of optimal points $\mathcal{P}$ for Eq. \eqref{eq:mop}, 
+\[
+\mathcal{P} = \{ x \in \mathbb{X} \ |\not \exists y  \in \mathbb{X} : y \prec x \}
+\]
+
+\noindent is called the Pareto set. The image $F(\mathcal{P})$ is called the Pareto front.
+\end{mydef}
+
+The Jacobian of $F$ at a point $x$ is given by 
+
+\begin{equation}
+J(x) = \left(\begin{array}[]{c}\nabla f_{1}\\
+\vdots\\
+\nabla f_{m}\end{array}\right) \in \mathbb{R}^k.
+\label{eq:jacobian}
+\end{equation}
+
+where $\nabla f_i(x)$ denotes the gradient of objective $f_i$. In case all the objectives of the \gls{mop} are differentiable the following famous theorem of Kuhn and Tucker \cite{kkt_conditions} states a necessary condition for Pareto optimality for unconstrained \glspl{mop}.
+
+\begin{theorem}[KKT Conditions]
+\label{theo:kkt_cond}
+Let $x^*$ be a Pareto point of problem \ref{eq:mop}, then there exists a vector $\alpha \in R^k$ with $\alpha_i \geq 0$, $i = 1,\ldots,k$, and $\sum_{i = 1}^k$ such that
+
+\begin{equation}
+\sum_{i = 1}^k \alpha_i \nabla f_i(x^*) = J(x)^T \alpha = 0.
+\label{eq:alpha_vector}
+\end{equation}
+\end{theorem}
+
+Points satisfying Eq. \ref{eq:alpha_vector} are called \emph{Karush-Kuhn-Tucker (\gls{kkt})} points. One important thing to outline is that given a \gls{kkt} point $x^*$ its associated weight vector $\alpha$ is normal to the linearization (tangent) of the Pareto front at $F(x^*)$. It can also be noted that $rank (J(x^*)^T) < k$ for any $x$ that is a \gls{kkt} point \cite{hillermeier01}.
+
+\subsection{Mixed-Integer Optimization}
+\label{sec:mixed_integer_mops}
+
+A mixed-integer multi-objective optimization problem (\gls{mmop}) can be formally stated as:
+
+\begin{equation}
+	\begin{aligned}
+	\underset{x  \in \mathbb{Z}^{d_{1}} \times \mathbb{R}^{d_{2}}}{\text{min}}
+	& \quad F(x)\\
+	\text{s. t.}\\
+	& \quad h_i(x) = 0, \; i = 1 \ldots m\\
+	& \quad h_j(x) \leq 0, \; j = 1 \ldots p,\\
+	\end{aligned}
+	\label{eq:dmop2}
+\end{equation}
+
+\noindent where $F:\mathbb{Z}^{d_1} \times \mathbb{R}^{d_2} \to \mathbb{R}^k$, which means that the parameter vector can be formed either by real variables, discrete (or integer) variables or a mixture of both depending on the values of $d_1$ and $d_2$ respectively. For instance, Figure \ref{fig:spaces_int} displays a two dimensional integer space where $x_1, x_2 \in \mathbb{Z}$, Figure \ref{fig:spaces_mix} represents a mixed-integer space where $x_1 \in \mathbb{Z}$ and $x_2 \in \mathbb{R}$,  while in Figure \ref{fig:spaces_real} $x_1, x_2 \in \mathbb{R}$, that is, they belong to a real space.
+
+The goal of Eq. \eqref{eq:dmop2}, as in the continuous case, is to seek non-dominated (Pareto optimal) solutions of the objective function $F$ on the feasible set $\mathbb{X}$.
+
+\begin{comment}
+
+\begin{figure}[H]
+    \subfloat[Integer space \label{fig:spaces_int}]{%
+    	\centering \def\svgwidth{120pt} 
+		\input{img/integer_space.pdf_tex} 
+    }
+    \hfill
+    \subfloat[Mixed-Integer space \label{fig:spaces_mix}]{%
+    	\centering \def\svgwidth{120pt} 
+		\input{img/mixed_integer_space.pdf_tex} 
+    }
+     \hfill
+    \subfloat[Real space \label{fig:spaces_real}]{%
+      \centering \def\svgwidth{120pt} 
+		\input{img/real_space.pdf_tex} 
+    }
+    \caption{Examples of decision spaces}
+    \label{fig:spaces_mixed_integer}
+\end{figure}
+
+\end{comment}
+
+In this work the theory developed for continuous \glspl{mop} will be used for the treatment of \glspl{mmop} since it can be shown, that under some assumptions, most of theory presented within this chapter holds for \glspl{mmop}.
+
+\subsection{Direct Zig Zag Method}
+\label{sec:dzz_method}
+
+The Direct Zig-Zag (\gls{dzz}) method \cite{zigzag_discrete} is a continuation method for solving discrete or mixed-integer bi-objective problems. The \gls{dzz} method searches Pareto optimal solutions along a zig-zag path close to the Pareto front. The local zig-zag path is identified based on a pattern search idea (e.g. Hooke-Jeeves method \cite{hooke_jeeves}) in which the search procedure only compares function values without computing the gradients of the objective functions. Thus, the \gls{dzz} method can, in general, be applied for black-box discrete or mixed-integer \glspl{mop} where the objective functions can be evaluated through numerical or simulation processes. The \gls{dzz} method guarantees local Pareto optimality of the solutions due to the neighborhood search inside the pattern search procedure. The method consists of two parts.
+
+In the first part, a First Pareto Solution (\gls{fps}) is computed, from a starting point $x_0$, by means of a modified version of the well known pattern search method \cite{hooke_jeeves}. This \gls{fps} is the Pareto point which minimizes $f_1$ while attaining the smallest value of $f_2$.
+
+The second part is performed in an iterative way. For each Pareto solution $x_0^*$ the method looks for a neighboring solution $x_1$ that increases the value of $f_1$, i.e., $f_1(x_1) > f_1(x_0^*)$, this is called a \textit{zig step}. Since it is assumed that the continuation will start  at the Pareto point that minimizes $f_1$ (\gls{fps}) it is logical to think that the only direction to keep moving is the one that increases the values of $f_1$.  From $x_1$ a pattern search like strategy is applied in order to find a non-dominated solution $x_1^*$, such that $x_1^* \neq x_0^*$, this is a \textit{zag step}. Figure \ref{Fig:dzz_example} displays a simple example of the application of the \gls{dzz} method. The first phase, namely the \gls{fps} phase goes from $f_(x_0)$ to $f(x_1)$. From $f(x_1)$ onwards, zig and zag steps are iteratively applied.
+
+\begin{comment}
+
+\begin{figure}[H]
+\centering \includegraphics[width = 60mm, height = 60mm]{img/dzz_method.png}
+\caption{DZZ method example}
+\label{Fig:dzz_example}
+\end{figure}
+
+\end{comment}
+
+It is remarkable that the method does not use gradient information making it very efficient in terms of function evaluations. Nevertheless, it is only able to solve bi-objective problems so far, making this its greatest disadvantage.
+
+\subsection{The Directed Search Method}
+\label{sec:directed_search}
+
+This method defines a way to steer the search for continuous \glspl{mop} by using a direction in objective space and mapping it into parameter space  \cite{directed_search}. Some of the concepts used by this method are quite important for the development of the \gls{eds}, thus a brief explantion of the key concepts of the \gls{ds} method are given next. The main idea is as follows.\\
+
+Assume a point $x_0 \in \mathbb{R}^n$, in parameter space, with $rank(J(x_0)) = k$ and a vector $d \in \mathbb{R}^k$ representing a desired search direction in image space are given. Then, a search direction $\nu \in \mathbb{R}^n$ in decision space is sought such that for $y_0 := x_0 + t\nu$, where $t \in \mathbb{R}_+$ is the step size (i.e., $y_0$ represents a movement from $x_0$ in direction v), it holds:
+
+\begin{equation}
+	 \lim_{t \to 0} \frac{f_i(y_0) - f_i(x_0)}{t} = \langle \nabla f_i(x_0), \nu \rangle = d_i, \quad i = 1,...,k.\\
+	 \label{eq:direction1}
+\end{equation}
+
+Using the Jacobian of $F$, Eq. \eqref{eq:direction1} can be stated in matrix vector notation as
+
+\begin{equation}
+	J(x_0)\nu = d.
+	\label{eq:direction2}
+\end{equation}
+
+Hence, such a search direction $\nu$ can be computed by solving a system of linear equations. Since typically the number of decision variables is (much) higher than the number of objectives for a given \gls{mop}, i.e., $n \gg k$, system \eqref{eq:direction2} is (probably highly) underdetermined, which implies that its solution is not unique. One possible choice is to take
+
+\begin{equation}
+	\nu_+ = J(x_0)^+d,
+	\label{eq:direction3}
+\end{equation}
+
+where $ J(x_0)^+ \in \mathbb{R}^{n \times k}$ denotes the pseudo inverse\footnote{If the rank of $J := J(x_0)$ is $k$ (i.e., maximal) the pseudo inverse is given by $J^+ = J^T(JJ^T)^{-1}$.} of $J(x_0)$. A new iterate $x_1$ can be computed as the following discussion shows: given a candidate solution $x_0$, a new solution is obtained via $x_1 = x_0 + t\nu$, where $t > 0$ is a step size and $\nu \in \mathbb{R}^n$ is a vector that satisfies \eqref{eq:direction2}. Among the solutions of system \eqref{eq:direction2}, $\nu_+$ is the one with the smallest Euclidean norm. Hence, given $t$, one expects for a step in direction $\nu_+$ (decision space) the largest progress in $d$-direction (objective space).
+
+Given a direction $d \in \mathbb{R}^k \texttt{\char`\\} \{0\}$ with $d_i \leq 0, i = 1, \ldots, k$, a point $x_0 \in \mathbb{R}^n$ with $\text{rank}(J(x_0)) = k$ and assuming that the image of $F$ is bounded from below, a greedy search in direction $d$ using Eq. \eqref{eq:direction3} leads to the (numerical) solution of the following initial value problem:
+
+\begin{eqnarray}
+		\label{eq:ds_initial_value_problem}
+		x(0) & = & x_0 \in \mathbb{R}^n\\
+		\dot{x}(t) & = & J(x(t))^+d,  \quad t > 0 \nonumber.
+\end{eqnarray}
+
+\vfill
+\newpage
+
+\begin{mydef}[Critical Point]
+\label{def:critical_point}
+
+Let $\gamma:[0, t_f] \to \mathbb{R}^n$ be a solution of Eq. \eqref{eq:ds_initial_value_problem} and let $t_c$ be the smallest value of $t > 0$ such that
+
+\begin{equation}
+\not \exists v \in \mathbb{R}^n : \quad J(x(t))v = d.
+\end{equation}.
+
+Then $t_c$ and $\gamma(t_c)$ are a critical value an critical point of \eqref{eq:ds_initial_value_problem} respectively. 
+
+\end{mydef}
+
+By Definition \ref{def:critical_point}, it is possible to divide the solution $\gamma:[0, t_f]$ of Eq. \eqref{eq:ds_initial_value_problem} into two phases, (see Figure \ref{Fig:greedy_ds}):
+	
+	\begin{itemize}
+		\item $\gamma([0, t_c])$: the function $F(\gamma(t))$ gets the desired decay in $d$-direction.
+		\item $\gamma((t_c, t_f])$: the function $F(\gamma(t))$ moves along the critical points of $F$. For the end point $\gamma(t_f)$, it holds $J(\gamma(t_f))^+d = 0$.
+	\end{itemize}
+	
+\begin{comment}	
+	
+\begin{figure}[H] 
+	\centering \def\svgwidth{150pt} 
+	\input{img/descent_ds.pdf_tex} 
+	\caption{Greedy movement of DS descent} 
+	\label{Fig:greedy_ds}
+\end{figure}
+
+\end{comment}	
+	
+The study made in \cite{directed_search} shows that \emph{critical points} are not necessarily \gls{kkt} points but are local solutions of the well known \gls{nbi} \cite{nbi} problem, therefore the \gls{ds} descent method is only restricted to the detection of such critical points. To trace the solution curve of Eq. \eqref{eq:ds_initial_value_problem} numerically, specialized \gls{pc} methods \cite{allgower01} can be used.\\
+
+Using the ideas mentioned above, the authors of \cite{directed_search} developed a method to move towards and along the Pareto front of continuous \glspl{mop}, for a broader exposition of the \gls{ds} please refer to \cite{directed_search}.

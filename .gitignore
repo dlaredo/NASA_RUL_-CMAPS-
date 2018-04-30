@@ -59,3 +59,23 @@ target/
 
 code/\.ipynb_checkpoints/
 \.DS_Store
+
+*.bak
+
+*.sav
+
+*.acn
+
+*.bbl
+
+*.aux
+
+*.blg
+
+*.glo
+
+*.glsdefs
+
+*.ist
+
+*.out
