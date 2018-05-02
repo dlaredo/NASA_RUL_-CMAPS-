@@ -88,14 +88,14 @@ class TunableModel():
 	def setCurrentModel(self, modelName):
 		"""Set the current model to be operated with"""
 
-		if modelName not in models.keys():
+		if modelName not in self.__models.keys():
 			print("Model name not found")
 		else:
 			self.__currentModelName = modelName
-			self.__currentModel = models[self.currentModelName]
+			self.__currentModel = self.__models[self.__currentModelName]
 
 
-	def getModelDescription(self, modelName):
+	def getModelDescription(self, modelName = None):
 		"""Provide a description of the choosen model, if no name is provided then describe the current model"""
 		
 		if modelName != None:
@@ -115,7 +115,7 @@ class TunableModel():
 	def getAllModelsDescription(self):
 		"""Provide a description for all the models"""
 
-		for modelName, model in self.__models:
+		for modelName, model in self.__models.items():
 			print("Description for model: " + modelName)
 			model.summary()
 
@@ -125,25 +125,33 @@ class TunableModel():
 
 		startTime = time.clock()
 		if learningRateScheduler != None:
-			self.__currentModel.fit(x = self.X_train, y = self.y_train, epochs = self.num_epoch, batch_size = self.batch_size, callbacks=[learningRateScheduler])  
+			self.__currentModel.fit(x = self.X_train, y = self.y_train, epochs = self.epochs, batch_size = self.batch_size, callbacks=[learningRateScheduler])  
 		else:
-			self.__currentModel.fit(x = self.X_train, y = self.y_train, epochs = self.num_epoch, batch_size = self.batch_size)  
+			self.__currentModel.fit(x = self.X_train, y = self.y_train, epochs = self.epochs, batch_size = self.batch_size)  
 		endTime = time.clock()
 
-		self.__times[currentModelName] = endTime - startTime
+		self.__times[self.__currentModelName] = endTime - startTime
 
 
 	def evaluateCurrentModel(self, metrics):
 		"""Evaluate the model using the metrics specified in metrics"""
 
-		score = self.__currentModel.evaluate(x = self.X_test, y = y_test)
+		i = 1
+
+		defaultScores = self.__currentModel.evaluate(x = self.X_test, y = self.y_test)
 		y_pred = self.__currentModel.predict(self.X_test)
 
 		scores = {}
-		scores["defaultScore"] = score
+		scores['loss'] = defaultScores[0]
+
+		for score in defaultScores[1:]:
+			scores['score_' + str(i)] = score
+			i = i+1
 
 		for metric in metrics:
 			scores[metric] = custom_scores.compute_score(metric, self.y_test, y_pred)
+
+		self.__scores[self.__currentModelName] = scores
 
 
 	def getModelScores(self, modelName = None):
