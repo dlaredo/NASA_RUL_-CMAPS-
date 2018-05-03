@@ -43,10 +43,11 @@ class TunableModel():
 			self.__currentModelName = None
 
 
-	def loadData(self):
+	def loadData(self, verbose=0):
 		"""This function forms the X and y matrices from the specified dataset using the rul, window size and stride specified"""
-
-		print("Loading data for dataset " + self.datasetNumber)
+        
+		if verbose == 1:
+			print("Loading data for dataset " + self.datasetNumber)
 
 		self.__data_file_train = '../CMAPSSData/train_FD00'+self.datasetNumber+'.txt'
 		self.__data_file_test = '../CMAPSSData/test_FD00'+self.datasetNumber+'.txt'
@@ -120,14 +121,15 @@ class TunableModel():
 			model.summary()
 
 
-	def trainCurrentModel(self, learningRateScheduler = None):
+	def trainCurrentModel(self, learningRateScheduler = None, verbose=0):
 		"""Train the current model using keras"""
 
 		startTime = time.clock()
 		if learningRateScheduler != None:
-			self.__currentModel.fit(x = self.X_train, y = self.y_train, epochs = self.epochs, batch_size = self.batch_size, callbacks=[learningRateScheduler])  
+			self.__currentModel.fit(x = self.X_train, y = self.y_train, epochs = self.epochs, batch_size = self.batch_size, callbacks=[learningRateScheduler], verbose=verbose)  
 		else:
-			self.__currentModel.fit(x = self.X_train, y = self.y_train, epochs = self.epochs, batch_size = self.batch_size)  
+			self.__currentModel.fit(x = self.X_train, y = self.y_train, epochs = self.epochs, batch_size = self.batch_size, 
+                                   verbose=verbose)  
 		endTime = time.clock()
 
 		self.__times[self.__currentModelName] = endTime - startTime
