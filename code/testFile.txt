@@ -1,1 +1,0 @@
-The model variables are [ 30   1 125]	The scores are: [RMSE:14.0717, RHS:330.9483]

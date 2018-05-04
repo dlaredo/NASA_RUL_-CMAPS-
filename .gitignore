@@ -79,3 +79,5 @@ code/\.ipynb_checkpoints/
 *.ist
 
 *.out
+
+code/testFile\.txt
