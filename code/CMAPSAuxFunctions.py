@@ -24,7 +24,47 @@ def compute_training_RUL(df_row, *args):
         return rul_vector[int(df_row['Unit Number']) - 1] - df_row['Cycle']
 
 
+def load_into_df(from_file):
+    """Given the filename, load the data into a pandas dataframe"""
+
+    '''
+    5    T2        - Total temperature at fan inlet      R
+    6    T24       - Total temperature at lpc outlet     R
+    7    T30       - Total temperature at hpc outlet     R
+    8    T50       - Total temperature at LPT outlet     R
+    9    P2        - Pressure at fan inlet               psia
+    10   P15       - Total pressure in bypass-duct       psia
+    11   P30       - Total pressure at HPC outlet        psia
+    12   Nf        - Physical fan speed                  rpm
+    13   Nc        - Physical core speed                 rpm
+    14   epr       - Engine Pressure ratio (P50/P2)      --
+    15   Ps30      - Static Pressure at HPC outlet       psia
+    16   phi       - Ratio fuel flow to Ps30             pps/psi
+    17   NRf       - corrected fan speed                 rpm
+    18   NRc       - Corrected core speed                rpm
+    19   BPR       - Bypass ratio                        --
+    20   farB      - Burner fuel-air ratio               --
+    21   htBleed   - Bleed enthalpy                      --
+    22   Nf_dmd    - Demanded fan speed                  rpm
+    23   PCNfR_dmd - Demanded corrected fan speed        rpm
+    24   W31       - HPT coolant bleed                   lbm/s
+    25   W32       - LPT coolant bleed                   lbm/s
+    '''
+
+    df = pd.read_csv(from_file ,sep='\s+',header=None)
+
+    col_names = {0:'Unit Number', 1:'Cycle', 2:'Op. Settings 1', 3:'Op. Settings 2', 4:'Op. Settings 3', 5:'T2',
+                6:'T24', 7:'T30', 8:'T50', 9:'P2', 10:'P15', 11:'P30', 12:'Nf', 13:'Nc', 14:'epr', 15:'Ps30', 
+                16:'phi', 17:'NRf', 18:'NRc', 19:'BPR', 20:'farB', 21:'htBleed', 22:'Nf_dmd', 23:'PCNfR_dmd', 
+                24:'W31', 25:'W32'}
+
+    df.rename(columns=col_names, inplace=True)
+
+    return df
+
+
 def get_X_y_from_df(df, time_window, features, num_units, dataset_type, stride=1):
+    """From a dataset with RUL values, create the X and y arrays using the specified time windows"""
     
     n_m = df.shape[0]
     n_x = len(features)
@@ -78,50 +118,14 @@ def get_X_y_from_df(df, time_window, features, num_units, dataset_type, stride=1
     return X, y
 
 
-def retrieve_and_reshape_data(from_file, selected_features, dataset_type, time_window=10, constRUL=125, unit_number=None, stride=1, crossValidationRatio=0):
-    '''
-    5    T2        - Total temperature at fan inlet      R
-    6    T24       - Total temperature at lpc outlet     R
-    7    T30       - Total temperature at hpc outlet     R
-    8    T50       - Total temperature at LPT outlet     R
-    9    P2        - Pressure at fan inlet               psia
-    10   P15       - Total pressure in bypass-duct       psia
-    11   P30       - Total pressure at HPC outlet        psia
-    12   Nf        - Physical fan speed                  rpm
-    13   Nc        - Physical core speed                 rpm
-    14   epr       - Engine Pressure ratio (P50/P2)      --
-    15   Ps30      - Static Pressure at HPC outlet       psia
-    16   phi       - Ratio fuel flow to Ps30             pps/psi
-    17   NRf       - corrected fan speed                 rpm
-    18   NRc       - Corrected core speed                rpm
-    19   BPR       - Bypass ratio                        --
-    20   farB      - Burner fuel-air ratio               --
-    21   htBleed   - Bleed enthalpy                      --
-    22   Nf_dmd    - Demanded fan speed                  rpm
-    23   PCNfR_dmd - Demanded corrected fan speed        rpm
-    24   W31       - HPT coolant bleed                   lbm/s
-    25   W32       - LPT coolant bleed                   lbm/s
-    '''
+def create_windowed_data(df, selected_features, dataset_type, time_window=10, constRUL=125, stride=1, crossValidationRatio=0):
+    """Given the dataframe, reshape the data to create the time windows"""
 
     X_crossVal, y_crossVal = None, None
 
     if crossValidationRatio < 0 or crossValidationRatio > 1 :
         print("Error, cross validation must be between 0 and 1")
         return
-    
-    df = pd.read_csv(from_file ,sep='\s+',header=None)
-
-    col_names = {0:'Unit Number', 1:'Cycle', 2:'Op. Settings 1', 3:'Op. Settings 2', 4:'Op. Settings 3', 5:'T2',
-                6:'T24', 7:'T30', 8:'T50', 9:'P2', 10:'P15', 11:'P30', 12:'Nf', 13:'Nc', 14:'epr', 15:'Ps30', 
-                16:'phi', 17:'NRf', 18:'NRc', 19:'BPR', 20:'farB', 21:'htBleed', 22:'Nf_dmd', 23:'PCNfR_dmd', 
-                24:'W31', 25:'W32'}
-
-    df.rename(columns=col_names, inplace=True)
-
-    #In case a specific unit number is needed
-    if unit_number != None:
-        df = df[df['Unit Number'] == unit_number]
-        df['Unit Number'] = 1
 
     df_rul, num_units = generate_df_withRUL(df, selected_features, constRUL)
 
@@ -130,8 +134,6 @@ def retrieve_and_reshape_data(from_file, selected_features, dataset_type, time_w
         df_train, df_crossVal, num_train, num_crossVal = split_dataFrames(df_rul, crossValidationRatio)
         
         df_crossVal, rul_crossVal = generate_cross_validation_from_df(df_crossVal, time_window)
-        #display(df_train)
-        #display(df_crossVal)
         
         X, y = get_X_y_from_df(df_train, time_window, selected_features, num_train, 
                                dataset_type, stride=stride)
@@ -211,6 +213,9 @@ def generate_cross_validation_from_df(df, window_size):
     df = pd.DataFrame(data=data, columns=cols)
     
     return df, ruls
+
+
+#def getSpecificEngine
  
 
 def get_X_y_from_Dataset(Dataset, dataSetLocation, constRUL, TW):

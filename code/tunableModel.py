@@ -46,6 +46,8 @@ class TunableModel():
 			self.__modelName = modelName
 			self.__scores = {}
 			self.__trainTime = None
+			self.__df_train = None
+			self.__df_test = None
 
 
 	def loadData(self, verbose=0, crossValRatio=0):
@@ -63,10 +65,13 @@ class TunableModel():
 		X_crossVal = None
 		y_crossVal = None
 
-		X_train, y_train, X_crossVal, y_crossVal = CMAPSAuxFunctions.retrieve_and_reshape_data(self.__data_file_train, self.selectedFeatures, 'train',
+		self.__df_train = CMAPSAuxFunctions.load_into_df(self.__data_file_train)
+		self.__df_test = CMAPSAuxFunctions.load_into_df(self.__data_file_test)
+
+		X_train, y_train, X_crossVal, y_crossVal = CMAPSAuxFunctions.create_windowed_data(self.__df_train, self.selectedFeatures, 'train',
 			time_window = self.windowSize, stride = self.windowStride, crossValidationRatio = crossValRatio)
 
-		X_test, _, _, _ = CMAPSAuxFunctions.retrieve_and_reshape_data(self.__data_file_test, self.selectedFeatures, 'test', time_window = self.windowSize, 
+		X_test, _, _, _ = CMAPSAuxFunctions.create_windowed_data(self.__df_test, self.selectedFeatures, 'test', time_window = self.windowSize, 
 			crossValidationRatio = crossValRatio)
 
 		#Rescale the data
@@ -371,6 +376,14 @@ class TunableModel():
 	@property
 	def trainTime(self):
 		return self.__trainTime
+
+	@property
+	def df_train(self):
+		return self.__df_train
+
+	@property
+	def df_test(self):
+		return self.__df_test
 
 
 
