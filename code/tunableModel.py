@@ -6,11 +6,13 @@ import matplotlib
 import seaborn as sns
 import pandas as pd
 import time
+from math import sqrt
 
 import CMAPSAuxFunctions
 import custom_scores
 
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
 
 class TunableModel():
 
@@ -48,6 +50,7 @@ class TunableModel():
 			self.__trainTime = None
 			self.__df_train = None
 			self.__df_test = None
+			self.__y_pred = None
 
 
 	def loadData(self, verbose=0, crossValRatio=0):
@@ -151,7 +154,7 @@ class TunableModel():
 		self.__trainTime = endTime - startTime
 
 
-	def evaluateModel(self, metrics=[], crossValidation = False):
+	def evaluateModel(self, metrics=[], crossValidation = False, round = False):
 		"""Evaluate the model using the metrics specified in metrics"""
 
 		i = 1
@@ -164,7 +167,16 @@ class TunableModel():
 			y_test = self.y_test
 
 		defaultScores = self.__model.evaluate(x = X_test, y = y_test)
-		y_pred = self.__model.predict(X_test)
+		self.__y_pred = self.__model.predict(X_test)
+
+		if round == True:
+			y_pred = self.__y_pred.astype(int)
+		else:
+			y_pred = self.__y_pred
+
+		print(y_pred)
+
+		rmse = sqrt(mean_squared_error(y_test, y_pred))
 
 		scores = {}
 		scores['loss'] = defaultScores[0]
@@ -175,6 +187,8 @@ class TunableModel():
 
 		for metric in metrics:
 			scores[metric] = custom_scores.compute_score(metric, y_test, y_pred)
+
+		scores['rmse'] = rmse
 
 		self.__scores = scores
 
@@ -385,7 +399,9 @@ class TunableModel():
 	def df_test(self):
 		return self.__df_test
 
-
+	@property
+	def y_pred(self):
+		return self.__y_pred
 
 
 
