@@ -1,0 +1,19 @@
+\section{Performance evaluation}
+\label{sec:rul_metrics}
+
+The evaluate the performance of the proposed approach we make use of two scoring indicators, namely the Root Mean Squared Error (\gls{rmse}) and a score function proposed in \cite{Saxena2008} which we refer in this work as \gls{rul} Health Score (\gls{rhs}). 
+
+\begin{equation}
+RMSE = \sqrt{ \frac{1}{N} \sum_{i=1}^{N}{d_i^2}}
+\end{equation}
+
+\begin{align}
+s &= \sum_{i=1}^{N}{s_i}\\
+s_i &= \begin{cases} 
+      e^{-\frac{d_i}{13}} - 1 & d_i < 0, \\
+      e^{-\frac{d_i}{10}} - 1 & d_i \geq 0
+\end{cases}
+\end{align}
+
+where $s$ denotes the score and $N$ is the total number of testing data samples. $d_i = RUL_i^p - RUL_i$, that is the error between the estimated \gls{rul} value and the actual \gls{rul} value for the \textbf{i-th} testing sample. The (\gls{rhs}) function penalizes late predictions more than early predictions since usually late predictions lead to more severe consequences in fields such as aerospace.
+

@@ -5,9 +5,30 @@ In this section the proposed \gls{ann}-based method for prognostics is presented
 
 The window size $n_w$, window stride $n_s$ and constant \gls{rul} $C_r$ hyperparameters have a considerable impact in the quality of the predictions made by the regressor \cite{Li2018, Lim2016}. Hand picking the best parameters for our application is time consuming, furthermore, a grid search approach as the ones used for hyperparameter tuning in Neural Networks is computationally expensive given the search space inherent to the aforementioned parameters. In this paper we propose the use of an evolutionary algorithm, i.e. Differential Evolution (\gls{de}) \cite{Storn1997}, to fine tune the parameters. The optimization framework here proposed allows for the use of simpler architectures of Neural Networks while attaining better results in terms of the quality of the predictions made.
 
+
+
 \subsection{The Neural Network Architecture}
 
-For this study we propose to use a rather simple \gls{mlp} architecture. All the implementations were used in python using the Keras/Tensorflow environment. The structure of the Network remained consisted for all the four datasets, our structure consists of two hidden layers in total; in the first hidden layer we have placed 250 neurons while in the second we have placed 50 neurons. Table \ref{table:proposed_nn} yields a description of the used network.
+For this study we propose to use a rather simple \gls{mlp} architecture. All the implementations were used in python using the Keras/Tensorflow environment. The structure of the Network remained consisted for all the four datasets.
+
+The choice of the network architecture was made using an iterative process; comparing 4 different architectures, running each $10$ times for $100$ epochs. Two objectives were pursued; that the size of the architecture was small enough, e.g. in terms of layers and neurons within each layer and that the performance indicators were better than the ones presented in the literature so far. The process for choosing the network architecture can be described as follows: First, fix the window size $n_w$, the window stride $n_s$ and the constant RUL $C$. An initial setup of two layers with $250$ and $50$ neurons each was chosen, the number of neurons at each layer was then reduced by roughly a factor of 2 and tested using a cross-validation set from subset 1 of \gls{cmaps}. When the performance of the network started to degrade the process was stopped. Table  \ref{table:tested_architectures_100} summarizes the results for each tested architecture, Table \ref{table:proposed_nn} presents the architecture chosen for the remainder of this work  yielded the best results and hence was the chosen for the rest of the experiments. Details for the other 3 tested architectures are presented in Section ...
+
+\begin{table}[!htb]
+\centering
+\begin{tabular}{l r r | r r | r r | r r}
+	\hline	
+	& \multicolumn{2}{c}{Min.} & \multicolumn{2}{c}{Max.}  & \multicolumn{2}{c}{Avg.}  & \multicolumn{2}{c}{STD} \\
+	Tested Architecture & RMSE & RHS & RMSE & RHS & RMSE & RHS & RMSE & RHS\\
+  	\hline
+  	Architecture 1 & 10.85 & 151.65 & 12.23 & 277.67 & 11.66 & 226.94 & 0.45 & 41.58\\
+  	Architecture 2 & 11.12 & 186.22 & 13.98 & 365.92 & 12.68 & 280.41 & 1.03 & 64.07\\
+  	Architecture 3 & 11.58 & 179.15 & 12.72 & 266.55 & 12.04 & 215.09 & 0.35 & 28.39\\
+  	Architecture 4 & 12.52 & 262.77 & 14.25 & 368.35 & 13.58 & 325.41 & 0.53 & 34.13\\
+  	\hline
+\end{tabular}
+\caption{Results for different architectures for subset 1, 100 epochs}
+\label{table:tested_architectures_100}
+\end{table}
 
 \begin{table}[!htb]
 \centering
@@ -24,4 +45,4 @@ For this study we propose to use a rather simple \gls{mlp} architecture. All the
 \label{table:proposed_nn}
 \end{table}
 
-The choice of the network was based upon 
+
