@@ -174,7 +174,7 @@ class TunableModel():
 		else:
 			y_pred = self.__y_pred
 
-		print(y_pred)
+		#print(y_pred)
 
 		rmse = sqrt(mean_squared_error(y_test, y_pred))
 
