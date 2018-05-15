@@ -1,0 +1,16 @@
+\section{Shaping the data}
+
+As mentioned in the previous sections the choice of the data-related parameters window size $n_w$, window stride $n_s$ and constant \gls{rul} $C$ are critical for the optimal performance of the regressor, i.e. the \gls{mlp}. In this section we present a framework for picking the best combination of the data-related hyperparameters $n_w$, $n_s$ and $R_e$ without spending too much computational time.
+
+\subsection{Time Window Processing}
+
+In multivariate time-series based problems such as \gls{rul}, more information can be generally obtained from the temporal sequence of data as compared with the multivariate data point at a single time stamp. Let $n_w$ denote the size of the time window, for a time window with a stride $n_s = 1$, all the past sensor values within the time window are collected and put together to form a feature vector $\mathbf{x}$. This approach has successfully been tested in \cite{Li2018} and \cite{Lim2016} where they propose the use of a moving window with values raging from 20 to 30. In this paper we propose not only the use of a moving time window, but also a \textit{strided} time window that updates $n_s$ elements at the time instead of $1$. 
+
+The use of a \textit{strided time window} allows for the regressor to take advantage not only of the previous information available, but also to control the ratio at which the algorithm is fed with new information. With the usual time window approach only one point is updated for every new time window, on the contrary, the strided time window allows for updating $n_s$ points at the time, allowing for the algorithm to catch newer information with fewer iterations, furthermore, the information contained in the strided time window is likely more rich than the one contained in a time window with stride of $1$.
+
+Different from common regression problems, the desired output value of the input data is difficult to determine for a \gls{rul} problem. It is usually impossible to evaluate the precise health condition and estimate the \gls{rul} of the system at each time step without an accurate physics based model. For this popular dataset, a piece-wise linear degradation model has been proposed in . The piece-wise linear degradation model assumes that the engines have a constant \gls{rul} label in the early cycles and then the \gls{rul} starts degrading linearly until it reaches 0. The piecewise linear degradation approach is used for this work, in here we denote the value for the \gls{rul} at the early stages as $R_e$. 
+
+\subsection{Piecewise linear degradation model}
+
+Different from common regression problems, the desired output value of the input data is difficult to determine for a \gls{rul} problem. It is usually impossible to evaluate the precise health condition and estimate the \gls{rul} of the system at each time step without an accurate physics based model. For this popular dataset, a piece-wise linear degradation model has been proposed in . The piece-wise linear degradation model assumes that the engines have a constant \gls{rul} label in the early cycles and then the \gls{rul} starts degrading linearly until it reaches 0. In here we denote the value for the \gls{rul} at the early stages as $R_e$. It should be noted that $R_e$ has a noticeable effect on the prognostics performance of the dataset. 
+

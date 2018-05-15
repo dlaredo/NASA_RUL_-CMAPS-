@@ -33,14 +33,16 @@ The evaluate the performance of the proposed approach on the \gls{cmaps} dataset
 
 \begin{equation}
 RMSE = \sqrt{ \frac{1}{N} \sum_{i=1}^{N}{d_i^2}}
+\label{eq:rmse}
 \end{equation}
 
 \begin{align}
-s &= \sum_{i=1}^{N}{s_i}\\
+s &= \sum_{i=1}^{N}{s_i} \nonumber \\
 s_i &= \begin{cases} 
       e^{-\frac{d_i}{13}} - 1 & d_i < 0, \\
       e^{-\frac{d_i}{10}} - 1 & d_i \geq 0
 \end{cases}
+\label{eq:rhs}
 \end{align}
 
 where $s$ denotes the score and $N$ is the total number of testing data samples. $d_i = RUL_i^p - RUL_i$, that is the error between the estimated \gls{rul} value and the actual \gls{rul} value for the \textbf{i-th} testing sample. The (\gls{rhs}) function penalizes late predictions more than early predictions since usually late predictions lead to more severe consequences in fields such as aerospace.
