@@ -13,17 +13,19 @@ The choice of the network architecture was made using an iterative process; comp
 
 \begin{table}[!htb]
 \centering
-\begin{tabular}{l r r | r r | r r | r r}
+
+\begin{tabular}{l | r r r r | r r r r}
 	\hline	
-	& \multicolumn{2}{c}{Min.} & \multicolumn{2}{c}{Max.}  & \multicolumn{2}{c}{Avg.}  & \multicolumn{2}{c}{STD} \\
-	Tested Architecture & RMSE & RHS & RMSE & RHS & RMSE & RHS & RMSE & RHS\\
+	& \multicolumn{4}{| c}{RMSE} & \multicolumn{4}{| c}{RHS} \\
+	Tested Architecture & Min. & Max. & Avg. & STD & Min. & Max. & Avg. & STD\\
   	\hline
-  	Architecture 1 & 10.85 & 151.65 & 12.23 & 277.67 & 11.66 & 226.94 & 0.45 & 41.58\\
-  	Architecture 2 & 11.12 & 186.22 & 13.98 & 365.92 & 12.68 & 280.41 & 1.03 & 64.07\\
-  	Architecture 3 & 11.58 & 179.15 & 12.72 & 266.55 & 12.04 & 215.09 & 0.35 & 28.39\\
-  	Architecture 4 & 12.52 & 262.77 & 14.25 & 368.35 & 13.58 & 325.41 & 0.53 & 34.13\\
+  	Architecture 1 & 10.85 & 12.23 & 11.66 & 0.45 & 151.65 & 277.67 & 226.94 & 41.58\\
+  	Architecture 2 & 11.12 & 13.98 & 12.68 & 1.03 & 186.22 & 365.92 & 280.41 & 64.07\\
+  	Architecture 3 & 11.58 & 12.72 & 12.04 & 0.35 & 179.15 & 266.55 & 215.09 & 28.39\\
+  	Architecture 4 & 12.52 & 14.25 & 13.58 & 0.53 & 262.77 & 368.35 & 325.41 & 34.13\\
   	\hline
 \end{tabular}
+
 \caption{Results for different architectures for subset 1, 100 epochs}
 \label{table:tested_architectures_100}
 \end{table}
@@ -108,6 +110,7 @@ There is yet one last detail to be taken care of, evolutionary algorithms such a
 \label{table:de_hyperparams}
 \end{table}
 
+\begin{comment}
 \begin{table}[!htb]
 \centering
 \begin{tabular}{l l l l l}
@@ -123,6 +126,7 @@ There is yet one last detail to be taken care of, evolutionary algorithms such a
 \caption{Optimal data-related parameters for each subset.}
 \label{table:optimal_data_params}
 \end{table}
+\end{comment}
 
 \begin{table}[!htb]
 \centering
@@ -136,6 +140,6 @@ There is yet one last detail to be taken care of, evolutionary algorithms such a
   	FD004 & 17 & 2 & 94\\
   	\hline
 \end{tabular}
-\caption{Optimal data-related parameters for each subset.}
+\caption{Data-related parameters for each subset obtained with Differential Evolution.}
 \label{table:optimal_data_params}
 \end{table}

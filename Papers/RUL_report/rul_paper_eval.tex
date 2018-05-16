@@ -1,5 +1,131 @@
 \section{Evaluating the performance of the proposed method}
 \label{sec:rul_eval}
 
-In this section we evaluate the performance of the proposed method. The architecture of the \gls{mlp} was presented in Section \ref{sec:method} Table \ref{table:proposed_nn} 
+In this section we evaluate the performance of the proposed method. The architecture of the \gls{mlp} was presented in Section \ref{sec:method} Table \ref{table:proposed_nn} and will be used throughout this section. The \gls{mlp} was trained for $10$ time for$200$ epochs each and tested in each subset of the \gls{cmaps} dataset.
 
+For the first experiment the combinations of window size $n_w$, window stride $n_s$ and early \gls{rul} $R_e$ presented in Table \ref{table:data_params_de} were tested obtaining the results shown in Table \ref{table:results_ann_de}.
+
+\begin{table}[!htb]
+\centering
+\begin{tabular}{l l l l l}
+	\hline
+	 Dataset & Window Size $n_w$ & Window Stride $n_s$ & Early RUL $R_e$\\
+  	\hline
+  	FD001 & 29 & 2 & 93\\
+  	FD002 & 17 & 2 & 94\\
+  	FD003 & 28 & 2 & 92\\
+  	FD004 & 17 & 2 & 94\\
+  	\hline
+\end{tabular}
+\caption{Data-related parameters for each subset as obtained by \gls{de}.}
+\label{table:data_params_de}
+\end{table}  
+
+\begin{table}[!htb]
+\centering
+
+\begin{tabular}{l | r r r r | r r r r}
+	\hline	
+	& \multicolumn{4}{| c}{RMSE} & \multicolumn{4}{| c}{RHS} \\
+	Data Subset & Min. & Max. & Avg. & STD & Min. & Max. & Avg. & STD\\
+  	\hline
+  	FD001 & 10.46 & 12.60 & 11.27 & 0.62 & 155.10 & 207.15 & 179.25 & 17.24\\
+  	FD002 & 16.07 & 18.58 & 16.74 & 0.83 & 1457.48 & 1881.45 & 1668.74 & 147.25\\
+  	FD003 & 9.33 & 11.53 & 10.85 & 0.71 & 112.88 & 190.12 & 157.94 & 23.76\\
+  	FD004 & 22.49 & 23.26 & 22.85 & 0.28 & 5782.80 & 8060.62 & 6835.42 & 724.16\\
+  	\hline
+\end{tabular}
+
+\caption{Scores for each dataset using the data-related parameters obtained by \gls{de}.}
+\label{table:results_ann_de}
+\end{table}
+
+Next, the possibility of using a single set of data-related parameters for all the subsets is explored. Table \ref{table:data_params_de} shows some relationship between the window sizes and early \gls{rul} used for the four subsets,  notice that the window stride parameter is already the same for all of the subsets. The following experiment uses two combinations of data-related parameters instead of four, the first set of data-related parameters is used for subsets FD001/FD003, while the second set is used for  FD002/FD004. The subset groups are formed in this way given the similarities the exhibit in the first experiment. Details of the data-related chosen parameters are presentes in Table \ref{table:data_params_1}, the results obtained are shown in Table \ref{table:results_ann_1}. 
+
+\begin{table}[!htb]
+\centering
+\begin{tabular}{l l l l l}
+	\hline
+	 Dataset & Window Size $n_w$ & Window Stride $n_s$ & Early RUL $R_e$\\
+  	\hline
+  	FD001 & 25 & 2 & 95\\
+  	FD002 & 15 & 2 & 95\\
+  	FD003 & 25 & 2 & 95\\
+  	FD004 & 15 & 2 & 95\\
+  	\hline
+\end{tabular}
+\caption{Rectified data-related parameters for each subset.}
+\label{table:data_params_1}
+\end{table}  
+
+\begin{comment}
+\begin{table}[!htb]
+\centering
+\begin{tabular}{l r r | r r | r r | r r}
+	\hline	
+	& \multicolumn{2}{c}{Min.} & \multicolumn{2}{c}{Max.}  & \multicolumn{2}{c}{Avg.}  & \multicolumn{2}{c}{STD} \\
+	Data Subset & RMSE & RHS & RMSE & RHS & RMSE & RHS & RMSE & RHS\\
+  	\hline
+  	FD001 & 10.50 & 158.04 & 12.57 & 187.81 & 10.94 & 167.73 & 0.60 & 9.90\\
+  	FD002 & 16.05 & 1551.98 & 18.70 & 2015.90 & 16.86 & 1756.61 & 0.86 & 166.03\\
+  	FD003 & 10.83 & 142.31 & 17.93 & 343.98 & 12.09 & 174.46 & 2.19 & 61.23\\
+  	FD004 & 22.36 & 6157.60 & 23.78 & 9221.86 & 22.82 & 7225.61 & 0.50 & 909.09\\
+  	\hline
+\end{tabular}
+\caption{Scores for each dataset using the rectified data-related parameters.}
+\label{table:results_ann_1}
+\end{table}
+\end{comment}
+
+\begin{table}[!htb]
+\centering
+\begin{tabular}{l | r r r r | r r r r}
+	\hline	
+	& \multicolumn{4}{| c}{RMSE} & \multicolumn{4}{| c}{RHS} \\
+	Data Subset & Min. & Max. & Avg. & STD & Min. & Max. & Avg. & STD\\
+  	\hline
+  	FD001 & 10.50 & 12.57 & 10.94 & 0.60 & 158.04 & 187.81 & 167.73 & 9.90\\
+  	FD002 & 16.05 & 18.70 & 16.86 & 0.86 & 1551.98 & 2015.90 & 1756.61 & 166.03\\
+  	FD003 & 10.83 & 17.93 & 12.09 & 2.19 & 142.31 & 343.98 & 174.46 & 61.23\\
+  	FD004 & 22.36 & 23.78 & 22.82 & 0.50 & 6157.60 & 9221.86 & 7225.61 & 909.09\\
+  	\hline
+\end{tabular}
+\caption{Scores for each dataset using the rectified data-related parameters.}
+\label{table:results_ann_1}
+\end{table}
+
+\pagebreak
+
+The above results show that slight variations to the time window barely hurts the performance of the regressor. Going one step further, trying a single set of data-related parameters is explored in the following experiment. The values used for the data related parameters are displayed in Table \ref{table:data_params_2}, the results obtained by the regressor using such parameters are shown in Table \ref{table:results_ann_2}.
+
+\begin{table}[!htb]
+\centering
+\begin{tabular}{l l l l l}
+	\hline
+	 Dataset & Window Size $n_w$ & Window Stride $n_s$ & Early RUL $R_e$\\
+  	\hline
+  	All & 15 & 2 & 95\\
+  	\hline
+\end{tabular}
+\caption{Single set of data-related parameters for all subsets.}
+\label{table:data_params_2}
+\end{table}  
+
+\begin{table}[!htb]
+\centering
+\begin{tabular}{l | r r r r | r r r r}
+	\hline	
+	& \multicolumn{4}{| c}{RMSE} & \multicolumn{4}{| c}{RHS} \\
+	Data Subset & Min. & Max. & Avg. & STD & Min. & Max. & Avg. & STD\\
+  	\hline
+  	FD001 & 12.26 & 13.83 & 12.95 & 0.52 & 237.42 & 352.26 & 290.70 & 38.52\\
+  	FD002 & 16.15 & 18.18 & 16.85 & 0.69 & 1522.32 & 1910.06 & 1732.36 & 152.05\\
+  	FD003 & 11.20 & 13.57 & 12.14 & 0.63 & 165.81 & 227.31 & 200.01 & 16.74\\
+  	FD004 & 20.91 & 22.72 & 21.92 & 0.72 & 5497.36 & 7210.30 & 6126.21 & 570.17\\
+  	\hline
+\end{tabular}
+\caption{Scores for each dataset using the single set of data-related parameters.}
+\label{table:results_ann_2}
+\end{table}
+
+As can be observed, most of the results remain unchanged except for subset FD001 where performance was decreased, nevertheless the use of a single set of data-related parameters is still promising and worth of more exploration.
