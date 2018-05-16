@@ -6,7 +6,7 @@ from sklearn import preprocessing
 
 def step_decay(epoch):
     lrat = 0
-    if epoch<200:
+    if epoch<100:
         lrat = 0.001
     else:
         lrat = 0.0001
