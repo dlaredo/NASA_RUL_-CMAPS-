@@ -126,7 +126,8 @@
 
 \noindent 
 
-This paper presents a data-driven framework for estimating the Remaining Useful Life (RUL) of mechanical systems. Two major components make up the framework: a multi-layer perceptron as base regressor and an evolutionary computation algorithm for the tuning of data-related parameters. On the data side, the framework makes use of a strided time window along with a piecewise linear model to generate the RUL label for each time window within the training sets. Tuning the data-related parameters, i.e. window size, window stride and RUL label for the early stages of the engine, using the optimization framework here presented allows for the use of simple regressor model, i.e. Neural Networks with few hidden layers and few neurons at each layer, which can in turn allow for the use of such models in environments with very limited resources such as embedded systems. The proposed method is evaluated on the publicly available C-MAPSS dataset. The accuracy of the proposed method is compared against other state-of-the art methods available in the literature and it is shown to perform better while making use of a simpler, more compact model.
+This paper presents a data-driven framework for estimating the Remaining Useful Life (\gls{rul}) of mechanical systems. Two  major components make up the framework: a multi-layer perceptron as base regressor and an evolutionary computation algorithm for the tuning of data-related parameters. On the data side, the framework makes use of a strided time window along with a piecewise linear model to generate the \gls{rul} label for each time window within the training sets. Tuning the data-related parameters, i.e. window size, window stride and \gls{rul} label for the early stages of the engine, using the optimization framework here presented allows for the use of a simple regressor model, i.e. Neural Networks with few hidden layers and few neurons at each layer, which can in turn allow for the use of such models in environments with very limited resources such as embedded systems. The proposed method is evaluated on the publicly available \gls{cmaps} dataset. The accuracy of the proposed method is compared against other state-of-the art methods available in the literature and it is shown to perform better while making use of a simpler, more compact model.
+ 
 \end{abstract}
 
 \keywords{Artificial Neural Networks (\gls{ann}), Moving Time Window, \gls{rul} Estimation, \gls{cmaps}, Prognostics}
@@ -135,12 +136,12 @@ This paper presents a data-driven framework for estimating the Remaining Useful 
 %	ARTICLE CONTENTS
 %----------------------------------------------------------------------------------------
 
-\input{rul_paper_intro}
-\input{rul_paper_dataset}
+%\input{rul_paper_intro}
+%\input{rul_paper_dataset}
 %\input{rul_paper_metrics}
 %\input{rul_paper_ann}
-\input{rul_paper_method}
-\input{rul_paper_eval}
+%\input{rul_paper_method}
+%\input{rul_paper_data_shaping}
 %\input{rul_paper_conclusions}
 %\input{rul_paper_appendix}
 
