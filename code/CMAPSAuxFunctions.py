@@ -17,11 +17,12 @@ def compute_training_RUL(df_row, *args):
     
     constRUL = args[1]
     rul_vector = args[0]
+    rul_vector_index = int(df_row['Unit Number']) - 1
     
-    if rul_vector[int(df_row['Unit Number']) - 1] - df_row['Cycle'] > constRUL:
+    if rul_vector[rul_vector_index] - df_row['Cycle'] > constRUL:
         return constRUL
     else:
-        return rul_vector[int(df_row['Unit Number']) - 1] - df_row['Cycle']
+        return rul_vector[rul_vector_index] - df_row['Cycle']
 
 
 def load_into_df(from_file):
@@ -154,6 +155,10 @@ def generate_df_withRUL(df, selected_features, constRUL):
     gruoped_by_unit = df.groupby('Unit Number')
     rul_vector = gruoped_by_unit.size().values
     num_units = len(gruoped_by_unit)
+
+    #print("from aux functions")
+    #print(num_units)
+    #print(rul_vector)
 
     df['RUL'] = df.apply(compute_training_RUL, axis = 1, args=(rul_vector,constRUL,))
     selected_features_rul = selected_features[:]

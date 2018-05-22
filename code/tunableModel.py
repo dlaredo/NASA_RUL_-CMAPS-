@@ -51,6 +51,7 @@ class TunableModel():
 			self.__df_train = None
 			self.__df_test = None
 			self.__y_pred = None
+			self.__y_pred_rectified = None
 
 
 	def loadData(self, verbose=0, crossValRatio=0):
@@ -86,7 +87,7 @@ class TunableModel():
 				X_crossVal = self.dataScaler.transform(X_crossVal)
 
 		y_test = np.loadtxt(self.__rul_file)
-		y_test = np.array([x if x < self.constRul else self.constRul for x in y_test])
+		#y_test = np.array([x if x < self.constRul else self.constRul for x in y_test])
 		y_test = np.reshape(y_test, (y_test.shape[0], 1))
 
 
@@ -154,7 +155,7 @@ class TunableModel():
 		self.__trainTime = endTime - startTime
 
 
-	def evaluateModel(self, metrics=[], crossValidation = False, round = False):
+	def evaluateModel(self, metrics=[], crossValidation = False, round = 0):
 		"""Evaluate the model using the metrics specified in metrics"""
 
 		i = 1
@@ -169,14 +170,16 @@ class TunableModel():
 		defaultScores = self.__model.evaluate(x = X_test, y = y_test)
 		self.__y_pred = self.__model.predict(X_test)
 
-		if round == True:
-			y_pred = self.__y_pred.astype(int)
+		if round == 1:
+			self.__y_pred_rectified = np.rint(self.__y_pred)
+		elif round == 2:
+			self.__y_pred_rectified = np.floor(self.__y_pred)
 		else:
-			y_pred = self.__y_pred
+			self.__y_pred_rectified = self.__y_pred
 
-		#print(y_pred)
+		#print(self.__y_pred_rectified)
 
-		rmse = sqrt(mean_squared_error(y_test, y_pred))
+		rmse = sqrt(mean_squared_error(y_test, self.__y_pred_rectified))
 
 		scores = {}
 		scores['loss'] = defaultScores[0]
@@ -186,7 +189,7 @@ class TunableModel():
 			i = i+1
 
 		for metric in metrics:
-			scores[metric] = custom_scores.compute_score(metric, y_test, y_pred)
+			scores[metric] = custom_scores.compute_score(metric, y_test, self.__y_pred_rectified)
 
 		scores['rmse'] = rmse
 
@@ -402,6 +405,10 @@ class TunableModel():
 	@property
 	def y_pred(self):
 		return self.__y_pred
+
+	@property
+	def y_pred_rectified(self):
+		return self.__y_pred_rectified
 
 
 
