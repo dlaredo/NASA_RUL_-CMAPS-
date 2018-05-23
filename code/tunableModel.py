@@ -54,7 +54,7 @@ class TunableModel():
 			self.__y_pred_rectified = None
 
 
-	def loadData(self, verbose=0, crossValRatio=0):
+	def loadData(self, verbose=0, crossValRatio=0, rectify_labels = False):
 		"""This function forms the X and y matrices from the specified dataset using the rul, window size and stride specified"""
         
 		if verbose == 1:
@@ -73,10 +73,10 @@ class TunableModel():
 		self.__df_test = CMAPSAuxFunctions.load_into_df(self.__data_file_test)
 
 		X_train, y_train, X_crossVal, y_crossVal = CMAPSAuxFunctions.create_windowed_data(self.__df_train, self.selectedFeatures, 'train',
-			time_window = self.windowSize, stride = self.windowStride, crossValidationRatio = crossValRatio)
+			time_window = self.windowSize, stride = self.windowStride, crossValidationRatio = crossValRatio, constRUL = self.constRul)
 
 		X_test, _, _, _ = CMAPSAuxFunctions.create_windowed_data(self.__df_test, self.selectedFeatures, 'test', time_window = self.windowSize, 
-			crossValidationRatio = crossValRatio)
+			crossValidationRatio = crossValRatio, constRUL = self.constRul)
 
 		#Rescale the data
 		if self.dataScaler != None:
@@ -87,7 +87,10 @@ class TunableModel():
 				X_crossVal = self.dataScaler.transform(X_crossVal)
 
 		y_test = np.loadtxt(self.__rul_file)
-		#y_test = np.array([x if x < self.constRul else self.constRul for x in y_test])
+
+		if rectify_labels == True and self.constRul > 0:
+			y_test = np.array([x if x < self.constRul else self.constRul for x in y_test])
+		
 		y_test = np.reshape(y_test, (y_test.shape[0], 1))
 
 

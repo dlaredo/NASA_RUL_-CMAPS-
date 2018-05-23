@@ -19,7 +19,7 @@ def compute_training_RUL(df_row, *args):
     rul_vector = args[0]
     rul_vector_index = int(df_row['Unit Number']) - 1
     
-    if rul_vector[rul_vector_index] - df_row['Cycle'] > constRUL:
+    if constRUL > 0 and rul_vector[rul_vector_index] - df_row['Cycle'] > constRUL:
         return constRUL
     else:
         return rul_vector[rul_vector_index] - df_row['Cycle']
