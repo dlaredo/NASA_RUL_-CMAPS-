@@ -128,11 +128,11 @@ def create_windowed_data(df, selected_features, dataset_type, time_window=10, co
         print("Error, cross validation must be between 0 and 1")
         return
 
-    df_rul, num_units = generate_df_withRUL(df, selected_features, constRUL)
+    df_rul, num_units, trimmedRUL_train = generate_df_withRUL(df, selected_features, constRUL)
 
     #Split for cross-validation
     if crossValidationRatio != 0 and dataset_type == 'train': 
-        df_train, df_crossVal, num_train, num_crossVal = split_dataFrames(df_rul, crossValidationRatio)
+        df_train, df_crossVal, num_train, num_crossVal, trimmedRUL_train, trimmedRUL_crossVal = split_dataFrames(df_rul, trimmedRUL_train, crossValidationRatio)
         
         df_crossVal, rul_crossVal = generate_cross_validation_from_df(df_crossVal, time_window)
         
@@ -146,7 +146,7 @@ def create_windowed_data(df, selected_features, dataset_type, time_window=10, co
     else:
         X, y = get_X_y_from_df(df_rul, time_window, selected_features, num_units, dataset_type, stride=stride)
     
-    return X, y, X_crossVal, y_crossVal
+    return X, y, X_crossVal, y_crossVal, trimmedRUL_train
 
 
 def generate_df_withRUL(df, selected_features, constRUL):
@@ -158,17 +158,19 @@ def generate_df_withRUL(df, selected_features, constRUL):
 
     #print("from aux functions")
     #print(num_units)
-    #print(rul_vector)
+
+    if constRUL > 0:
+        trimmedRUL = rul_vector - constRUL
 
     df['RUL'] = df.apply(compute_training_RUL, axis = 1, args=(rul_vector,constRUL,))
     selected_features_rul = selected_features[:]
     selected_features_rul.extend(['Unit Number', 'RUL'])
     df_selected_features = df[selected_features_rul]
     
-    return df_selected_features, num_units
+    return df_selected_features, num_units, trimmedRUL
 
 
-def split_dataFrames(df, splittingRatio):
+def split_dataFrames(df, trimmedRUL, splittingRatio):
     """Split the dataframes according to the indicated splitting ratio"""
 
     num_engines = df['Unit Number'].max()
@@ -182,11 +184,13 @@ def split_dataFrames(df, splittingRatio):
 
     crossVal_engines = shuffledEngines[:i]
     train_engines = shuffledEngines[i:]
+    trimmedRUL_train = trimmedRUL[:i]
+    trimmedRUL_crossVal = trimmedRUL[i:]
 
     df_train = df[df['Unit Number'].isin(train_engines)]
     df_crossVal = df[df['Unit Number'].isin(crossVal_engines)]
 
-    return (df_train, df_crossVal, num_train, num_crossVal)
+    return (df_train, df_crossVal, num_train, num_crossVal, trimmedRUL_train, trimmedRUL_crossVal)
 
 
 def generate_cross_validation_from_df(df, window_size):

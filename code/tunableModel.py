@@ -53,6 +53,7 @@ class TunableModel():
 			self.__df_test = None
 			self.__y_pred = None
 			self.__y_pred_rounded = None
+			self.__trimmedRUL_train = None
 
 
 	def loadData(self, verbose=0, crossValRatio=0, rectify_labels = False):
@@ -73,10 +74,10 @@ class TunableModel():
 		self.__df_train = CMAPSAuxFunctions.load_into_df(self.__data_file_train)
 		self.__df_test = CMAPSAuxFunctions.load_into_df(self.__data_file_test)
 
-		X_train, y_train, X_crossVal, y_crossVal = CMAPSAuxFunctions.create_windowed_data(self.__df_train, self.selectedFeatures, 'train',
+		X_train, y_train, X_crossVal, y_crossVal, trimmedRUL_train = CMAPSAuxFunctions.create_windowed_data(self.__df_train, self.selectedFeatures, 'train',
 			time_window = self.windowSize, stride = self.windowStride, crossValidationRatio = crossValRatio, constRUL = self.constRul)
 
-		X_test, _, _, _ = CMAPSAuxFunctions.create_windowed_data(self.__df_test, self.selectedFeatures, 'test', time_window = self.windowSize, 
+		X_test, _, _, _, _ = CMAPSAuxFunctions.create_windowed_data(self.__df_test, self.selectedFeatures, 'test', time_window = self.windowSize, 
 			crossValidationRatio = crossValRatio, constRUL = self.constRul)
 
 		#Rescale the data
@@ -108,6 +109,7 @@ class TunableModel():
 		self.y_train = y_train
 		self.y_crossVal = y_crossVal
 		self.y_test = y_test
+		self.__trimmedRUL_train = trimmedRUL_train
 
 		if verbose == 1:
 			print("Data loaded for dataset " + self.datasetNumber)
@@ -173,7 +175,7 @@ class TunableModel():
 		self.__trainTime = endTime - startTime
 
 
-	def evaluateModel(self, metrics=[], crossValidation = False, round = 0):
+	def evaluateModel(self, metrics=[], crossValidation = False, round = 0, scalingFactor = 100):
 		"""Evaluate the model using the metrics specified in metrics"""
 
 		i = 1
@@ -203,6 +205,15 @@ class TunableModel():
 			self.__y_pred_rounded = np.floor(self.__y_pred)
 		else:
 			self.__y_pred_rounded = self.__y_pred
+
+		self.__y_pred_rounded =  np.ravel(self.__y_pred_rounded)
+
+		#Rectify the labels according to the constant RUL before making the final prediction
+		if self.constRul > 0:
+			rectifiers = [np.floor(x/scalingFactor) if x-5 > self.constRul else 0 for x in self.__trimmedRUL_train]
+			print(rectifiers)
+			#self.__y_pred_rounded = self.__y_pred_rounded + np.floor(self.__trimmedRUL_train/scalingFactor)
+			self.__y_pred_rounded = self.__y_pred_rounded + rectifiers
 
 		#Compute the scores from the predictions
 		rmse = sqrt(mean_squared_error(y_test, self.__y_pred_rounded))
@@ -446,6 +457,10 @@ class TunableModel():
 	@property
 	def y_pred_rectified(self):
 		return self.__y_pred_rounded
+
+	@property
+	def trimmedRUL_train(self):
+		return self.__trimmedRUL_train
 
 
 
