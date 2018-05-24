@@ -20,7 +20,7 @@ class TunableModel():
 	maxWindowStride = 10
 
 
-	def __init__(self, modelName, model, selectedFeatures, dataFolder, datasetNumber = 1, constRul = 125, 
+	def __init__(self, modelName, model, selectedFeatures, dataFolder, lib_type, datasetNumber = 1, constRul = 125, 
 		window_size = 30, window_stride = 1, scaler = None, epochs = 250, batch_size = 512):
 
 			#public properties
@@ -44,6 +44,7 @@ class TunableModel():
 			self.__data_file_train = dataFolder+'/train_FD00'+self.datasetNumber+'.txt'
 			self.__data_file_test = dataFolder+'/test_FD00'+self.datasetNumber+'.txt'
 			self.__rul_file = dataFolder+'/RUL_FD00'+self.datasetNumber+'.txt'
+			self.__lib_type = lib_type
 			self.__model = model
 			self.__modelName = modelName
 			self.__scores = {}
@@ -51,7 +52,7 @@ class TunableModel():
 			self.__df_train = None
 			self.__df_test = None
 			self.__y_pred = None
-			self.__y_pred_rectified = None
+			self.__y_pred_rounded = None
 
 
 	def loadData(self, verbose=0, crossValRatio=0, rectify_labels = False):
@@ -112,11 +113,12 @@ class TunableModel():
 			print("Data loaded for dataset " + self.datasetNumber)
 
 
-	def changeModel(self, modelName, model):
+	def changeModel(self, modelName, model, lib_type):
 		"""Change the model"""
 
 		self.__modelName = modelName
 		self.__model = model
+		self.__lib_type = lib_type
 
 
 	def changeDataset(self, datasetNumber, dataFolder=None):
@@ -136,23 +138,36 @@ class TunableModel():
 		"""Provide a description of the choosen model, if no name is provided then describe the current model"""
 		
 		print("Description for model: " + self.__modelName)
-		self.__model.summary()
 
-		if plotDescription == True:
-			plot_model(happyModel, to_file='HappyModel.png')
-			#SVG(model_to_dot(happyModel).create(prog='dot', format='svg'))
+		if self.__lib_type == 'keras':
+
+			self.__model.summary()
+
+			if plotDescription == True:
+				plot_model(happyModel, to_file='HappyModel.png')
+				#SVG(model_to_dot(happyModel).create(prog='dot', format='svg'))
 
 
 
 	def trainModel(self, learningRateScheduler = None, verbose=0):
-		"""Train the current model using keras"""
+		"""Train the current model using keras/scikit"""
 
 		startTime = time.clock()
-		if learningRateScheduler != None:
-			self.__model.fit(x = self.X_train, y = self.y_train, epochs = self.epochs, batch_size = self.batch_size, callbacks=[learningRateScheduler], verbose=verbose)  
+
+		if self.__lib_type == 'keras':
+
+			if learningRateScheduler != None:
+				self.__model.fit(x = self.X_train, y = self.y_train, epochs = self.epochs, batch_size = self.batch_size, callbacks=[learningRateScheduler], verbose=verbose)  
+			else:
+				self.__model.fit(x = self.X_train, y = self.y_train, epochs = self.epochs, batch_size = self.batch_size, verbose=verbose)
+
+		elif self.__lib_type == 'scikit':
+			y_train = np.ravel(self.y_train)
+			self.__model.fit(X = self.X_train, y = y_train)
+		
 		else:
-			self.__model.fit(x = self.X_train, y = self.y_train, epochs = self.epochs, batch_size = self.batch_size, 
-                                   verbose=verbose)  
+			print('Library not supported')
+
 		endTime = time.clock()
 
 		self.__trainTime = endTime - startTime
@@ -170,29 +185,44 @@ class TunableModel():
 			X_test = self.X_test
 			y_test = self.y_test
 
-		defaultScores = self.__model.evaluate(x = X_test, y = y_test)
-		self.__y_pred = self.__model.predict(X_test)
+
+		#Predict the output labels
+		if self.__lib_type == 'keras':
+			defaultScores = self.__model.evaluate(x = X_test, y = y_test)
+			self.__y_pred = self.__model.predict(X_test)
+		elif self.__lib_type == 'scikit':
+			y_test = np.ravel(self.y_test)
+			defaultScores = self.__model.score(X = X_test, y = y_test)
+			self.__y_pred = self.__model.predict(X_test)
+		else:
+			print('Library not supported')
 
 		if round == 1:
-			self.__y_pred_rectified = np.rint(self.__y_pred)
+			self.__y_pred_rounded = np.rint(self.__y_pred)
 		elif round == 2:
-			self.__y_pred_rectified = np.floor(self.__y_pred)
+			self.__y_pred_rounded = np.floor(self.__y_pred)
 		else:
-			self.__y_pred_rectified = self.__y_pred
+			self.__y_pred_rounded = self.__y_pred
 
-		#print(self.__y_pred_rectified)
-
-		rmse = sqrt(mean_squared_error(y_test, self.__y_pred_rectified))
+		#Compute the scores from the predictions
+		rmse = sqrt(mean_squared_error(y_test, self.__y_pred_rounded))
 
 		scores = {}
-		scores['loss'] = defaultScores[0]
 
-		for score in defaultScores[1:]:
-			scores['score_' + str(i)] = score
-			i = i+1
+		if self.__lib_type == 'keras':
+			scores['loss'] = defaultScores[0]
+		elif self.__lib_type == 'scikit':
+			scores['loss'] = defaultScores
+		else:
+			print('Library not supported')
+
+		if self.__lib_type == 'keras':
+			for score in defaultScores[1:]:
+				scores['score_' + str(i)] = score
+				i = i+1
 
 		for metric in metrics:
-			scores[metric] = custom_scores.compute_score(metric, y_test, self.__y_pred_rectified)
+			scores[metric] = custom_scores.compute_score(metric, y_test, self.__y_pred_rounded)
 
 		scores['rmse'] = rmse
 
@@ -378,6 +408,10 @@ class TunableModel():
 		return self.__modelName
 
 	@property
+	def lib_type(self):
+		return self.__lib_type
+
+	@property
 	def data_file_train(self):
 		return self.__data_file_train
 
@@ -411,7 +445,7 @@ class TunableModel():
 
 	@property
 	def y_pred_rectified(self):
-		return self.__y_pred_rectified
+		return self.__y_pred_rounded
 
 
 
