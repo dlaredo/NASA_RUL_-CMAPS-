@@ -162,6 +162,8 @@ def generate_df_withRUL(df, selected_features, constRUL):
     if constRUL > 0:
         trimmedRUL = rul_vector - constRUL
 
+    #print(trimmedRUL)
+
     df['RUL'] = df.apply(compute_training_RUL, axis = 1, args=(rul_vector,constRUL,))
     selected_features_rul = selected_features[:]
     selected_features_rul.extend(['Unit Number', 'RUL'])

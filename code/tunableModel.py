@@ -210,7 +210,9 @@ class TunableModel():
 
 		#Rectify the labels according to the constant RUL before making the final prediction
 		if self.constRul > 0:
-			rectifiers = [np.floor(x/scalingFactor) if x-5 > self.constRul else 0 for x in self.__trimmedRUL_train]
+			rectifier = np.max(self.__trimmedRUL_train)
+			#print(rectifier)
+			rectifiers = [np.floor(rectifier/scalingFactor) if x-5 > self.constRul else 0 for x in self.__y_pred_rounded]
 			print(rectifiers)
 			#self.__y_pred_rounded = self.__y_pred_rounded + np.floor(self.__trimmedRUL_train/scalingFactor)
 			self.__y_pred_rounded = self.__y_pred_rounded + rectifiers
