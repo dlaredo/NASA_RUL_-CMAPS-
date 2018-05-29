@@ -175,7 +175,7 @@ class TunableModel():
 		self.__trainTime = endTime - startTime
 
 
-	def evaluateModel(self, metrics=[], crossValidation = False, round = 0, scalingFactor = 100):
+	def evaluateModel(self, metrics=[], crossValidation = False, round = 0, setLimits = []):
 		"""Evaluate the model using the metrics specified in metrics"""
 
 		i = 1
@@ -208,14 +208,9 @@ class TunableModel():
 
 		self.__y_pred_rounded =  np.ravel(self.__y_pred_rounded)
 
-		#Rectify the labels according to the constant RUL before making the final prediction
-		if self.constRul > 0:
-			rectifier = np.max(self.__trimmedRUL_train)
-			#print(rectifier)
-			rectifiers = [np.floor(rectifier/scalingFactor) if x-5 > self.constRul else 0 for x in self.__y_pred_rounded]
-			print(rectifiers)
-			#self.__y_pred_rounded = self.__y_pred_rounded + np.floor(self.__trimmedRUL_train/scalingFactor)
-			self.__y_pred_rounded = self.__y_pred_rounded + rectifiers
+		if setLimits:
+			print('limits')                
+			self.__y_pred_rounded = np.clip(self.__y_pred_rounded, setLimits[0], setLimits[1])
 
 		#Compute the scores from the predictions
 		rmse = sqrt(mean_squared_error(y_test, self.__y_pred_rounded))
