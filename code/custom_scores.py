@@ -3,13 +3,20 @@ import numpy as np
 
 def rul_health_score(y_true, y_pred):
     s=0
-    for i in range(len(y_true)):
-        d = y_pred[i] - y_true[i]
-        if d < 0:
-            s+=math.e**(-d/13)-1
+
+    d = y_pred - y_true
+
+    print(d)
+
+    for i in range(len(d)):
+        if d[i] < 0:
+            s+=math.e**(-d[i]/13)-1
         else:
-            s+=math.e**(d/10)-1
-    return np.asscalar(s)
+            s+=math.e**(d[i]/10)-1
+
+    s = s/len(d)
+
+    return s
 
 score_dict = {'rhs':lambda x,y : rul_health_score(x,y)}
 
