@@ -19,12 +19,10 @@ The choice of the network architecture was made using an iterative process; comp
 	& \multicolumn{4}{| c}{RMSE} & \multicolumn{4}{| c}{RHS} \\
 	Tested Architecture & Min. & Max. & Avg. & STD & Min. & Max. & Avg. & STD\\
   	\hline
-  	Architecture 1 & 14.93 & 15.34 & 15.06 & 0.12 & 3.88 & 5.72 & 4.55 & 0.65\\
-  	Architecture 2 & 15.09 & 16.77 & 15.97 & 0.59 & 3.51 & 7.12 & 5.26 & 1.23\\
-  	Architecture 3 & 14.75 & 16.35 & 15.36 & 0.49 & 3.76 & 7.41 & 5.06 & 1.11\\
-  	Architecture 4 & 15.14 & 16.56 & 15.62 & 0.44 & 3.40 & 7.13 & 4.58 & 1.21\\
-  	Architecture 5 & 15.42 & 15.93 & 15.57 & 0.15 & 3.82 & 4.46 & 4.15 & 0.19\\
-  	Architecture 6 & 15.49 & 16.27 & 15.65 & 0.23 & 3.95 & 4.94 & 4.28 & 30.29\\
+  	Architecture 1 & 10.85 & 12.23 & 11.66 & 0.45 & 151.65 & 277.67 & 226.94 & 41.58\\
+  	Architecture 2 & 11.12 & 13.98 & 12.68 & 1.03 & 186.22 & 365.92 & 280.41 & 64.07\\
+  	Architecture 3 & 11.58 & 12.72 & 12.04 & 0.35 & 179.15 & 266.55 & 215.09 & 28.39\\
+  	Architecture 4 & 12.52 & 14.25 & 13.58 & 0.53 & 262.77 & 368.35 & 325.41 & 34.13\\
   	\hline
 \end{tabular}
 
@@ -38,8 +36,8 @@ The choice of the network architecture was made using an iterative process; comp
 	\hline
 	Layer & Shape & Activation & Additional Information\\
   	\hline
-  	Fully connected & 30 & ReLU & L2 regularization factor = 0.2\\
-  	Fully connected & 10 & ReLU & L2 regularization factor = 0.2\\
+  	Fully connected & 30 & ReLU & Dropout(0.6)\\
+  	Fully connected & 10 & ReLU & Dropout(0.2)\\
   	Fully connected & 1 & Linear & \\
   	\hline
 \end{tabular}
@@ -56,7 +54,7 @@ x^{i,j}_{norm} = 2 \frac{x^{i,j} - x^{j}_{min}}{x^{j}_{max} - x^{j}_{min}} - 1
 \label{eq:min_max_norm}
 \end{equation}
 
-where $x_{i,j}$ denotes the original $i$-th data point of the $j$-th sensor and $x^{i,j_norm}$ is the normalized value of $x^{i,j}$.  $x^{j}_{max}$ and $x^{j}_{min}$ denote the maximum and minimum values of the original measurement data from the $j$-th sensor, respectively.
+where $x_{i,j}$ denotes the original $i$-th data point of the $j$-th sensor and $x^{i,j_norm}$ is the normalized value of $x^{i,j}$.  $x^{j}_{max}$ and $x^{j}_{min}$ denote the maximum and minimum values of the original measurement data from the $j$-th sensor, respectively. 
 
 \subsubsection{Time Window Processing}
 
@@ -72,7 +70,7 @@ Different from common regression problems, the desired output value of the input
 
 As mentioned in the previous sections the choice of the data-related parameters window size $n_w$, window stride $n_s$ and constant \gls{rul} $R_e$ have a large impact on the performance of the regressor, i.e. the \gls{mlp}. In this section we present a framework for picking the best combination of the data-related parameters $n_w$, $n_s$ and $R_e$ without spending too much computational time.
 
-Let $\mathbf{v} = (n_w, n_s, R_e)$, where $n_w \in \left[1, b\right]$, $n_s \in \left[1, 10\right]$ and $R_e \in \left[90, 120 \right]$ and all the intervals are integer intervals. The value of $b$ is dependent upon the specific subset, Table \ref{table:b_values} presents the different values $b$ can take for each dataset.
+Let $\mathbf{v} = (n_w, n_s, R_e)$, where $n_w \in \left[1, b\right]$, $n_s \in \left[1, 10\right]$ and $R_e \in \left[90, 140 \right]$ and all the intervals are integer intervals. The value of $b$ is dependent upon the specific subset, Table \ref{table:b_values} presents the different values $b$ can take for each dataset.
 
 \begin{table}[!htb]
 \centering
@@ -97,7 +95,7 @@ Differential Evolution (\gls{de}) \cite{Storn1997} is a method that optmizes a p
 
 Although \gls{de} does not have special operators for treating integer variables a very simple modification to the algorithm, consisting on rounding every candidate solution $\mathbf{v}'$ to the nearest integer, is used for this work.
 
-There is yet one last detail to be taken care of, evolutionary algorithms such as \gls{de} tend to use several function evaluations for obtaining the optimal solutions,  for our application one function evaluations implies retraining the Neural Network. Certainly this is not a desirable scenario, as obtaining the optimal parameter vector $\mathbf{v}$ would entail an extensive use of computational power. Instead of running for \gls{de} for several iterations and with a large population we propose to run it just for $10$ iterations (generations in the literature of evolutionary computation) and using a population size of $10$, which seems reasonable given the size of the search space of $\mathbf{v}$. Furthermore, during the tuning process the \gls{mlp} is not trained for  $100$ epochs, instead the \gls{mlp} is trained for just $20$ epochs, this is done mainly for two reasons: the use of the mini-batch in the training process allows for a speed up in the convergence, therefore it can be assumed that the algorithm will most likely be very close to its optima after just a couple of iterations, second and most important is the fact that we assume that parameters that lead to lower score values in the early stages of the \gls{mlp} training process are more likely to provide better performance overall. Given the similarities between subsets FD001/FD003 and FD002/FD004 we have decided to just tune the for subsets FD001 and FD002. Details for the use of \gls{de} in finding the optimum data-related parameters are described in Table \ref{table:de_hyperparams}. The optimal data-related parameters for each of the subsets found by \gls{de} are shown in Table \ref{table:optimal_data_params}.
+There is yet one last detail to be taken care of, evolutionary algorithms such as \gls{de} tend to use several function evaluations for obtaining the optimal solutions,  for our application one function evaluations implies retraining the Neural Network. Certainly this is not a desirable scenario, as obtaining the optimal parameter vector $\mathbf{v}$ would entail an extensive use of computational power. Instead of running for \gls{de} for several iterations and with a large population we propose to run it just for $10$ iterations (generations in the literature of evolutionary computation) and using a population size of $10$, which seems reasonable given the size of the search space of $\mathbf{v}$. Furthermore, during the tuning process the \gls{mlp} is not trained for  $100$ epochs, instead the \gls{mlp} is trained for just $20$ epochs, this is done mainly for two reasons: the use of the mini-batch in the training process allows for a speed up in the convergence, therefore it can be assumed that the algorithm will most likely be very close to its optima after just a couple of iterations, second and most important is the fact that we assume that parameters that lead to lower score values in the early stages of the \gls{mlp} training process are more likely to provide better performance overall. Details for the use of \gls{de} in finding the optimum data-related parameters are described in Table \ref{table:de_hyperparams}. The optimal data-related parameters for each of the subsets found by \gls{de} are shown in Table \ref{table:optimal_data_params}.
 
 \begin{table}[!htb]
 \centering
@@ -105,7 +103,7 @@ There is yet one last detail to be taken care of, evolutionary algorithms such a
 	\hline
 	 Population Size & Generations & Strategy & \gls{mlp} epochs\\
   	\hline
-  	30 & 20 & Best1Bin & 20\\
+  	10 & 10 & Best1Bin & 20\\
   	\hline
 \end{tabular}
 \caption{Differential Evolution hyper-parameters.}
@@ -130,20 +128,18 @@ There is yet one last detail to be taken care of, evolutionary algorithms such a
 \end{table}
 \end{comment}
 
-\pagebreak
-
 \begin{table}[!htb]
 \centering
 \begin{tabular}{l l l l l}
 	\hline
 	 Dataset & Window Size $n_w$ & Window Stride $n_s$ & Early RUL $R_e$\\
   	\hline
-  	FD001 & 30 & 2 & 120\\
-  	FD002 & 20 & 2 & 120\\
+  	FD001 & 29 & 2 & 93\\
+  	FD002 & 17 & 2 & 94\\
+  	FD003 & 28 & 2 & 92\\
+  	FD004 & 17 & 2 & 94\\
   	\hline
 \end{tabular}
 \caption{Data-related parameters for each subset obtained with Differential Evolution.}
 \label{table:optimal_data_params}
 \end{table}
-
-As can be observed in Table \ref{table:optimal_data_params}, the maximum window size $n_w$ is preferred for each dataset, furthermore, a window stride $n_s = 2$ is preferred for both sets, finally the largets available $R_e$ was also optimal as per the results obtained with \gls{de}.
