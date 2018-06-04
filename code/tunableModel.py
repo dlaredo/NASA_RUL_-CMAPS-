@@ -208,8 +208,7 @@ class TunableModel():
 
 		self.__y_pred_rounded =  np.ravel(self.__y_pred_rounded)
 
-		if setLimits:
-			print('limits')                
+		if setLimits:               
 			self.__y_pred_rounded = np.clip(self.__y_pred_rounded, setLimits[0], setLimits[1])
 
 		#Compute the scores from the predictions
@@ -264,31 +263,31 @@ class TunableModel():
 			
 			print("Training data (X, y)")
 			print(self.X_train[:5,:])
-			print(self.y_train[:5])
+			print(self.y_train[:5,:])
 
 			if self.X_crossVal is not None:
 				print("Cross-Validation data (X, y)")
 				print(self.X_crossVal[:5,:])
-				print(self.y_crossVal[:5])
+				print(self.y_crossVal[:5,:])
 
 			print("Testing data (X, y)")
 			print(self.X_test[:5,:])
-			print(self.y_test[:5])
+			print(self.y_test[:5,:])
 		else:
 			print("Printing last 5 elements\n")
 			
 			print("Training data (X, y)")
 			print(self.X_train[-5:,:])
-			print(self.y_train[-5:])
+			print(self.y_train[-5:,:])
 
 			if self.X_crossVal is not None:
 				print("Cross-Validation data (X, y)")
 				print(self.X_crossVal[-5:,:])
-				print(self.y_crossVal[-5:])
+				print(self.y_crossVal[-5:,:])
 
 			print("Testing data (X, y)")
 			print(self.X_test[-5:,:])
-			print(self.y_test[-5:])
+			print(self.y_test[-5:,:])
 
 
 	#property definition

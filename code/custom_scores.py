@@ -6,7 +6,7 @@ def rul_health_score(y_true, y_pred):
 
     d = y_pred - y_true
 
-    print(d)
+    #print(d)
 
     for i in range(len(d)):
         if d[i] < 0:
