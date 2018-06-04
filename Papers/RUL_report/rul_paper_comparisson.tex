@@ -89,27 +89,3 @@ As can be observed, performance is decreased for subsets FD001/FD003, this indic
 \caption{Comparison of \gls{rhs} results for different sets of data-related parameters.}
 \label{fig:scores_rhs}
 \end{figure}
-
-\subsection{Comparison with other approaches}
-
-In this section the performance of the proposed method is compared against other state-of-the-art methods. Most of the presented methods in this section have only reported results on the test set FD001 in terms of \gls{rmse}, the results are displayed in Table \ref{table:results_comparison}. The \gls{rmse} value of the proposed method in Table \ref{table:results_comparison} is the mean value of 10 independent runs. The remainder of the values are identical to those reported in their respective original papers.
-
-\begin{table}[!htb]
-\centering
-\begin{tabular}{l | r r r r | r r r r}
-	\hline	
-	Method & No. of Engines & RMSE \\
-  	\hline
-  	ESN trained by Kalman Filter \cite{Peng2012} & 100 of 100 & 63.45\\
-  	Modified approach with classified sub- models of the ESN \cite{Peng2012} & 80 of 100 & 7.02\\
-  	Support Vector Machine Classifier \cite{Louen2013} & 100 of 100 & 29.82\\
-  	Time Window Neural Network \cite{Lim2016} & 100 of 100 & 15.16\\
-  	Multi-objective deep belief networks ensemble \cite{Zhang2016} & 100 of 100 & 15.04\\
-  	Deep Convolutional Neural Network \cite{Babu2016} & 100 of 100 & 18.45\\
-  	\textbf{Proposed method with $n_w = 30$, $n_s=2$ and $R_e = 120$} & 100 of 100 & 14.90\\
-  	\hline
-\end{tabular}
-\caption{Performance comparisons of the proposed method and the latest related papers on the \gls{cmaps} dataset.}
-\label{table:results_comparison}
-\end{table}
-
