@@ -1,0 +1,10 @@
+\beamer@slide {introduction<1>}{2}
+\beamer@slide {introduction}{2}
+\beamer@slide {fig:cmaps}{5}
+\beamer@slide {table:cmapss}{7}
+\beamer@slide {eq:rhs}{8}
+\beamer@slide {table:proposed_nn}{11}
+\beamer@slide {table:tested_architectures_100}{11}
+\beamer@slide {table:data_params_de}{14}
+\beamer@slide {table:results_ann_de}{15}
+\beamer@slide {table:results_comparison}{16}
