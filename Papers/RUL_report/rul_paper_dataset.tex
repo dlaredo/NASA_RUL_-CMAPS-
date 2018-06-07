@@ -37,10 +37,10 @@ RMSE = \sqrt{ \frac{1}{N} \sum_{i=1}^{N}{d_i^2}}
 \end{equation}
 
 \begin{align}
-s &= \sum_{i=1}^{N}{s_i} \nonumber \\
+s &= \frac{1}{N} \sum_{i=1}^{N}{s_i} \nonumber \\
 s_i &= \begin{cases} 
       e^{-\frac{d_i}{13}} - 1 & d_i < 0, \\
-      e^{-\frac{d_i}{10}} - 1 & d_i \geq 0
+      e^{\frac{d_i}{10}} - 1 & d_i \geq 0
 \end{cases}
 \label{eq:rhs}
 \end{align}
