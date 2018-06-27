@@ -1,8 +1,8 @@
-\section{Appendix}
+\section{Appendix A - Tested Neural Network Architectures}
 \label{sec:appendices}
 
 
-Different architectures tested
+In this section we present the six tested neural network architectures
 
 Architecture 1
 
@@ -12,8 +12,8 @@ Architecture 1
 	\hline
 	Layer & Shape & Activation & Additional Information\\
   	\hline
-  	Fully connected & 30 & ReLU & Dropout(0.6)\\
-  	Fully connected & 10 & ReLU & Dropout(0.2)\\
+  	Fully connected & 30 & ReLU & L2 regularization factor = 0.2\\
+  	Fully connected & 10 & ReLU & L2 regularization factor = 0.2\\
   	Fully connected & 1 & Linear & \\
   	\hline
 \end{tabular}
@@ -29,8 +29,8 @@ Architecture 2
 	\hline
 	Layer & Shape & Activation & Additional Information\\
   	\hline
-  	Fully connected & 50 & ReLU & Dropout(0.6)\\
-  	Fully connected & 20 & ReLU & Dropout(0.2)\\
+  	Fully connected & 50 & ReLU & L2 regularization factor = 0.2\\
+  	Fully connected & 20 & ReLU & L2 regularization factor = 0.2\\
   	Fully connected & 1 & Linear & \\
   	\hline
 \end{tabular}
@@ -46,8 +46,8 @@ Architecture 3
 	\hline
 	Layer & Shape & Activation & Additional Information\\
   	\hline
-  	Fully connected & 100 & ReLU & Dropout(0.6)\\
-  	Fully connected & 50 & ReLU & Dropout(0.2)\\
+  	Fully connected & 100 & ReLU & L2 regularization factor = 0.2\\
+  	Fully connected & 50 & ReLU & L2 regularization factor = 0.2\\
   	Fully connected & 1 & Linear & \\
   	\hline
 \end{tabular}
@@ -63,8 +63,8 @@ Architecture 4
 	\hline
 	Layer & Shape & Activation & Additional Information\\
   	\hline
-  	Fully connected & 250 & ReLU & Dropout(0.6)\\
-  	Fully connected & 50 & ReLU & Dropout(0.2)\\
+  	Fully connected & 250 & ReLU & L2 regularization factor = 0.2\\
+  	Fully connected & 50 & ReLU & L2 regularization factor = 0.2\\
   	Fully connected & 1 & Linear & \\
   	\hline
 \end{tabular}
@@ -72,19 +72,36 @@ Architecture 4
 \label{table:proposed_nn_4}
 \end{table}
 
+Architecture 5
+
 \begin{table}[!htb]
 \centering
-\begin{tabular}{l r r | r r | r r | r r}
-	\hline	
-	& \multicolumn{2}{c}{Min.} & \multicolumn{2}{c}{Max.}  & \multicolumn{2}{c}{Avg.}  & \multicolumn{2}{c}{STD} \\
-	Tested Architecture & RMSE & RHS & RMSE & RHS & RMSE & RHS & RMSE & RHS\\
+\begin{tabular}{l l l l}
+	\hline
+	Layer & Shape & Activation & Additional Information\\
   	\hline
-  	Architecture 1 & 11.09 & 172.18 & 14.98 & 397.79 & 12.96 & 295.51 & 1.27 & 68.62\\
-  	Architecture 2 & 11.27 & 187.88 & 14.28 & 344.96 & 12.84 & 274.69 & 0.82 & 42.78\\
-  	Architecture 3 & 12.45 & 257.33 & 15.60 & 483.22 & 14.46 & 389.27 & 1.03 & 78.12\\
-  	Architecture 4 & 13.26 & 307.14 & 15.58 & 465.33 & 14.57 & 405.08 & 0.74 & 52.03\\
+  	Fully connected & 20 & ReLU & L2 regularization factor = 0.2\\
+  	Fully connected & 1 & Linear & \\
   	\hline
 \end{tabular}
-\caption{Results for different architectures for subset 1, 250 epochs}
-\label{table:tested_architectures_250}
+\caption{Proposed Neural Network architecture 5}
+\label{table:proposed_nn_5}
+\end{table}
+
+\pagebreak
+
+Architecture 6
+
+\begin{table}[!htb]
+\centering
+\begin{tabular}{l l l l}
+	\hline
+	Layer & Shape & Activation & Additional Information\\
+  	\hline
+  	Fully connected & 10 & ReLU & L2 regularization factor = 0.2\\
+  	Fully connected & 1 & Linear & \\
+  	\hline
+\end{tabular}
+\caption{Proposed Neural Network architecture 6}
+\label{table:proposed_nn_6}
 \end{table}
