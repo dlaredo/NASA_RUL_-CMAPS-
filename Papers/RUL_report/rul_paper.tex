@@ -38,7 +38,7 @@
 %\usepackage[hang, small,labelfont=bf,up,textfont=it,up]{caption} % Custom captions under/above floats in tables or figures
 \usepackage{booktabs} % Horizontal rules in tables
 %\usepackage{float} % Required for tables and figures in the multi-column environment - they need to be placed in specific locations with the [H] (e.g. \begin{table}[H])
-\usepackage{hyperref} % For hyperlinks in the PDF
+%\usepackage{hyperref} % For hyperlinks in the PDF
 
 \usepackage{lettrine} % The lettrine is the first enlarged letter at the beginning of the text
 \usepackage{paralist} % Used for the compactitem environment which makes bullet points with less space between them
@@ -93,7 +93,7 @@
 %	TITLE SECTION
 %----------------------------------------------------------------------------------------
 
-\title{A Neural Network-Evolutionary Computation framework for Remaining Useful Life Estimation}
+\title{A Neural Network-Evolutionary Computation Framework for Remaining Useful Life Estimation}
 \author[1]{David Laredo\thanks{dlaredorazo@ucmerced.edu}}
 \author[1]{Zhaoyin Chen}
 \author[2]{Oliver Sch\"utze}
@@ -132,7 +132,7 @@
 This paper presents a data-driven framework for estimating the Remaining Useful Life (RUL) of mechanical systems. Two major components make up the framework: a multi-layer perceptron as base regressor and an evolutionary computation algorithm for the tuning of data-related parameters. On the data side, the framework makes use of a strided time window along with a piecewise linear model to estimate the RUL label for each time window within the training sets. Tuning the data-related parameters, i.e. window size, window stride and RUL label for the early stages of the engine, using the optimization framework here presented allows for the use of simple regressor model, i.e. Neural Networks with few hidden layers and few neurons at each layer, which can in turn allow for the use of such models in environments with very limited resources such as embedded systems. The proposed method is evaluated on the publicly available C-MAPSS dataset. The accuracy of the proposed method is compared against other state-of-the art methods available in the literature and it is shown to perform better while making use of a simpler, compact model.
 \end{abstract}
 
-\keywords{Artificial Neural Networks (\gls{ann}), Moving Time Window, \gls{rul} Estimation, \gls{cmaps}, Prognostics}
+\keywords{Artificial Neural Networks (\gls{ann}), Moving Time Window, \gls{rul} Estimation, \gls{cmaps}, Prognostics, Evolutionary Algorithms}
 
 %----------------------------------------------------------------------------------------
 %	ARTICLE CONTENTS

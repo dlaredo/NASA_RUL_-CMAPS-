@@ -1,9 +1,9 @@
 \section{Evaluating the performance of the proposed method}
 \label{sec:rul_eval}
 
-In this section we evaluate the performance of the proposed method. The architecture of the \gls{mlp} to be used here was presented in Section \ref{sec:method} Table \ref{table:proposed_nn} and will be used throughout this section.  The \gls{mlp} was trained $10$ times for$200$ epochs each and tested in each subset of the \gls{cmaps} dataset.
+In this section we evaluate the performance of the proposed method. The architecture of the \gls{mlp} to be used here was presented in Section \ref{sec:method} Table \ref{table:proposed_nn} and will be used throughout this section.  The \gls{mlp} was trained $10$ times for $200$ epochs each and tested in each subset of the \gls{cmaps} dataset.
 
-For the first experiment the combinations of window size $n_w$, window stride $n_s$ and early \gls{rul} $R_e$ presented in Table \ref{table:data_params_de} were tested obtaining the results shown in Table \ref{table:results_ann_de}.
+For the first experiment the combinations of window size $n_w$, window stride $n_s$ and early \gls{rul} $R_e$ are presented in Table \ref{table:data_params_de}.
 
 \begin{table}[!htb]
 \centering
@@ -11,28 +11,29 @@ For the first experiment the combinations of window size $n_w$, window stride $n
 	\hline
 	 Dataset & Window Size $n_w$ & Window Stride $n_s$ & Early RUL $R_e$\\
   	\hline
-  	FD001 & 30 & 2 & 120\\
-  	FD002 & 20 & 2 & 120\\
-  	FD003 & 30 & 2 & 120\\
-  	FD004 & 18 & 2 & 120\\
+  	FD001 & 30 & 1 & 128\\
+  	FD002 & 20 & 2 & 134\\
+  	FD003 & 30 & 1 & 128\\
+  	FD004 & 18 & 2 & 134\\
   	\hline
 \end{tabular}
 \caption{Data-related parameters for each subset as obtained by \gls{de}.}
 \label{table:data_params_de}
 \end{table}  
 
+The obtained results using the above setting are depicted in Table \ref{table:results_ann_de}. Notice that the performances obtained for datasets FD001 and FD002 improved, this is due to the fact that this time the \gls{mlp} was trained for more epochs, thus obtaining better results.
+
 \begin{table}[!htb]
 \centering
-
 \begin{tabular}{l | r r r r | r r r r}
 	\hline	
 	& \multicolumn{4}{| c}{RMSE} & \multicolumn{4}{| c}{RHS} \\
 	Data Subset & Min. & Max. & Avg. & STD & Min. & Max. & Avg. & STD\\
   	\hline
-  	FD001 & 14.78 & 15.25 & 14.98 & 0.13 & 3.41 & 4.40 & 3.94 & 0.30\\
-  	FD002 & 29.76 & 31.55 & 30.67 & 0.50 & 59.25 & 95.36 & 69.25 & 10.68\\
-  	FD003 & 15.05 & 16.05 & 15.54 & 0.33 & 3.24 & 4.98 & 3.86 & 0.57\\
-  	FD004 & 34.61 & 37.75 & 35.58 & 0.99 & 55.46 & 91.94 & 69.06 & 11.12\\
+  	FD001 & 14.87 & 15.08 & 14.94 & 0.06 &3.65 & 3.99 & 3.86 & 0.10\\
+  	FD002 & 28.67 & 31.60 & 29.54 & 0.91 & 49.15 & 92.52 & 61 & 13.52\\
+  	FD003 & 14.55 & 16.21 & 15.05 & 0.52 & 3.88 & 4.54 & 4.17 & 0.22\\
+  	FD004 & 32.54 & 37.703 & 34.08 & 1.43 & 48.35 & 79.33 & 59.60 & 10.26\\
   	\hline
 \end{tabular}
 
@@ -48,7 +49,7 @@ Next, the possibility of using a single set of data-related parameters for all t
 	\hline
 	 Dataset & Window Size $n_w$ & Window Stride $n_s$ & Early RUL $R_e$\\
   	\hline
-  	All & 18 & 2 & 120\\
+  	All & 18 & 2 & 128\\
   	\hline
 \end{tabular}
 \caption{Single set of data-related parameters for all subsets.}
@@ -62,10 +63,10 @@ Next, the possibility of using a single set of data-related parameters for all t
 	& \multicolumn{4}{| c}{RMSE} & \multicolumn{4}{| c}{RHS} \\
 	Data Subset & Min. & Max. & Avg. & STD & Min. & Max. & Avg. & STD\\
   	\hline
-  	FD001 & 17.45 & 19.29 & 18.12 & 0.63 & 6.60 & 8.96 & 7.45 & 0.81\\
-  	FD002 & 29.64 & 31.93 & 30.28 & 0.67 & 49.02 & 95.62 & 60.65 & 14.18\\
-  	FD003 & 15.90 & 16.80 & 16.19 & 0.32 & 3.63 & 5.11 & 4.04 & 0.45\\
-  	FD004 & 33.63 & 36.43 & 34.63 & 0.86 & 52.14 & 78.47 & 61.87 & 8.47\\
+  	FD001 & 17.58 & 18.56 & 17.82 & 0.29 & 8.26 & 9.18 & 8.59 & 0.28\\
+  	FD002 & 29.48 & 31.92 & 30.15 & 0.75 & 65.83 & 104.37 & 75.73 & 11.54\\
+  	FD003 & 17.35 & 19.99 & 18.20 & 0.72 & 6.25 & 16.09 & 8.27 & 2.86\\
+  	FD004 & 32.91 & 37.28 & 34.45 & 1.41 & 48.90 & 77.93 & 59.60 & 9.65\\
   	\hline
 \end{tabular}
 \caption{Scores for each dataset using the single set of data-related parameters.}
@@ -96,20 +97,19 @@ In this section the performance of the proposed method is compared against other
 \centering
 \begin{tabular}{l | r r r r | r r r r}
 	\hline	
-	Method & No. of Engines & RMSE \\
+	Method & RMSE \\
   	\hline
-  	ESN trained by Kalman Filter \cite{Peng2012} & 100 of 100 & 63.45\\
-  	Modified approach with classified sub- models of the ESN \cite{Peng2012} & 80 of 100 & 7.02\\
-  	Support Vector Machine Classifier \cite{Louen2013} & 100 of 100 & 29.82\\
-  	Time Window Neural Network \cite{Lim2016} & 100 of 100 & 15.16\\
-  	Multi-objective deep belief networks ensemble \cite{Zhang2016} & 100 of 100 & 15.04\\
-  	Deep Convolutional Neural Network \cite{Babu2016} & 100 of 100 & 18.45\\
-  	\textbf{Proposed method with $n_w = 30$, $n_s=2$ and $R_e = 120$} & 100 of 100 & 14.90\\
+  	ESN trained by Kalman Filter \cite{Peng2012} & 63.45\\
+  	Support Vector Machine Classifier \cite{Louen2013} & 29.82\\
+  	Time Window Neural Network \cite{Lim2016} & 15.16\\
+  	Multi-objective deep belief networks ensemble \cite{Zhang2016} & 15.04\\
+  	Deep Convolutional Neural Network \cite{Babu2016} & 18.45\\
+  	\textbf{Proposed method with $n_w = 30$, $n_s=1$ and $R_e = 128$} & 14.87\\
   	\hline
 \end{tabular}
 \caption{Performance comparisons of the proposed method and the latest related papers on the \gls{cmaps} dataset.}
 \label{table:results_comparison}
 \end{table}
 
-Based on the results, the proposed method performance is better than the majority of the compared methods when taking into consideration the whole dataset FD001. The only method that outperforms the presented approach is the modified ESN \cite{Peng2012}, nevertheless, the method misses to estimate the \gls{rul} for the remaining 20 engines. Two methods come close to the perfomance of the presented approach in this paper, namely the time window \gls{ann} \cite{Lim2016} and the Networks Ensemble \cite{Zhang2016}. While the performance of both methods comes close to the results presented in this paper, the presented approach is computationally more efficient. Furthermore, the approach proposed in this paper is extremely simple to understand and implement, robust, generic, light-weight and fast to train, features that we believe are important to highlight when comparing the proposed method against other state-of-the-art approaches.
+Based on the results, the proposed method performs better than the majority of the compared methods when taking into consideration the whole dataset FD001. Two methods come close to the performance of the presented approach in this paper, namely the time window \gls{ann} \cite{Lim2016} and the Networks Ensemble \cite{Zhang2016}. While the performance of both methods comes close to the results presented in this paper, the presented approach is computationally more efficient. Furthermore, the framework proposed in here is simple to understand and implement, robust, generic and light-weight, features we believe are important to highlight when comparing the proposed method against other state-of-the-art approaches.
 
