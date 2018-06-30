@@ -7,9 +7,9 @@ For the first experiment, the combinations of window size $n_w$, window stride $
 
 \begin{table}[!htb]
 \centering
-\begin{tabular}{l l l l l}
+\begin{tabular}{l r r r l}
 	\hline
-	 Dataset & Window Size $n_w$ & Window Stride $n_s$ & Early RUL $R_e$\\
+	 Dataset & $n_w$ &  $n_s$ & $R_e$\\
   	\hline
   	FD001 & 30 & 1 & 128\\
   	FD002 & 20 & 2 & 134\\
@@ -21,14 +21,14 @@ For the first experiment, the combinations of window size $n_w$, window stride $
 \label{table:data_params_de}
 \end{table}  
 
-The obtained results using the above setting are depicted in Table \ref{table:results_ann_de}. Notice that the performances obtained for datasets FD001 and FD002 improved, this is due to the fact that this time the \gls{mlp} was trained for more epochs, thus obtaining better results.
+The obtained results for $f(v)$ using the above setting are depicted in Table \ref{table:results_ann_de}. Notice that the performances obtained for datasets FD001 and FD002 improved, this is due to the fact that this time the \gls{mlp} was trained for more epochs, thus obtaining better results.
 
 \begin{table}[!htb]
 \centering
 \begin{tabular}{l | r r r r | r r r r}
 	\hline	
 	& \multicolumn{4}{| c}{RMSE} & \multicolumn{4}{| c}{RHS} \\
-	Data Subset & Min. & Max. & Avg. & STD & Min. & Max. & Avg. & STD\\
+	Data Subset & min & max & avg & STD & min & max & avg & STD\\
   	\hline
   	FD001 & 14.87 & 15.08 & 14.94 & 0.06 &3.65 & 3.99 & 3.86 & 0.10\\
   	FD002 & 28.67 & 31.60 & 29.54 & 0.91 & 49.15 & 92.52 & 61 & 13.52\\
@@ -41,27 +41,14 @@ The obtained results using the above setting are depicted in Table \ref{table:re
 \label{table:results_ann_de}
 \end{table}
 
-Next, the possibility of using a single set of data-related parameters for all the subsets is explored. For this experiment the window size $n_w$ is fixed for all of the four datasets, given that the maximum allowable window size for all datasets is $18$, $n_w = 18$ will be used as window size throughout the four subsets. Details of the data-related chosen parameters are presented in Table \ref{table:data_params_1}, the results obtained are shown in Table \ref{table:results_ann_1}. 
-
-\begin{table}[!htb]
-\centering
-\begin{tabular}{l l l l l}
-	\hline
-	 Dataset & Window Size $n_w$ & Window Stride $n_s$ & Early RUL $R_e$\\
-  	\hline
-  	All & 18 & 2 & 128\\
-  	\hline
-\end{tabular}
-\caption{Single set of data-related parameters for all subsets.}
-\label{table:data_params_1}
-\end{table}  
+Next, the possibility of using a single set of data-related parameters for all the subsets is explored. For this experiment the $n_w$ is fixed for all of the four datasets, given that the maximum allowable window size for all datasets is $18$. Hence, the data-related chosen parameters are $v=(18, 2, 18)$, the results obtained are shown in Table \ref{table:results_ann_1}. 
 
 \begin{table}[!htb]
 \centering
 \begin{tabular}{l | r r r r | r r r r}
 	\hline	
 	& \multicolumn{4}{| c}{RMSE} & \multicolumn{4}{| c}{RHS} \\
-	Data Subset & Min. & Max. & Avg. & STD & Min. & Max. & Avg. & STD\\
+	Data Subset & min & max & avg & STD & min & max & avg & STD\\
   	\hline
   	FD001 & 17.58 & 18.56 & 17.82 & 0.29 & 8.26 & 9.18 & 8.59 & 0.28\\
   	FD002 & 29.48 & 31.92 & 30.15 & 0.75 & 65.83 & 104.37 & 75.73 & 11.54\\
@@ -91,13 +78,13 @@ As can be observed, performance is decreased for subsets FD001/FD003, this indic
 
 \subsection{Comparison with other approaches}
 
-In this section the performance of the proposed method is compared against other state-of-the-art methods. Most of the presented methods in this section have only reported results on the test set FD001 in terms of \gls{rmse}, the results are displayed in Table \ref{table:results_comparison}. The \gls{rmse} value of the proposed method in Table \ref{table:results_comparison} is the mean value of 10 independent runs. The remainder of the values are identical to those reported in their respective original papers.
+In this section the performance of the proposed method is compared against other state-of-the-art methods. Most of the presented methods in this section have only reported results on the test set FD001 in terms of $e_{rms}$, the results are displayed in Table \ref{table:results_comparison}. The $e_{rms}$ value of the proposed method in Table \ref{table:results_comparison} is the mean value of 10 independent runs. The remainder of the values are identical to those reported in their respective original papers.
 
 \begin{table}[!htb]
 \centering
 \begin{tabular}{l | r r r r | r r r r}
 	\hline	
-	Method & RMSE \\
+	Method & $e_{rms}$ \\
   	\hline
   	ESN trained by Kalman Filter \cite{Peng2012} & 63.45\\
   	Support Vector Machine Classifier \cite{Louen2013} & 29.82\\
