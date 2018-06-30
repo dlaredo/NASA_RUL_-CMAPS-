@@ -1,0 +1,252 @@
+%%
+%% This is file `beamerthemefibeamer.sty',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% fibeamer.dtx  (with options: `class')
+%% 
+%% Copyright 2015  Vít Novotný <witiko@mail.muni.cz>
+%% Faculty of Informatics, Masaryk University (Brno, Czech Republic)
+%% 
+%% This work is based on the (Unofficial) University of Manchester
+%% Beamer Theme by Andrew Mundy <andrew.mundy@cs.man.ac.uk>.
+%% 
+%% This work may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version
+%% 1.3 of this license or (at your option) any later version.
+%% The latest version of this license is available at
+%% 
+%%   http://www.latex-project.org/lppl.txt
+%% 
+%% and version 1.3 or later is part of all distributions of LaTeX
+%% version 2005/12/01 or later.
+%% 
+%% This work has the LPPL maintenance status `maintained'.
+%% 
+%% The Current Maintainer of this work is Vít Novotný (VN).
+%% Send bug reports, requests for additions and questions
+%% either to the fithesis discussion forum at
+%% 
+%%   http://is.muni.cz/auth/df/fithesis-sazba/
+%% 
+%% or to the e-mail address <witiko@mail.muni.cz>.
+%% 
+%% 
+%% MODIFICATION ADVICE:
+%% 
+%% If you want to customize this file, it is best to make a copy of
+%% the source file(s) from which it was produced.  Use a different
+%% name for your copy(ies) and modify the copy(ies); this will ensure
+%% that your modifications do not get overwritten when you install a
+%% new release of the standard system.  You should also ensure that
+%% your modified source file does not generate any modified file with
+%% the same name as a standard file.
+%% 
+%% You will also need to produce your own, suitably named, .ins file to
+%% control the generation of files from your source file; this file
+%% should contain your own preambles for the files it generates, not
+%% those in the standard .ins files.
+%% 
+%% The names of the source files used are shown above.
+%% 
+\NeedsTeXFormat{LaTeX2e}
+{\def\fibeamer@versiondef#1#2{
+  \gdef\fibeamer@version@number{#1}
+  \gdef\fibeamer@version@date{#2}
+  \gdef\fibeamer@version{#2 #1 fibeamer MU beamer theme}}
+\fibeamer@versiondef{v1.1.5}{2016/06/16}}
+\hypersetup{%
+  pdfcreator=\fibeamer@version,
+  pdfencoding=auto}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ProvidesPackage{fibeamer/beamerthemefibeamer}[\fibeamer@version]
+\newif\iffibeamer@fonts
+\DeclareOptionBeamer{fonts}{\fibeamer@fontstrue}
+\ExecuteOptionsBeamer{fonts}
+\DeclareOptionBeamer{nofonts}{\fibeamer@fontsfalse}
+\newif\iffibeamer@microtype
+\DeclareOptionBeamer{microtype}{\fibeamer@microtypetrue}
+\ExecuteOptionsBeamer{microtype}
+\DeclareOptionBeamer{nomicrotype}{\fibeamer@microtypefalse}
+\DeclareOptionBeamer{university}{\def\fibeamer@university{#1}}
+\ExecuteOptionsBeamer{university=mu}
+\DeclareOptionBeamer{faculty}{\def\fibeamer@faculty{#1}}
+\ExecuteOptionsBeamer{faculty=fi}
+\def\fibeamer@locale{%
+  % Babel / polyglossia detection
+  \ifx\languagename\undefined%
+  english\else\languagename\fi}
+\DeclareOptionBeamer{locale}{%
+  \def\fibeamer@locale{#1}}
+\def\fibeamer@logoLocale{\fibeamer@locale}
+\DeclareOptionBeamer{logoLocale}{%
+  \def\fibeamer@logoLocale{#1}}
+\DeclareOptionBeamer{basePath}{%
+  \ifx\fibeamer@empty#1\fibeamer@empty%
+    \def\fibeamer@basePath{}%
+  \else%
+    \def\fibeamer@basePath{#1/}%
+  \fi}
+\ExecuteOptionsBeamer{basePath=fibeamer}
+\def\fibeamer@subdir#1#2#3#4\empty{%
+  \ifx#1\empty%           <empty> -> <basePath>
+    \fibeamer@basePath
+  \else
+    \if#1/%
+      \ifx#2\empty%             / -> /
+        /%
+      \else%              /<path> -> /<path>/
+        #1#2#3#4/%
+      \fi
+    \else
+      \if#1.%
+        \ifx#2\empty%           . -> ./
+          ./%
+        \else
+          \if#2.%
+            \ifx#3\empty%      .. -> ../
+              ../%
+            \else
+              \if#3/%   ../<path> -> ../<path>/
+                ../#4/%
+              \else
+                \fibeamer@basePath#1#2#3#4/%
+              \fi
+            \fi
+          \else
+            \if#2/%      ./<path> -> ./<path>/
+              ./#3#4/%
+            \else
+              \fibeamer@basePath#1#2#3#4/%
+            \fi
+          \fi
+        \fi
+      \else
+        \fibeamer@basePath#1#2#3#4/%
+      \fi
+    \fi
+  \fi}
+\DeclareOptionBeamer{themePath}{%
+  \def\fibeamer@themePath{\fibeamer@subdir#1%
+    \empty\empty\empty\empty}}
+\ExecuteOptionsBeamer{themePath=theme}
+\DeclareOptionBeamer{logoPath}{%
+  \def\fibeamer@logoPath{\fibeamer@subdir#1%
+    \empty\empty\empty\empty}}
+\ExecuteOptionsBeamer{logoPath=logo/\fibeamer@university}
+\DeclareOptionBeamer{logo}{\def\fibeamer@logo{#1}}
+\ExecuteOptionsBeamer{%
+  logo=\fibeamer@logoPath fibeamer-\fibeamer@university-%
+    \fibeamer@faculty-\fibeamer@logoLocale}
+
+\DeclareOptionBeamer{logoTwo}{\def\fibeamer@logoTwo{#1}}
+\ExecuteOptionsBeamer{%
+  logoTwo=\fibeamer@logoPath neo.png}    
+    
+\DeclareOptionBeamer{fallbackLogo}{\def\fibeamer@fallbackLogo{#1}}
+\def\fibeamer@fallbackLogo{%
+  \fibeamer@logoPath fibeamer-\fibeamer@university-%
+    \fibeamer@faculty-english}
+    
+\DeclareOptionBeamer{fallbackLogoTwo}{\def\fibeamer@fallbackLogoTwo{#1}}
+\def\fibeamer@fallbackLogoTwo{%
+  \fibeamer@logoPath neo.png}    
+    
+\def\fibeamer@require#1{\IfFileExists{#1.sty}{%
+  \@ifpackageloaded{#1}{}{\RequirePackage{#1}}}{}}
+\def\fibeamer@requireTheme#1{%
+  \fibeamer@require{\fibeamer@themePath beamer#1themefibeamer}
+  \fibeamer@require{\fibeamer@themePath\fibeamer@university%
+    /beamer#1themefibeamer-\fibeamer@university}
+  \fibeamer@require{\fibeamer@themePath\fibeamer@university%
+    /beamer#1themefibeamer-\fibeamer@university-\fibeamer@faculty}}
+\fibeamer@require{etoolbox}
+\newcommand\fibeamer@includeLogo[1][]{{
+  % See <http://tex.stackexchange.com/a/39987/70941>.
+  \patchcmd{\Gin@ii}% Make `\includegraphics` use `@fallbackLogo`.
+    {\begingroup}% <search>
+    {\begingroup\renewcommand{\@latex@error}[2]{%
+       \includegraphics[#1]\fibeamer@fallbackLogo}}% <replace>
+    {}% <success>
+    {}% <failure>
+  \includegraphics[#1]\fibeamer@logo}}
+  
+\newcommand\fibeamer@includeLogoTwo[1][]{{
+  % See <http://tex.stackexchange.com/a/39987/70941>.
+  \patchcmd{\Gin@ii}% Make `\includegraphics` use `@fallbackLogo`.
+    {\begingroup}% <search>
+    {\begingroup\renewcommand{\@latex@error}[2]{%
+       \includegraphics[#1]\fibeamer@fallbackLogoTwo}}% <replace>
+    {}% <success>
+    {}% <failure>
+  \includegraphics[#1]\fibeamer@logoTwo}}  
+  
+\def\fibeamer@patch#1#2{%
+  \def\fibeamer@patch@versions{#1}%
+  \def\fibeamer@patch@action{#2}%
+  \def\fibeamer@patch@next##1,{%
+    \def\fibeamer@patch@arg{##1}%
+    \def\fibeamer@patch@relax{\relax}%
+    \ifx\fibeamer@patch@arg\fibeamer@version@number
+      \def\fibeamer@patch@next####1\relax,{}%
+      \expandafter\fibeamer@patch@action
+      \expandafter\fibeamer@patch@next
+    \else\ifx\fibeamer@patch@arg\fibeamer@patch@relax\else
+      \expandafter\expandafter\expandafter\fibeamer@patch@next
+    \fi\fi}%
+  \expandafter\expandafter\expandafter\fibeamer@patch@next
+  \expandafter\fibeamer@patch@versions\expandafter,\relax,}
+\ProcessOptionsBeamer
+  % Set up the microtypographic extensions
+  \iffibeamer@microtype
+    \RequirePackage{microtype}
+  \fi
+\mode<presentation>
+  % Set up the fonts
+  \iffibeamer@fonts
+    \RequirePackage{ifthen}
+    \RequirePackage{ifxetex}
+    \RequirePackage{ifluatex}
+    \RequirePackage{lmodern}
+    \RequirePackage[sfdefault,lf]{carlito}
+    \renewcommand*\oldstylenums[1]{{\carlitoOsF #1}}
+
+    %% Load arev with scaling factor of .85
+    %% See <http://tex.stackexchange.com/a/181240/70941>
+    \DeclareFontFamily{OML}{zavm}{\skewchar\font=127 }
+    \DeclareFontShape{OML}{zavm}{m}{it}{<-> s*[.85] zavmri7m}{}
+    \DeclareFontShape{OML}{zavm}{b}{it}{<-> s*[.85] zavmbi7m}{}
+    \DeclareFontShape{OML}{zavm}{m}{sl}{<->ssub * zavm/m/it}{}
+    \DeclareFontShape{OML}{zavm}{bx}{it}{<->ssub * zavm/b/it}{}
+    \DeclareFontShape{OML}{zavm}{b}{sl}{<->ssub * zavm/b/it}{}
+    \DeclareFontShape{OML}{zavm}{bx}{sl}{<->ssub * zavm/b/sl}{}
+
+    \AtBeginDocument{
+      \SetSymbolFont{operators}   {normal}{OT1}{zavm}{m}{n}
+      \SetSymbolFont{letters}     {normal}{OML}{zavm}{m}{it}
+      \SetSymbolFont{symbols}     {normal}{OMS}{zavm}{m}{n}
+      \SetSymbolFont{largesymbols}{normal}{OMX}{iwona}{m}{n}}
+    \RequirePackage[sans]{dsfont}
+
+    \ifthenelse{\boolean{xetex}\OR\boolean{luatex}}{
+      \RequirePackage{fontspec}
+      \setmonofont[Scale=0.85,Ligatures=TeX]{DejaVu Sans Mono}
+    }{
+      \usepackage[scaled=0.85]{DejaVuSansMono}
+      \RequirePackage[resetfonts]{cmap}
+      \RequirePackage[T1]{fontenc}
+    }
+    \RequirePackage{setspace}
+    \setstretch{1.15}
+  \fi
+\mode
+  <all>
+\fibeamer@requireTheme{color}
+\fibeamer@requireTheme{font}
+\fibeamer@requireTheme{inner}
+\fibeamer@requireTheme{outer}
+\endinput
+%%
+%% End of file `beamerthemefibeamer.sty'.

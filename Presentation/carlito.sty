@@ -1,0 +1,160 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{carlito}
+    [2014/08/20 (Bob Tennent)  Supports Carlito fonts for LaTeX, pdfLaTeX, luaLaTeX and xeLaTeX.]
+
+\RequirePackage{ifxetex,ifluatex,xkeyval,textcomp}
+
+\newif\ifcarlito@fontspec 
+\ifxetex
+  \carlito@fontspectrue
+\else\ifluatex
+  \carlito@fontspectrue
+\else
+  \carlito@fontspecfalse
+\fi\fi
+
+\newif\ifcarlito@default \carlito@defaultfalse
+\newif\ifcarlito@lining \carlito@liningfalse
+\newif\ifcarlito@tabular \carlito@tabularfalse
+
+\newcommand*{\Carlito@scale}{1}
+\DeclareOptionX{scaled}{\renewcommand*{\Carlito@scale}{#1}}
+\DeclareOptionX{scale}{\renewcommand*{\Carlito@scale}{#1}}
+
+\DeclareOptionX{default}{\carlito@defaulttrue}
+\DeclareOptionX{sfdefault}{\carlito@defaulttrue}
+
+\DeclareOptionX{osf}{\carlito@liningfalse}
+\DeclareOptionX{oldstyle}{\carlito@liningfalse}
+\DeclareOptionX{lf}{\carlito@liningtrue}
+\DeclareOptionX{lining}{\carlito@liningtrue}
+\DeclareOptionX{proportional}{\carlito@tabularfalse}
+\DeclareOptionX{p}{\carlito@tabularfalse}
+\DeclareOptionX{tabular}{\carlito@tabulartrue}
+\DeclareOptionX{t}{\carlito@tabulartrue}
+
+\ProcessOptionsX\relax
+
+\ifcarlito@fontspec
+  \RequirePackage{fontspec}
+\else
+  \RequirePackage{fontenc,fontaxes}
+\fi
+
+\ifcarlito@fontspec
+  \ifcarlito@lining
+    \def\carlito@figurestyle{Lining}
+  \else
+    \def\carlito@figurestyle{OldStyle}
+  \fi
+  \ifcarlito@tabular
+    \def\carlito@figurealign{Monospaced} 
+  \else
+    \def\carlito@figurealign{Proportional} 
+  \fi
+
+\else 
+
+  \ifcarlito@lining
+    \def\carlito@figurestyle{LF} 
+  \else
+    \def\carlito@figurestyle{OsF} 
+  \fi
+  \ifcarlito@tabular
+    \def\carlito@figurealign{T} 
+  \else
+    \def\carlito@figurealign{} 
+  \fi
+
+\fi
+
+\ifcarlito@fontspec
+  \ifxetex\XeTeXtracingfonts=1\fi
+  \defaultfontfeatures{
+        Ligatures = TeX ,
+        Scale     = \Carlito@scale ,
+        Extension = .ttf }
+  \setsansfont
+      [ Numbers   = {\carlito@figurestyle,\carlito@figurealign},
+        UprightFont    = *-Regular ,
+        ItalicFont     = *-Italic ,
+        BoldFont       = *-Bold , 
+        BoldItalicFont = *-BoldItalic ]
+      {Carlito}
+  % grab current family in case of subsequent change:
+  \let\carlitofamily\sfdefault  
+  \ifcarlito@default\renewcommand*\familydefault{\carlitofamily}\fi
+  \newfontfamily\carlito
+      [ Numbers   = {\carlito@figurestyle,\carlito@figurealign},
+        UprightFont    = *-Regular ,
+        ItalicFont     = *-Italic ,
+        BoldFont       = *-Bold , 
+        BoldItalicFont = *-BoldItalic 
+      ]
+      {Carlito}
+   \newfontfamily\carlitoOsF
+        [ Numbers = {Proportional,OldStyle},
+        UprightFont    = *-Regular ,
+        ItalicFont     = *-Italic ,
+        BoldFont       = *-Bold , 
+        BoldItalicFont = *-BoldItalic 
+        ]
+        {Carlito}
+  \newfontfamily\carlitoLF
+        [ Numbers = {Proportional,Lining},
+        UprightFont    = *-Regular ,
+        ItalicFont     = *-Italic ,
+        BoldFont       = *-Bold , 
+        BoldItalicFont = *-BoldItalic 
+        ]
+        {Carlito}
+   \newfontfamily\carlitoTLF
+        [ Numbers = {Monospaced, Lining},
+        UprightFont    = *-Regular ,
+        ItalicFont     = *-Italic ,
+        BoldFont       = *-Bold , 
+        BoldItalicFont = *-BoldItalic 
+        ]
+        {Carlito}
+   \newfontfamily\carlitoTOsF
+        [ Numbers = {Monospaced, OldStyle},
+        UprightFont    = *-Regular ,
+        ItalicFont     = *-Italic ,
+        BoldFont       = *-Bold , 
+        BoldItalicFont = *-BoldItalic 
+        ]
+        {Carlito}
+  \providecommand\sufigures{\addfontfeatures{VerticalPosition=Superior}}
+  \providecommand\infigures{\addfontfeatures{VerticalPosition=ScientificInferior}}
+
+\else 
+  \def\carlitofamily{Carlito-\carlito@figurealign\carlito@figurestyle}
+  \newcommand*\carlito{\fontfamily{\carlitofamily}\selectfont}
+  \def\sfdefault{\carlitofamily}
+  \ifcarlito@default\edef\familydefault{\sfdefault}\fi
+  \newcommand*\carlitoOsF{\fontfamily{Carlito-OsF}\selectfont}
+  \newcommand*\carlitoLF{\fontfamily{Carlito-LF}\selectfont}
+  \newcommand*\carlitoTLF{\fontfamily{Carlito-TLF}\selectfont}
+  \newcommand*\carlitoTOsF{\fontfamily{Carlito-TOsF}\selectfont}
+
+  \fa@naming@exception{figures}{{superior}{proportional}}{Sup}
+  \fa@naming@exception{figures}{{superior}{tabular}}{Sup}
+  \def\sufigures{\@nomath\sufigures
+      \fontfigurestyle{superior}\selectfont}
+
+  \fa@naming@exception{figures}{{inferior}{proportional}}{Inf}
+  \fa@naming@exception{figures}{{inferior}{tabular}}{Inf}
+  \def\infigures{\@nomath\infigures
+      \fontfigurestyle{inferior}\selectfont}
+
+\fi
+
+\DeclareTextFontCommand{\textsu}{\sufigures}
+\DeclareTextFontCommand{\textin}{\infigures}
+
+\ifcarlito@fontspec
+% turn off defaults in case other fonts are selected:
+  \defaultfontfeatures{}
+\fi
+
+\endinput

@@ -1,0 +1,182 @@
+%%
+%% This is file `beamerouterthemefibeamer-mu.sty',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% base.dtx  (with options: `outer')
+%% 
+%% Copyright 2015  Vít Novotný <witiko@mail.muni.cz>
+%% Faculty of Informatics, Masaryk University (Brno, Czech Republic)
+%% 
+%% This work is based on the (Unofficial) University of Manchester
+%% Beamer Theme by Andrew Mundy <andrew.mundy@cs.man.ac.uk>.
+%% 
+%% This work may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version
+%% 1.3 of this license or (at your option) any later version.
+%% The latest version of this license is available at
+%% 
+%%   http://www.latex-project.org/lppl.txt
+%% 
+%% and version 1.3 or later is part of all distributions of LaTeX
+%% version 2005/12/01 or later.
+%% 
+%% This work has the LPPL maintenance status `maintained'.
+%% 
+%% The Current Maintainer of this work is Vít Novotný (VN).
+%% Send bug reports, requests for additions and questions
+%% either to the fithesis discussion forum at
+%% 
+%%   http://is.muni.cz/auth/df/fithesis-sazba/
+%% 
+%% or to the e-mail address <witiko@mail.muni.cz>.
+%% 
+%% 
+%% MODIFICATION ADVICE:
+%% 
+%% If you want to customize this file, it is best to make a copy of
+%% the source file(s) from which it was produced.  Use a different
+%% name for your copy(ies) and modify the copy(ies); this will ensure
+%% that your modifications do not get overwritten when you install a
+%% new release of the standard system.  You should also ensure that
+%% your modified source file does not generate any modified file with
+%% the same name as a standard file.
+%% 
+%% You will also need to produce your own, suitably named, .ins file to
+%% control the generation of files from your source file; this file
+%% should contain your own preambles for the files it generates, not
+%% those in the standard .ins files.
+%% 
+%% The names of the source files used are shown above.
+%% 
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{fibeamer/theme/mu/%
+  beamerouterthemefibeamer-mu}[2016/01/12]
+\mode<presentation>
+  \RequirePackage{ifthen}
+  \RequirePackage{ifpdf}
+  \ifpdf\else
+    \@ifundefined{pdfpagewidth}{\newdimen\pdfpagewidth}{}
+    \@ifundefined{pdfpageheight}{\newdimen\pdfpageheight}{}
+    \pdfpagewidth=\paperwidth
+    \pdfpageheight=\paperheight
+  \fi
+  \RequirePackage{tikz}
+  \RequirePackage{pgfcore}
+  \newlength\fibeamer@lengths@baseunit
+  \fibeamer@lengths@baseunit=3.75mm
+  % The footer padding
+  \newlength\fibeamer@lengths@footerpad
+  \setlength\fibeamer@lengths@footerpad{%
+    \fibeamer@lengths@baseunit}
+  % The side margins
+  \newlength\fibeamer@lengths@margin
+  \setlength\fibeamer@lengths@margin{%
+    3\fibeamer@lengths@baseunit}
+  \setbeamersize{
+    text margin left=\fibeamer@lengths@margin,
+    text margin right=\fibeamer@lengths@margin}
+  % The upper margin
+  \newlength\fibeamer@lengths@titleline
+  \setlength\fibeamer@lengths@titleline{%
+    3\fibeamer@lengths@baseunit}
+  % The background clipping
+  \newlength\fibeamer@lengths@clipbottom
+  \setlength\fibeamer@lengths@clipbottom\paperwidth
+  \addtolength\fibeamer@lengths@clipbottom{-\paperheight}
+  \setlength\fibeamer@lengths@clipbottom{%
+    0.5\fibeamer@lengths@clipbottom}
+  \newlength\fibeamer@lengths@cliptop
+  \setlength\fibeamer@lengths@cliptop\paperwidth
+  \addtolength\fibeamer@lengths@cliptop{%
+    -\fibeamer@lengths@clipbottom}
+  % The logo size
+  \newlength\fibeamer@lengths@logowidth
+  \setlength\fibeamer@lengths@logowidth{%
+    14\fibeamer@lengths@baseunit}
+  \newlength\fibeamer@lengths@logoheight
+  \setlength\fibeamer@lengths@logoheight{%
+    0.4\fibeamer@lengths@logowidth}
+  \defbeamertemplate*{navigation symbols}{fibeamer}{}
+  \defbeamertemplate*{headline}{fibeamer}{}
+  \defbeamertemplate*{frametitle}{fibeamer}{%
+    \vskip-1em % Align the text with the top border
+    \vskip\fibeamer@lengths@titleline
+    \usebeamercolor[fg]{frametitle}%
+    \usebeamerfont{frametitle}%
+      \insertframetitle\par%
+    \usebeamercolor[fg]{framesubtitle}%
+    \usebeamerfont{framesubtitle}%
+      \insertframesubtitle}
+  \defbeamertemplate*{footline}{fibeamer}{%
+    \ifnum\c@framenumber=0\else%
+      \begin{tikzpicture}[overlay]
+        \node[anchor=south east,
+          yshift=\fibeamer@lengths@footerpad,
+          xshift=-\fibeamer@lengths@footerpad] at
+          (current page.south east) {
+            \usebeamercolor[fg]{framenumber}%
+            \usebeamerfont{framenumber}%
+            \insertframenumber/\inserttotalframenumber};
+      \end{tikzpicture}
+    \fi}
+  \defbeamertemplate*{title page}{fibeamer}{%
+    % This is slide 0
+    \setcounter{framenumber}{0}
+
+    % Input the university logo
+    \begin{tikzpicture}[
+      remember picture,
+      overlay,
+      xshift=0.5\fibeamer@lengths@logowidth,
+      yshift=0.5\fibeamer@lengths@logoheight
+    ]
+      \node at (0,0) {
+        \fibeamer@includeLogo[
+          width=\fibeamer@lengths@logowidth,
+          height=\fibeamer@lengths@logoheight
+        ]};
+    \end{tikzpicture}
+
+    % Input the title
+    \usebeamerfont{title}%
+    \usebeamercolor[fg]{title}%
+    \begin{minipage}[b][3\baselineskip][b]{\textwidth}%
+      \raggedright\inserttitle
+    \end{minipage}
+    \vskip-.5\baselineskip
+
+    % Input the dashed line
+    \begin{pgfpicture}
+      \pgfsetlinewidth{2pt}
+      \pgfsetroundcap
+      \pgfsetdash{{0pt}{4pt}}{0cm}
+
+      \pgfpathmoveto{\pgfpoint{0mm}{0mm}}
+      \pgfpathlineto{\pgfpoint{\textwidth}{0mm}}
+
+      \pgfusepath{stroke}
+    \end{pgfpicture}
+    \vfill
+    % Input the subtitle
+    \usebeamerfont{subtitle}%
+    \usebeamercolor[fg]{subtitle}%
+    \begin{minipage}{\textwidth}
+      \raggedright%
+      \insertsubtitle%
+    \end{minipage}\vskip.25\baselineskip
+
+    % Input the author's name
+    \usebeamerfont{author}%
+    \usebeamercolor[fg]{author}%
+    \begin{minipage}{\textwidth}
+      \raggedright%
+      \insertauthor%
+    \end{minipage}}
+
+\mode
+<all>
+\endinput
+%%
+%% End of file `beamerouterthemefibeamer-mu.sty'.
