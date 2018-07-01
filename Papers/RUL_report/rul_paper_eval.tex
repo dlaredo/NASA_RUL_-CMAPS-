@@ -1,7 +1,7 @@
 \section{Evaluating the performance of the proposed method}
 \label{sec:rul_eval}
 
-In this section we evaluate the performance of the proposed method. The architecture of the \gls{mlp} to be used here was presented in Section \ref{sec:method} Table \ref{table:proposed_nn} and will be used throughout this section.  The \gls{mlp} was trained $10$ times for $200$ epochs each and tested in each subset of the \gls{cmaps} dataset.
+In this section we evaluate the performance of the proposed method. The architecture of the \gls{mlp} to be used here is described in Table \ref{table:proposed_nn} and will be used throughout this section.  The \gls{mlp} was trained $10$ times for $200$ epochs each and tested in each subset of the \gls{cmaps} dataset.
 
 For the first experiment, the combinations of window size $n_w$, window stride $n_s$ and early \gls{rul} $R_e$ are presented in Table \ref{table:data_params_de}.
 
@@ -64,14 +64,14 @@ As can be observed, performance is decreased for subsets FD001/FD003, this indic
 
 \begin{figure}[!htb]
 \centering
-\includegraphics[width=0.5\textwidth]{img/rmse_comparisson.png}
+\includegraphics[width=0.7\textwidth]{img/rmse_comparisson.png}
 \caption{Comparison of \gls{rmse} results for different sets of data-related parameters.}
 \label{fig:scores_rmse}
 \end{figure}
 
 \begin{figure}[!htb]
 \centering
-\includegraphics[width=0.5\textwidth]{img/rhs_comparisson.png}
+\includegraphics[width=0.7\textwidth]{img/rhs_comparisson.png}
 \caption{Comparison of \gls{rhs} results for different sets of data-related parameters.}
 \label{fig:scores_rhs}
 \end{figure}

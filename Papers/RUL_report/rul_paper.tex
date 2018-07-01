@@ -44,7 +44,7 @@
     colorlinks=true,
     linkcolor=black,
     filecolor=magenta,      
-    urlcolor=cyan,
+    urlcolor=black,
     citecolor=black
 }
 
@@ -137,7 +137,7 @@
 
 \noindent 
 
-This paper presents a data-driven framework for estimating the remaining useful life (RUL) of mechanical systems. Two major components make up the framework: a multi-layer perceptron as base regressor and an evolutionary computation algorithm for the tuning of data-related parameters. On the data side, the framework makes use of a strided time window along with a piecewise linear model to estimate the RUL label for each time window within the training sets. Tuning the data-related parameters, i.e. window-size, window-stride and RUL label for the early stages of the engine, using the optimization framework here presented allows for the use of simple regressor model, i.e. neural networks with few hidden layers and few neurons at each layer, which can in turn allow for the use of such models in environments with very limited resources such as embedded systems. The proposed method is evaluated on the publicly available C-MAPSS dataset. The accuracy of the proposed method is compared against other state-of-the art methods available in the literature and it is shown to perform better while making use of a simpler, compact model.
+This paper presents a data-driven framework for estimating the remaining useful life (RUL) of mechanical systems. Two major components make up the framework: a multi-layer perceptron as base regressor and an evolutionary computation algorithm for the tuning of data-related parameters. On the data side, the framework makes use of a strided time window along with a piecewise linear model to estimate the RUL label for each time window within the training sets. Tuning the data-related parameters using the optimization framework here presented allows for the use of simple regressor models, e.g. neural networks with few hidden layers and few neurons at each layer, which can in turn be deployed in environments with very limited resources such as embedded systems. The proposed method is evaluated on the publicly available C-MAPSS dataset. The accuracy of the proposed method is compared against other state-of-the art methods available in the literature and it is shown to perform better while making use of a simpler, compact model.
 \end{abstract}
 
 \keywords{artificial neural networks, moving time window, \gls{rul} estimation, \gls{cmaps}, prognostics, evolutionary algorithms}
