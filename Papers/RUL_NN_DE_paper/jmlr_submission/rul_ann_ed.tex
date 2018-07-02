@@ -1,0 +1,97 @@
+\documentclass[twoside,11pt]{article}
+
+% Any additional packages needed should be included after jmlr2e.
+% Note that jmlr2e.sty includes epsfig, amssymb, natbib and graphicx,
+% and defines many common macros, such as 'proof' and 'example'.
+%
+% It also sets the bibliographystyle to plainnat; for more information on
+% natbib citation styles, see the natbib documentation, a copy of which
+% is archived at http://www.jmlr.org/format/natbib.pdf
+
+\usepackage{jmlr2e}
+
+\usepackage[acronym]{glossaries} %Used for the acronyms
+\usepackage{mathtools} %tools for mathematical writing
+\usepackage{caption}
+\usepackage{subfig}
+\usepackage{float}
+\usepackage{color}
+\usepackage{adjustbox}
+\usepackage{comment}
+\usepackage{hyperref} % For hyperlinks in the PDF
+\usepackage{algorithm}% http://ctan.org/pkg/algorithms
+\usepackage{algpseudocode}% http://ctan.org/pkg/algorithmicx
+\usepackage[acronym]{glossaries} %Used for the acronyms
+\usepackage[titletoc]{appendix}
+
+% Definitions of handy macros can go here
+
+\newcommand{\dataset}{{\cal D}}
+\newcommand{\fracpartial}[2]{\frac{\partial #1}{\partial  #2}}
+
+% Heading arguments are {volume}{year}{pages}{date submitted}{date published}{paper id}{author-full-names}
+
+\jmlrheading{18}{2018}{1-48}{07/18}{10/00}{dlaredo00a}{Laredo, Chen, Sun and Sch\"{u}tze}
+
+% Short headings should be running head and authors last names
+
+\ShortHeadings{A Neural Network-Evolutionary Computation Framework for Remaining Useful Life Estimation}{Laredo, Chen,  Sun and Sch\"{u}tze}
+\firstpageno{1}
+
+\begin{document}
+
+\title{A Neural Network-Evolutionary Computation Framework for Remaining Useful Life Estimation}
+
+\input{acronyms} %Insert acronym list
+
+%Used to not expand the first acronym
+\glsunsetall
+
+\author{\name David Laredo \email dlaredorazo@ucmerced.edu \\
+			 \name Zhaoyin Chen \email zchen@ucmerced.edu \\
+			 \name Jian-Qiao Sun \email jsun3@ucmerced.edu \\
+       \addr Department of Mechanical Engineering\\
+       University of California\\
+       Merced, Ca 95340-5200, USA
+       \AND
+       \name Oliver Sch\"{u}tze \email schuetze@cs.cinvestav.mx \\
+       \addr Department of Computer Science\\
+       CINVESTAV\\
+       Mexico City, Av. Instituto Politecnico Nacional 07360-1776, Mexico}
+
+\editor{Kevin Murphy and Bernhard Sch{\"o}lkopf}
+
+\maketitle
+
+\begin{abstract}%   <- trailing '%' for backward compatibility of .sty file
+This paper presents a data-driven framework for estimating the remaining useful life (\gls{rul}) of mechanical systems. Two major components make up the framework: a multi-layer perceptron as base regressor and an evolutionary computation algorithm for the tuning of data-related parameters. On the data side, the framework makes use of a strided time window along with a piecewise linear model to estimate the \gls{rul} label for each time window within the training sets. Tuning the data-related parameters using the optimization framework here presented allows for the use of simple regressor models, e.g. neural networks with few hidden layers and few neurons at each layer, which can in turn be deployed in environments with very limited resources such as embedded systems. The proposed method is evaluated on the publicly available \gls{cmaps} dataset. The accuracy of the proposed method is compared against other state-of-the art methods available in the literature and it is shown to perform better while making use of a simpler, compact model.
+\end{abstract}
+
+\begin{keywords}
+  Artificial Neural Networks, Moving Time Window, \gls{rul} Estimation, Prognostics, Evolutionary Algorithms
+\end{keywords}
+
+%----------------------------------------------------------------------------------------
+%	ARTICLE CONTENTS
+%----------------------------------------------------------------------------------------
+
+\input{rul_paper_intro}
+\input{rul_paper_dataset}
+%\input{rul_paper_metrics}
+%\input{rul_paper_ann}
+\input{rul_paper_method}
+\input{rul_paper_eval}
+\input{rul_paper_conclusions}
+\pagebreak
+\appendix
+%\addcontentsline{toc}{section}{Appendices}
+%\section*{Appendices}
+\input{rul_paper_appendix}
+
+%------------------------------------------------
+
+
+\vskip 0.2in
+\bibliography{../reference_rul_paper}
+
+\end{document}
