@@ -1,9 +1,9 @@
 \section{Evaluating the performance of the proposed method}
 \label{sec:rul_eval}
 
-In this section we evaluate the performance of the proposed method. The architecture of the \gls{mlp} to be used here is described in Table \ref{table:proposed_nn} and will be used throughout this section.  The \gls{mlp} was trained $10$ times for $200$ epochs each and tested in each subset of the \gls{cmaps} dataset.
+In this section we evaluate the performance of the proposed method. The architecture of the \gls{mlp} to be used throughout this section is described in Table \ref{table:proposed_nn}. The results presented here were obtained after performing $10$ different runs where each network was trained for $100$ epochs at each run and tested in each subset of the \gls{cmaps} dataset.
 
-For the first experiment, the combinations of window size $n_w$, window stride $n_s$ and early \gls{rul} $R_e$ are presented in Table \ref{table:data_params_de}.
+For the first experiment, the combinations of window-size $n_w$, window-stride $n_s$ and early \gls{rul} $R_e$ are presented in Table \ref{table:data_params_de}.
 
 \begin{table}[!htb]
 \centering
@@ -21,7 +21,7 @@ For the first experiment, the combinations of window size $n_w$, window stride $
 \label{table:data_params_de}
 \end{table}  
 
-The obtained results for $f(v)$ using the above setting are depicted in Table \ref{table:results_ann_de}. Notice that the performances obtained for datasets FD001 and FD002 improved, this is due to the fact that this time the \gls{mlp} was trained for more epochs, thus obtaining better results.
+The obtained results for $f(\nu)$ using the above setting are depicted in Table \ref{table:results_ann_de}. Notice that the performances obtained for datasets FD001 and FD002 improved with respect to those presented in Table \ref{table:tested_architectures_100} due to the fact of using a better $\nu$.
 
 \begin{table}[!htb]
 \centering
@@ -41,7 +41,7 @@ The obtained results for $f(v)$ using the above setting are depicted in Table \r
 \label{table:results_ann_de}
 \end{table}
 
-Next, the possibility of using a single set of data-related parameters for all the subsets is explored. For this experiment the $n_w$ is fixed for all of the four datasets, given that the maximum allowable window size for all datasets is $18$. Hence, the data-related chosen parameters are $v=(18, 2, 18)$, the results obtained are shown in Table \ref{table:results_ann_1}. 
+Next, the possibility of using a single set of data-related parameters for all the subsets is explored. For this experiment $n_w$ is fixed using the maximum allowable window size for all datasets, for \gls{cmaps} $n_w=18$. The data-related chosen parameters proposed for this experiment are $\nu=(18, 2, 18)$, the results $f(\nu)$ obtained are displayed in Table \ref{table:results_ann_1}. 
 
 \begin{table}[!htb]
 \centering
@@ -64,14 +64,14 @@ As can be observed, performance is decreased for subsets FD001/FD003, this indic
 
 \begin{figure}[!htb]
 \centering
-\includegraphics[width=0.7\textwidth]{../img/rmse_comparisson.png}
+\includegraphics[width=0.62\textwidth]{../img/rmse_comparisson.png}
 \caption{Comparison of \gls{rmse} results for different sets of data-related parameters.}
 \label{fig:scores_rmse}
 \end{figure}
 
 \begin{figure}[!htb]
 \centering
-\includegraphics[width=0.7\textwidth]{../img/rhs_comparisson.png}
+\includegraphics[width=0.62\textwidth]{../img/rhs_comparisson.png}
 \caption{Comparison of \gls{rhs} results for different sets of data-related parameters.}
 \label{fig:scores_rhs}
 \end{figure}
@@ -86,7 +86,7 @@ In this section the performance of the proposed method is compared against other
 	\hline	
 	Method & $e_{rms}$ \\
   	\hline
-  	ESN trained by Kalman Filter \citep{Peng2012} & 63.45\\
+  	%ESN trained by Kalman Filter \citep{Peng2012} & 63.45\\
   	Support Vector Machine Classifier \citep{Louen2013} & 29.82\\
   	Time Window Neural Network \citep{Lim2016} & 15.16\\
   	Multi-objective deep belief networks ensemble \citep{Zhang2016} & 15.04\\
@@ -98,5 +98,5 @@ In this section the performance of the proposed method is compared against other
 \label{table:results_comparison}
 \end{table}
 
-Based on the results, the proposed method performs better than the majority of the compared methods when taking into consideration the whole dataset FD001. Two methods come close to the performance of the presented approach in this paper, namely the time window \gls{ann} \citep{Lim2016} and the Networks Ensemble \citep{Zhang2016}. While the performance of both methods comes close to the results presented in this paper, the presented approach is computationally more efficient. Furthermore, the framework proposed in here is simple to understand and implement, robust, generic and light-weight, features we believe are important to highlight when comparing the proposed method against other state-of-the-art approaches.
+Based on the results, the proposed method performs better than the compared methods. Two methods come close to the performance of the presented approach in this paper, namely the time window \gls{ann} \citep{Lim2016} and the Networks Ensemble \citep{Zhang2016}. While the performance of both methods comes close to the results presented in this paper, the presented approach is computationally more efficient. Furthermore, the framework proposed in here is simple, robust, generic and light-weight, features we believe are important to highlight when comparing the proposed method against other state-of-the-art approaches.
 

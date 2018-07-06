@@ -3,7 +3,7 @@
 
 The NASA \gls{cmaps} dataset is used to evaluate performance of the proposed method. The \gls{cmaps} dataset contains simulated data produced using a model based simulation program developed by NASA. The dataset is further divided into 4 subsets composed of multi-variate temporal data obtained from 21 sensors.
 
-For each of the 4 subsets a training and a test set is provided. The training sets include run-to-failure sensor records of multiple aero-engines collected under different operational conditions and fault modes as described in Table \ref{table:cmapss}.
+For each of the 4 subsets a training and a test set are provided. The training sets include run-to-failure sensor records of multiple aero-engines collected under different operational conditions and fault modes as described in Table \ref{table:cmapss}.
 
 \begin{table}[!htb]
 \centering
@@ -24,12 +24,12 @@ For each of the 4 subsets a training and a test set is provided. The training se
 
 The data is arranged in an $n\times26$ matrix where $n$ corresponds to the number of data points in each subset. The first two variables represent the engine and cycle numbers respectively. The following three variables are operational settings which correspond to the operating conditions in Table \ref{table:cmapss} and have a substantial effect on engine performance. The remaining variables represent the 21 sensors readings that model the engine degradation throughout time.
 
-Each trajectory within the train and test trajectories is assumed to represent the life-cycle of an engine. Each engine is simulated with different initial health conditions (no faults). For each trajectory of an engine the last data entry corresponds to the moment the engine is declared faulty. On the other hand the trajectories within the test sets terminate at some point prior to failure. The aim of the regressor, e.g. \gls{mlp}, is then to predict the \gls{rul} of each engine in the test set. The actual \gls{rul} value of each test trajectories are also included in the dataset for verification purposes. Further discussion of the dataset and details on how the data is generated are given in \citep{Saxena2008}.
+Each trajectory within the train and test trajectories is assumed to represent the life-cycle of an engine. Each engine in the test set is simulated with different initial health conditions (no faults), for each trajectory of an engine the last data entry corresponds to the moment the engine is declared faulty. On the other hand the trajectories within the test sets terminate at some point prior to failure. The aim of the regressor, e.g. \gls{mlp}, is then to predict the \gls{rul} of each engine in the test set. The actual \gls{rul} value of each test trajectories are also included in the dataset for verification purposes. Further discussion of the dataset and details on how the data is generated are given in \citep{Saxena2008}.
 
 \subsection{Performance evaluation}
 \label{sec:rul_metrics}
 
-To evaluate the performance of the proposed approach on the \gls{cmaps} dataset we make use of two scoring indicators, namely the Root Mean Squared Error (\gls{rmse}) which we will address as $e_{rms}(d)$ and a score function proposed in \citep{Saxena2008} which we refer in this work as \gls{rul} Health Score (\gls{rhs}) and will be addressed as $s_{rh}(d)$. 
+To evaluate the performance of the proposed approach on the \gls{cmaps} dataset we make use of two scoring indicators, namely the Root Mean Squared Error (\gls{rmse}) which we will refer as $e_{rms}(d)$ and a score function proposed in \citep{Saxena2008} which we address in this work as \gls{rul} Health Score (\gls{rhs}) and will be referred as $s_{rh}(d)$. 
 
 \pagebreak
 
@@ -48,5 +48,5 @@ s_i &= \begin{cases}
 \end{cases}
 \label{eq:rhs}
 \end{align}
-where $N$ is the total number of testing data samples and $d = \hat{y} - y$ is the error between the estimated \gls{rul} values $\hat{y}$, and the actual \gls{rul} values $y$ for each engine within the test set. It is important to notice that $s_{rh}(d)$ penalizes late predictions more than early predictions since usually late predictions lead to more severe consequences in fields such as aerospace.
+where $N$ is the total number of testing data samples and $d = \hat{y} - y$ is the error between the estimated \gls{rul} values $\hat{y}$, and the actual \gls{rul} values $y$ for the engines within the test set. It is important to notice that $s_{rh}(d)$ penalizes late predictions more than early predictions since usually late predictions lead to more severe consequences in fields such as aerospace.
 
