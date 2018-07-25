@@ -64,34 +64,180 @@ def load_into_df(from_file):
     return df
 
 
-def get_X_y_from_df(df, time_window, features, num_units, dataset_type, stride=1):
-    """From a dataset with RUL values, create the X and y arrays using the specified time windows"""
-    
-    n_m = df.shape[0]
-    n_x = len(features)
-    
-    df_values = df[features].values
-    targets = df['RUL'].values
-    n_m = 0
-    n_X = len(features)
+def df_to_arrays_by_unit(df, time_window, features, num_units, stride=1):
+    """From a dataset with RUL values, return a list of numpy arrays for each unit"""
+
+    #n_m = 0
     df_unit_values = []
     targets_unit = []
     num_samples_unit = []
     engine_windows = []
-    
+
     engineNumbers = df['Unit Number'].unique()
-    
+
     #Count number of elements at each group so that we can create the matrix to hold them all. 
     #Also store each matrix in temporary arrays to access them faster
     for j in range(num_units):
-        
+
         i = engineNumbers[j]
         df_unit = df.loc[df['Unit Number'] == i]
         df_unit_values.append(df_unit[features].values) #is this a view or a copy of the df?
         targets_unit.append(df_unit['RUL'].values) #is this a view or a copy of the df?
         num_samples_unit.append(df_unit.shape[0])
         engine_windows.append(math.floor((df_unit.shape[0]-time_window)/stride) + 1)
-        n_m = n_m + engine_windows[-1]
+        #n_m = n_m + engine_windows[-1]
+
+    return df_unit_values, targets_unit, engine_windows
+
+
+def create_fixed_size_sequence(unit_values_list, unit_targets_list, sequence_length, padding_top=True):
+    """Given the readings for each engine, create sequences of size sequence_lenght"""
+
+    unit_values_padded = list()
+    unit_targets_padded = list()
+    feature_number = unit_values_list[0].shape[1]
+
+    for unit_values, unit_targets in zip(unit_values_list, unit_targets_list):
+
+        if padding_top == True:
+            padding_values = unit_values[0,:]
+            padding_target = unit_targets[0]
+        else:
+            padding_values = unit_values[-1,:]
+            padding_target = unit_targets[-1]
+
+        seq_len = unit_values.shape[0]
+        #print(seq_len)
+
+        #print(sequence_length)
+        #print(feature_number)
+        fixed_len_unit_values = np.empty([sequence_length, feature_number])
+        fixed_len_unit_targets = np.empty(sequence_length,)
+
+        #print(unit_values.shape)
+        #print(fixed_len_unit_values.shape)
+        #print(unit_targets.shape)
+        #print(fixed_len_unit_targets.shape)
+
+
+        if seq_len < sequence_length:   #Pad elements to matrix
+            padding_size = sequence_length-seq_len
+            padding_matrix_values = np.tile(padding_values, (padding_size,1))
+            padding_matrix_targets = np.repeat(padding_target, padding_size)
+
+            if padding_top == True:
+                #Pad elements
+                fixed_len_unit_values[:padding_size] =  padding_matrix_values
+                fixed_len_unit_targets[:padding_size] = padding_matrix_targets
+
+                #Add original elements
+                fixed_len_unit_values[padding_size:] = unit_values
+                fixed_len_unit_targets[padding_size:] = unit_targets
+            else:
+                #Add original elements
+                fixed_len_unit_values[:seq_len] = unit_values
+                fixed_len_unit_targets[:seq_len] = unit_targets
+
+                #Pad elements
+                fixed_len_unit_values[seq_len:] =  padding_matrix_values
+                fixed_len_unit_targets[seq_len:] = padding_matrix_targets
+        else:   
+            #Truncate elements from matrix
+            fixed_len_unit_values = unit_values[-sequence_length:]
+            fixed_len_unit_targets = unit_targets[-sequence_length:]
+
+        unit_values_padded.append(fixed_len_unit_values)
+        unit_targets_padded.append(fixed_len_unit_targets)
+
+    return unit_values_padded, unit_targets_padded
+
+
+def get_Sequenced_X_y_from_df(df, time_window, features, num_units, dataset_type, stride=1, sequence_length=0, strategy='augment/top'):
+    """From a dataset with RUL values, create sequenced X and y arrays using the specified time windows"""
+
+    n_m = 0
+    n_x = len(features)
+
+    padding_top = True
+
+    df_unit_values, targets_unit, _ = df_to_arrays_by_unit(df, time_window, features, num_units, stride)
+
+    sequenceLenghts = [seq.shape[0] for seq in targets_unit]
+    strategy_split = strategy.split("/")
+
+    if len(strategy_split) == 2:
+        strategy =  strategy_split[0]
+        padding = strategy_split[1]
+    else:
+        print("Unknowkn strategy applying avg and top padding")
+        strategy =  "avg"
+        padding = "top"
+
+    #The strategy for generating fixed size sequences will be either truncating or augmenting data or a mixture of both
+    if sequence_length == 0:
+        if strategy == "augment":
+            sequence_length = max(sequenceLenghts)
+            print("Increasing sequence length to " + str(sequence_length))
+        elif strategy == "reduce":
+            sequence_length = min(sequenceLenghts)
+            print("Reducing sequence length to " + str(sequence_length))
+        elif strategy == "avg":
+            sequence_length = int(sum(sequenceLenghts)/len(sequenceLenghts))
+            print("Using average sequence length " + str(sequence_length))
+        else:
+            sequence_length = int(sum(sequenceLenghts)/len(sequenceLenghts))
+            print("Unknowkn strategy, applying avg " + str(sequence_length))
+
+    if padding == "bottom":
+        padding_top = False
+
+    unit_values_padded, unit_targets_padded = create_fixed_size_sequence(df_unit_values, targets_unit, sequence_length, padding_top = padding_top)
+
+    print(unit_values_padded[0].shape)
+    print(unit_targets_padded[0].shape)
+    print(unit_values_padded[0])
+    print(unit_targets_padded[0])
+
+    num_windows = math.floor((sequence_length-time_window)/stride) + 1
+        
+    n_m = num_windows*len(targets_unit)
+    
+    #Create the numpy arrays to hold the features
+    if (dataset_type == 'train' or dataset_type == 'cross_validation'):
+        X, y = np.empty([n_m, n_x*time_window]), np.empty([n_m, 1])
+    else:
+        X, y = np.empty([num_units, n_x*time_window]), np.empty([num_units, 1])
+        
+    k = 0
+    
+    #Create the feature matrix by moving the time window for each type of engine.
+    for i in range(num_units):
+    
+        if (dataset_type == 'train' or dataset_type == 'cross_validation'):
+            for j in range(num_windows):
+
+                time_window_samples = unit_values_padded[i][j*stride:j*stride+time_window,:]
+                X[k,:] = np.squeeze(time_window_samples.reshape(1,-1))
+                y[k] = unit_targets_padded[i][j*stride+time_window-1]
+                k = k + 1
+        else:
+            time_window_samples = unit_values_padded[i][-time_window:,:]
+            X[k,:] = np.squeeze(time_window_samples.reshape(1,-1))
+            k = k + 1
+
+    return X, y
+
+
+def get_X_y_from_df(df, time_window, features, num_units, dataset_type, stride=1):
+    """From a list of numpy arrays for each unit, create non sequenced X and y arrays using the specified time windows"""
+
+    n_m = 0
+    n_x = len(features)
+
+    df_unit_values, targets_unit, engine_windows = df_to_arrays_by_unit(df, time_window, features, num_units, stride)
+
+    for num_windows in engine_windows:
+        n_m = n_m + num_windows
     
     #Create the numpy arrays to hold the features
     if (dataset_type == 'train' or dataset_type == 'cross_validation'):
@@ -119,7 +265,7 @@ def get_X_y_from_df(df, time_window, features, num_units, dataset_type, stride=1
     return X, y
 
 
-def create_windowed_data(df, selected_features, dataset_type, time_window=10, constRUL=125, stride=1, crossValidationRatio=0):
+def create_windowed_data(df, selected_features, dataset_type, time_window=10, constRUL=125, stride=1, sequenced=False, sequenceLength=0, sequence_strategy='avg/top', crossValidationRatio=0):
     """Given the dataframe, reshape the data to create the time windows"""
 
     X_crossVal, y_crossVal = None, None
@@ -136,15 +282,22 @@ def create_windowed_data(df, selected_features, dataset_type, time_window=10, co
         
         df_crossVal, rul_crossVal = generate_cross_validation_from_df(df_crossVal, time_window)
         
-        X, y = get_X_y_from_df(df_train, time_window, selected_features, num_train, 
-                               dataset_type, stride=stride)
+        if sequenced == True:
+            X, y = get_Sequenced_X_y_from_df(df_train, time_window, selected_features, num_train, dataset_type, stride=stride, 
+                sequence_length=sequenceLength, strategy=sequence_strategy)
+            
+        else:
+            X, y = get_X_y_from_df(df_train, time_window, selected_features, num_train, dataset_type, stride=stride)
         
-        X_crossVal, _ = get_X_y_from_df(df_crossVal, time_window, selected_features, num_crossVal, 
-                                        'test', stride=stride)
+        X_crossVal, _ = get_X_y_from_df(df_crossVal, time_window, selected_features, num_crossVal, 'test', stride=stride)
         
         y_crossVal = rul_crossVal
     else:
-        X, y = get_X_y_from_df(df_rul, time_window, selected_features, num_units, dataset_type, stride=stride)
+        if sequenced == True:
+            X, y = get_Sequenced_X_y_from_df(df_rul, time_window, selected_features, num_units, dataset_type, stride=stride, 
+                sequence_length=sequenceLength, strategy=sequence_strategy)
+        else:
+            X, y = get_X_y_from_df(df_rul, time_window, selected_features, num_units, dataset_type, stride=stride)
     
     return X, y, X_crossVal, y_crossVal, trimmedRUL_train
 
