@@ -38,6 +38,7 @@ class CMAPSDataHandler(SequenceDataHandler):
 		#Public properties
 		self._selected_features = selected_features
 		self._max_rul = max_rul
+		self._rectify_labels = False
 
 
 		#ReadOnly properties
@@ -110,7 +111,7 @@ class CMAPSDataHandler(SequenceDataHandler):
 		self._load_from_file = True
 
 
-	def load_data(self, verbose=0, cross_validation_ratio=0, rectify_labels = False):
+	def load_data(self, verbose=0, cross_validation_ratio=0):
 		"""Load the data using the specified parameters"""
 
 		if verbose == 1:
@@ -122,14 +123,28 @@ class CMAPSDataHandler(SequenceDataHandler):
 			return
 
 		if self._load_from_file == True:
+			print("Loading data from file")
 			self._df_train = self.load_csv_into_df(self._file_train_data)
 			self._df_test = self.load_csv_into_df(self._file_test_data)
+			self._df_train, num_units, trimmed_rul_train = self.generate_df_with_rul(self._df_train)
+		else:
+			print("Loading data from memmory")
+
+		#Reset arrays
+		"""
+		self._X_train_list = list()
+		self._X_crossVal_list = list()
+		self._X_test_list = list()
+		self._y_train_list = list()
+		self._y_crossVal_list = list()
+		self._y_test_list = list()
+		"""
 
 		#Modify properties in the parent class, and let the parent class finish the data processing
 		self._X_train_list, self._y_train_list, self._X_crossVal_list, self._y_crossVal_list = self.generate_train_arrays(cross_validation_ratio)
 		self._X_test_list = self.generate_test_arrays()
 		self._y_test_list = np.loadtxt(self._file_rul)
-		self.print_sequence_shapes()
+		#self.print_sequence_shapes()
 		self.create_sequenced_train_data()
 		self.create_sequenced_test_data()
 
@@ -146,11 +161,11 @@ class CMAPSDataHandler(SequenceDataHandler):
 			print("Error, cross validation must be between 0 and 1")
 			return
 
-		df_train, num_units, trimmed_rul_train = self.generate_df_with_rul(self._df_train)
+		df_train = self._df_train
 
 		if cross_validation_ratio != 0:
 
-			df_train, df_crossVal, num_train, num_crossVal, trimmed_rul_train, trimmed_rul_crossVal = self.split_dataFrames(df_train, trimmed_rul_train, cross_validation_ratio)
+			df_train, df_crossVal, num_train, num_crossVal = self.split_dataFrames(df_train, cross_validation_ratio)
 			df_crossVal, rul_crossVal = self.generate_cross_validation_from_df(df_crossVal, self._sequence_length)
 
 			#Create a list with the data from cv dataframe
@@ -189,8 +204,29 @@ class CMAPSDataHandler(SequenceDataHandler):
 		return X_test_list
 
 
-	def split_dataFrames(self, df, trimmed_rul, splitting_ratio):
+	def split_dataFrames(self, df, splitting_ratio):
 		"""Split the dataframes according to the indicated splitting ratio"""
+
+		num_engines = df['Unit Number'].max()
+
+		shuffled_engines = list(range(1,num_engines+1))
+		random.shuffle(shuffled_engines)
+
+		i = int(splitting_ratio*num_engines)
+		num_crossVal = i
+		num_train = num_engines - num_crossVal
+
+		crossVal_engines = shuffled_engines[:i]
+		train_engines = shuffled_engines[i:]
+
+		df_train = df[df['Unit Number'].isin(train_engines)]
+		df_crossVal = df[df['Unit Number'].isin(crossVal_engines)]
+
+		return (df_train, df_crossVal, num_train, num_crossVal)
+
+	
+	"""
+	def split_dataFrames(self, df, trimmed_rul, splitting_ratio):
 
 		num_engines = df['Unit Number'].max()
 
@@ -210,6 +246,7 @@ class CMAPSDataHandler(SequenceDataHandler):
 		df_crossVal = df[df['Unit Number'].isin(crossVal_engines)]
 
 		return (df_train, df_crossVal, num_train, num_crossVal, trimmed_rul_train, trimmed_rul_crossVal)
+	"""
 
 
 	def generate_cross_validation_from_df(self, df, sequence_length):
@@ -267,6 +304,14 @@ class CMAPSDataHandler(SequenceDataHandler):
 	@max_rul.setter
 	def max_rul(self, max_rul):
 		self._max_rul = max_rul
+
+	@property
+	def rectify_labels(self):
+		return self._rectify_labels
+
+	@rectify_labels.setter
+	def rectify_labels(self, rectify_labels):
+		self._rectify_labels = rectify_labels
 
 	#ReadOnly Properties
 	

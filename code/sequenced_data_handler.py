@@ -32,8 +32,15 @@ class SequenceDataHandler():
 		print("super init")
 
 
+	#def load_data():
+		"""This has to be implemented in the child class"""
+
+
 	def create_sequenced_train_data(self):
 		"""Create sequenced data using sequence_length and sequence_stride"""
+
+		self._X_train = None
+		self._y_train = None
 
 		n_m = 0
 		sequences_per_sample = 	list()
@@ -60,6 +67,11 @@ class SequenceDataHandler():
 
 	def create_sequenced_test_data(self):
 		"""Create sequenced data using sequence_length and sequence_stride"""
+
+		self._X_crossVal = None
+		self._X_test = None
+		self._y_crossVal = None
+		self._y_test = None
 
 		num_samples = len(self._X_test_list)
 
@@ -126,7 +138,7 @@ class SequenceDataHandler():
 		print(self._y_test_list[0])
 
 
-	def print_data(self, printTop=True):
+	def print_data(self, print_top=True):
 		"""Print the shapes of the data and the first 5 rows"""
 
 		if self.X_train is None:
@@ -148,7 +160,7 @@ class SequenceDataHandler():
 		print(self.X_test.shape)
 		print(self.y_test.shape)
 
-		if printTop == True:
+		if print_top == True:
 			print("Printing first 5 elements\n")
 			
 			print("Training data (X, y)")
