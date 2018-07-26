@@ -6,45 +6,41 @@ from math import sqrt
 
 import custom_scores
 
-from sklearn.metrics import mean_squared_error
-
 
 class TunableModel():
 
 
-	def __init__(self, modelName, model, lib_type, epochs = 250, batch_size = 512):
+	def __init__(self, model_name, model, lib_type, epochs = 250, batch_size = 512):
 
 			#public properties
-			self.epochs = epochs
-			self.batch_size = batch_size
-			self.X_test = None
-			self.X_train = None
-			self.X_crossVal = None
-			self.y_crossVal = None
-			self.y_test = None
-			self.y_train = None
+			self._epochs = epochs
+			self._batch_size = batch_size
+			self._X_test = None
+			self._X_train = None
+			self._X_crossVal = None
+			self._y_crossVal = None
+			self._y_test = None
+			self._y_train = None
 
 			#ReadOnly properties
-			self.__lib_type = lib_type
-			self.__model = model
-			self.__modelName = modelName
-			self.__scores = {}
-			self.__trainTime = None
-			self.__df_train = None
-			self.__df_test = None
-			self.__y_pred = None
+			self._lib_type = lib_type
+			self._model = model
+			self._model_name = model_name
+			self._scores = {}
+			self._train_time = None
+			self._y_predicted = None
 
 
 	
-	def changeModel(self, modelName, model, lib_type):
+	def change_model(self, model_name, model, lib_type):
 		"""Change the model"""
 
-		self.__modelName = modelName
-		self.__model = model
-		self.__lib_type = lib_type
+		self._model_name = model_name
+		self._model = model
+		self._lib_type = lib_type
 
 
-	def getModelDescription(self, plotDescription = False):
+	def get_model_description(self, plot_description = False):
 		"""Provide a description of the choosen model, if no name is provided then describe the current model"""
 		
 		print("Description for model: " + self.__modelName)
@@ -53,161 +49,169 @@ class TunableModel():
 
 			self.__model.summary()
 
-			if plotDescription == True:
-				plot_model(happyModel, to_file='HappyModel.png')
+			if plot_description == True:
+				pass
+				#plot_model(happyModel, to_file='HappyModel.png')
 				#SVG(model_to_dot(happyModel).create(prog='dot', format='svg'))
 
 
-	def trainModel(self, learningRateScheduler = None, verbose=0):
+	def train_model(self, verbose=0, learningRate_scheduler = None):
 		"""Train the current model using keras/scikit"""
 
 		startTime = time.clock()
 
-		if self.__lib_type == 'keras':
+		if self._lib_type == 'keras':
 
-			if learningRateScheduler != None:
-				self.__model.fit(x = self.X_train, y = self.y_train, epochs = self.epochs, batch_size = self.batch_size, callbacks=[learningRateScheduler], verbose=verbose)  
+			if learningRate_scheduler != None:
+				self._model.fit(x = self._X_train, y = self._y_train, epochs = self._epochs, batch_size = self._batch_size, callbacks=[learningRate_scheduler], verbose=verbose)  
 			else:
-				self.__model.fit(x = self.X_train, y = self.y_train, epochs = self.epochs, batch_size = self.batch_size, verbose=verbose)
+				self._model.fit(x = self._X_train, y = self._y_train, epochs = self._epochs, batch_size = self._batch_size, verbose=verbose)
 
-		elif self.__lib_type == 'scikit':
-			y_train = np.ravel(self.y_train)
-			self.__model.fit(X = self.X_train, y = y_train)
+		elif self._lib_type == 'scikit':
+			y_train = np.ravel(self._y_train)
+			self._model.fit(X = self._X_train, y = y_train)
 		
 		else:
 			print('Library not supported')
 
 		endTime = time.clock()
 
-		self.__trainTime = endTime - startTime
+		self._train_time = endTime - startTime
 
 
-	def predictModel(self, metrics=[], crossValidation = False):
+	def predict_model(self, metrics=[], cross_validation = False):
 		"""Evaluate the model using the metrics specified in metrics"""
 
 		i = 1
 
-		if crossValidation == True:
-			X_test = self.X_crossVal
-			y_test = self.y_crossVal
+		if cross_validation == True:
+			X_test = self._X_crossVal
+			y_test = self._y_crossVal
 		else:
-			X_test = self.X_test
-			y_test = self.y_test
+			X_test = self._X_test
+			y_test = self._y_test
 
 
 		#Predict the output labels
-		if self.__lib_type == 'keras':
-			defaultScores = self.__model.evaluate(x = X_test, y = y_test)
-			self.__y_pred = self.__model.predict(X_test)
-		elif self.__lib_type == 'scikit':
-			y_test = np.ravel(self.y_test)
-			defaultScores = self.__model.score(X = X_test, y = y_test)
-			self.__y_pred = self.__model.predict(X_test)
+		if self._lib_type == 'keras':
+			default_scores = self._model.evaluate(x = X_test, y = y_test)
+			self._y_predicted = self._model.predict(X_test)
+			self._scores["loss"] = default_scores[0]
+			default_scores.pop(0)
+		elif self._lib_type == 'scikit':
+			y_test = np.ravel(self._y_test)
+			self._scores["loss"] = self.__model.score(X = X_test, y = y_test)
+			self._y_predicted = self.__model.predict(X_test)
 		else:
 			print('Library not supported')
+
+		for i in range(len(default_scores)):
+			self._scores["score_"+str(i+1)] =  default_scores[i]
+
+
 
 	#property definition
 
 	@property
 	def X_test(self):
-		return self.__X_test
+		return self._X_test
 
 	@X_test.setter
 	def X_test(self, X_test):
-		self.__X_test = X_test
+		self._X_test = X_test
 
 	@property
 	def X_crossVal(self):
-		return self.__X_crossVal
+		return self._X_crossVal
 
 	@X_crossVal.setter
 	def X_crossVal(self, X_crossVal):
-		self.__X_crossVal = X_crossVal
+		self._X_crossVal = X_crossVal
 
 	@property
 	def X_train(self):
-		return self.__X_train
+		return self._X_train
 
 	@X_train.setter
 	def X_train(self, X_train):
-		self.__X_train = X_train
+		self._X_train = X_train
 
 	@property
 	def y_test(self):
-		return self.__y_test
+		return self._y_test
 
 	@y_test.setter
 	def y_test(self, y_test):
-		self.__y_test = y_test
+		self._y_test = y_test
 
 	@property
 	def y_crossVal(self):
-		return self.__y_crossVal
+		return self._y_crossVal
 
 	@y_crossVal.setter
 	def y_crossVal(self, y_crossVal):
-		self.__y_crossVal = y_crossVal
+		self._y_crossVal = y_crossVal
 
 	@property
 	def y_train(self):
-		return self.__y_train
+		return self._y_train
 
 	@y_train.setter
 	def y_train(self, y_train):
-		self.__y_train = y_train
+		self._y_train = y_train
 
 	@property
 	def epochs(self):
-		return self.__epochs
+		return self._epochs
 
 	@epochs.setter
 	def epochs(self, epochs):
-		self.__epochs = epochs
+		self._epochs = epochs
 
 	@property
 	def batch_size(self):
-		return self.__batch_size
+		return self._batch_size
 
 	@batch_size.setter
 	def batch_size(self, batch_size):
-		self.__batch_size = batch_size
+		self._batch_size = batch_size
 
 
 	#ReadOnlyProperties
 	@property
 	def model(self):
-		return self.__model
+		return self._model
 
 	@property
-	def modelName(self):
-		return self.__modelName
+	def model_name(self):
+		return self._model_name
 
 	@property
 	def lib_type(self):
-		return self.__lib_type
+		return self._lib_type
 
 	@property
 	def scores(self):
-		return self.__scores
+		return self._scores
 
 	@property
-	def trainTime(self):
-		return self.__trainTime
+	def train_time(self):
+		return self._train_time
 
 	@property
 	def df_train(self):
-		return self.__df_train
+		return self._df_train
 
 	@property
 	def df_test(self):
-		return self.__df_test
+		return self._df_test
 
 	@property
-	def y_pred(self):
-		return self.__y_pred
+	def y_predicted(self):
+		return self._y_predicted
 
 
-class NonSequenceTunableModel(TunableModel):
+class NonSequenceTunableModelRegression(TunableModel):
 
 		def __init__(self, model_name, model, lib_type, data_handler, data_scaler = None, epochs = 250, batch_size = 512):
 
@@ -216,6 +220,9 @@ class NonSequenceTunableModel(TunableModel):
 			#public properties
 			self._data_handler = data_handler
 			self._data_scaler = data_scaler  #Can be any scaler from scikit or using the same interface
+
+			#read only properties
+			self._y_pred_rounded = None
 
 
 		def load_data(self, verbose=0, cross_validation_ratio=0):
@@ -237,15 +244,39 @@ class NonSequenceTunableModel(TunableModel):
 				X_train = self._data_scaler.fit_transform(X_train)
 				X_test = self._data_scaler.transform(X_test)
 
-				if crossValRatio > 0:
+				if cross_validation_ratio > 0:
 					X_crossVal = self._data_scaler.transform(X_crossVal)
 
 			self._X_train = X_train
 			self._X_crossVal = X_crossVal
 			self._X_test = X_test
-			#self._y_train = np.ravel(y_train)
-			#self._y_crossVal = np.ravel(y_crossVal)
-			#self._y_test = np.ravel(y_test)
+			self._y_train = np.ravel(self._y_train)
+			self._y_crossVal = np.ravel(self._y_crossVal)
+			self._y_test = np.ravel(self._y_test)
+
+
+		def evaluate_model(self, metrics=[], cross_validation = False, round = 0):
+			"""Evaluate the performance of the model"""
+
+			self.predict_model(metrics = metrics, cross_validation = cross_validation)
+
+			self._y_predicted_rounded = self._y_predicted
+
+			if round == 1:
+				self._y_predicted_rounded = np.rint(self._y_predicted_rounded)
+			elif round == 2:
+				self._y_predicted_rounded = np.floor(self._y_predicted_rounded)
+
+			self._y_predicted_rounded =  np.ravel(self._y_predicted_rounded)
+
+			"""
+			if setLimits:               
+				y_predicted = np.clip(self.__y_pred_rounded, setLimits[0], setLimits[1])
+			"""
+
+			for metric in metrics:
+				score = custom_scores.compute_score(metric, self._y_test, self._y_predicted_rounded)
+				self._scores[metric] = score
 
 
 		def print_data(self, print_top=True):
@@ -275,31 +306,31 @@ class NonSequenceTunableModel(TunableModel):
 				
 				print("Training data (X, y)")
 				print(self._X_train[:5,:])
-				print(self._y_train[:5,:])
+				print(self._y_train[:5])
 
 				if self._X_crossVal is not None:
 					print("Cross-Validation data (X, y)")
 					print(self._X_crossVal[:5,:])
-					print(self._y_crossVal[:5,:])
+					print(self._y_crossVal[:5])
 
 				print("Testing data (X, y)")
 				print(self._X_test[:5,:])
-				print(self._y_test[:5,:])
+				print(self._y_test[:5])
 			else:
 				print("Printing last 5 elements\n")
 				
 				print("Training data (X, y)")
 				print(self._X_train[-5:,:])
-				print(self._y_train[-5:,:])
+				print(self._y_train[-5:])
 
 				if self._X_crossVal is not None:
 					print("Cross-Validation data (X, y)")
 					print(self._X_crossVal[-5:,:])
-					print(self._y_crossVal[-5:,:])
+					print(self._y_crossVal[-5:])
 
 				print("Testing data (X, y)")
 				print(self._X_test[-5:,:])
-				print(self._y_test[-5:,:])
+				print(self._y_test[-5:])
 
 
 		#Property definition
@@ -320,5 +351,11 @@ class NonSequenceTunableModel(TunableModel):
 		def data_scaler(self, data_scaler):
 			self._data_scaler = data_scaler
 
+
+		#Read only properties
+
+		@property
+		def y_predicted_rounded(self):
+			return self._y_predicted_rounded
 
 
