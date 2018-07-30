@@ -211,7 +211,7 @@ class TunableModel():
 		return self._y_predicted
 
 
-class NonSequenceTunableModelRegression(TunableModel):
+class SequenceTunableModelRegression(TunableModel):
 
 		def __init__(self, model_name, model, lib_type, data_handler, data_scaler = None, epochs = 250, batch_size = 512):
 
@@ -225,11 +225,11 @@ class NonSequenceTunableModelRegression(TunableModel):
 			self._y_pred_rounded = None
 
 
-		def load_data(self, verbose=0, cross_validation_ratio=0):
+		def load_data(self, unroll=False, cross_validation_ratio=0, verbose=0):
 			"""Load the data using the corresponding Data Handler, apply the corresponding scaling and reshape"""
 
 			#A call to the Data Handler is done, DataHandler must deliver data with shape X = (samples, features), y = (samples, size_output)
-			self._data_handler.load_data(verbose=verbose, cross_validation_ratio=cross_validation_ratio)
+			self._data_handler.load_data(unroll=unroll, verbose=verbose, cross_validation_ratio=cross_validation_ratio)
 
 			#Fill the arrays with the data from the DataHandler
 			X_train = self._data_handler.X_train
@@ -240,6 +240,10 @@ class NonSequenceTunableModelRegression(TunableModel):
 			self._y_test = self._data_handler.y_test
 
 			#Rescale the data
+
+			#Implemented in the dataHandler instead due to problems with sequenced data.
+
+			self._data_scaler = None
 			if self._data_scaler != None:
 				X_train = self._data_scaler.fit_transform(X_train)
 				X_test = self._data_scaler.transform(X_test)

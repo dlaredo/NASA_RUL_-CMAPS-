@@ -5,12 +5,13 @@ import math
 class SequenceDataHandler():
 
 	
-	def __init__(self, sequence_length, sequence_stride, feature_size):
+	def __init__(self, sequence_length, sequence_stride, feature_size, data_scaler):
 
 
 		#Public properties
 		self._sequence_length = sequence_length
 		self._sequence_stride = sequence_stride
+		self._data_scaler = data_scaler
 
 		#Read Only properties
 		self._feature_size = feature_size
@@ -28,6 +29,7 @@ class SequenceDataHandler():
 		self._y_train_list = list()
 		self._y_crossVal_list = list()
 		self._y_test_list = list()
+		self._load_data_from_origin = True
 
 		print("super init")
 
@@ -36,7 +38,7 @@ class SequenceDataHandler():
 		"""This has to be implemented in the child class"""
 
 
-	def create_sequenced_train_data(self):
+	def generate_train_data(self, unroll=True):
 		"""Create sequenced data using sequence_length and sequence_stride"""
 
 		self._X_train = None
@@ -53,49 +55,83 @@ class SequenceDataHandler():
 			num_sequences = num_sequences + n_m
 			sequences_per_sample.append(n_m)
 
-		self._X_train, self._y_train = np.empty([num_sequences, self._feature_size*self._sequence_length]), np.empty([num_sequences, 1])
+		#Different shapes for the arrays depending wether data is to be unrolled or not
+		if unroll == True:
+			self._X_train, self._y_train = np.empty([num_sequences, self._feature_size*self._sequence_length]), np.empty([num_sequences, 1])
+		else:
+			self._X_train, self._y_train = np.empty([num_sequences, self._sequence_length, self._feature_size]), np.empty([num_sequences, 1])
 
 		k = 0
 		#Create the feature matrix by moving the sequence window for each sample
 		for i in range(num_samples):
 			for j in range(sequences_per_sample[i]):
 				sequence_samples = self._X_train_list[i][j*self._sequence_stride:j*self._sequence_stride+self._sequence_length,:]
-				self._X_train[k,:] = np.squeeze(sequence_samples.reshape(1,-1)) #If I dont squeeze I may be able to get the shape needed for RNN
+
+				if unroll == True:
+					self._X_train[k,:] = np.squeeze(sequence_samples.reshape(1,-1)) #If I dont squeeze I may be able to get the shape needed for RNN
+				else:
+					self._X_train[k,:,:] = sequence_samples
+
 				self._y_train[k,:] = self._y_train_list[i][j*self._sequence_stride+self._sequence_length-1]
 				k = k + 1
 
 
-	def create_sequenced_test_data(self):
+	def generate_test_data(self, unroll=True):
 		"""Create sequenced data using sequence_length and sequence_stride"""
 
-		self._X_crossVal = None
 		self._X_test = None
-		self._y_crossVal = None
 		self._y_test = None
 
 		num_samples = len(self._X_test_list)
 
-		self._X_test, self._y_test = np.empty([num_samples, self._feature_size*self._sequence_length]), np.empty([num_samples, 1])
+		#Different shapes for the arrays depending wether data is to be unrolled or not
+		if unroll == True:
+			self._X_test, self._y_test = np.empty([num_samples, self._feature_size*self._sequence_length]), np.empty([num_samples, 1])
+		else:
+			self._X_test, self._y_test = np.empty([num_samples, self._sequence_length, self._feature_size]), np.empty([num_samples, 1])
 
 		k = 0
 		for i in range(num_samples):
 			sequence_samples = self._X_test_list[i][-self._sequence_length:,:]
-			self._X_test[k,:] = np.squeeze(sequence_samples.reshape(1,-1))
+
+			if unroll == True:
+				self._X_test[k,:] = np.squeeze(sequence_samples.reshape(1,-1))
+			else:
+				self._X_test[k,:,:] = sequence_samples
+
 			self._y_test[k,:] = self._y_test_list[i]
 			k = k + 1
 
 		#In case cross validation is enabled
 		if len(self._X_crossVal_list) != 0:
-			num_samples = len(self._X_crossVal_list)
+			self.generate_crossValidation_data()
+			
 
+	def generate_crossValidation_data(self, unroll=True):
+		"""Create sequenced data using sequence_length and sequence_stride"""
+
+		self._X_crossVal = None
+		self._y_crossVal = None
+
+		num_samples = len(self._X_crossVal_list)
+
+		#Different shapes for the arrays depending wether data is to be unrolled or not
+		if unroll == True:
 			self._X_crossVal, self._y_crossVal = np.empty([num_samples, self._feature_size*self._sequence_length]), np.empty([num_samples, 1])
+		else:
+			self._X_crossVal, self._y_crossVal = np.empty([num_samples, self._sequence_length, self._feature_size]), np.empty([num_samples, 1])
 
-			k = 0
-			for i in range(num_samples):
-				sequence_samples = self._X_crossVal_list[i][-self._sequence_length:,:]
-				self._X_crossVal[k,:] = np.squeeze(sequence_samples.reshape(1,-1))
-				self._y_crossVal[k,:] = self._y_crossVal_list[i]
-				k = k + 1
+		k = 0
+		for i in range(num_samples):
+			sequence_samples = self._X_crossVal_list[i][-self._sequence_length:,:]
+
+		if unroll == True:
+			self._X_crossVal[k,:] = np.squeeze(sequence_samples.reshape(1,-1))
+		else:
+			self._X_crossVal[k,:,:] = sequence_samples
+
+			self._y_crossVal[k,:] = self._y_crossVal_list[i]
+			k = k + 1
 
 
 	def print_sequence_shapes(self):
@@ -190,7 +226,7 @@ class SequenceDataHandler():
 			print("Testing data (X, y)")
 			print(self.X_test[-5:,:])
 			print(self.y_test[-5:,:])
-
+			
 
 
 	#Property definition
@@ -210,6 +246,15 @@ class SequenceDataHandler():
 	@sequence_stride.setter
 	def sequence_stride(self, sequence_stride):
 		self._sequence_stride = sequence_stride
+
+	@property
+	def data_scaler(self):
+		return self._data_scaler
+
+	@data_scaler.setter
+	def data_scaler(self, data_scaler):
+		self._data_scaler = data_scaler
+		self._load_data_from_origin = True
 
 	#ReadOnly Properties
 
@@ -272,4 +317,8 @@ class SequenceDataHandler():
 	@property
 	def y_test_list(self):
 		return self._y_test_list
+
+	@property
+	def reload_data_from_origin(self):
+		return self._reload_data_from_origin
 

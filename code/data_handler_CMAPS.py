@@ -33,7 +33,7 @@ class CMAPSDataHandler(SequenceDataHandler):
 
 	#Method definition
 
-	def __init__(self, data_folder, dataset_number, selected_features, max_rul, sequence_length=1, sequence_stride=1):
+	def __init__(self, data_folder, dataset_number, selected_features, max_rul, sequence_length=1, sequence_stride=1, data_scaler=None):
 
 		#Public properties
 		self._selected_features = selected_features
@@ -47,7 +47,7 @@ class CMAPSDataHandler(SequenceDataHandler):
 		self._file_train_data = data_folder+'/train_FD00'+self.dataset_number+'.txt'
 		self._file_test_data = data_folder+'/test_FD00'+self.dataset_number+'.txt'
 		self._file_rul = data_folder+'/RUL_FD00'+self.dataset_number+'.txt'
-		self._load_from_file = True
+		#self._load_from_file = True
 		
 		self._column_names = {0:'Unit Number', 1:'Cycle', 2:'Op. Settings 1', 3:'Op. Settings 2', 4:'Op. Settings 3', 5:'T2',
 			6:'T24', 7:'T30', 8:'T50', 9:'P2', 10:'P15', 11:'P30', 12:'Nf', 13:'Nc', 14:'epr', 15:'Ps30', 
@@ -60,7 +60,7 @@ class CMAPSDataHandler(SequenceDataHandler):
 		print("init")
 
 		#super init
-		super().__init__(sequence_length, sequence_stride, len(selected_features))
+		super().__init__(sequence_length=sequence_length, sequence_stride=sequence_stride, feature_size=len(selected_features), data_scaler=data_scaler)
 
 
 	def load_csv_into_df(self, file_name):
@@ -108,11 +108,12 @@ class CMAPSDataHandler(SequenceDataHandler):
 		self._file_train_data = data_folder+'/train_FD00'+self._dataset_number+'.txt'
 		self._file_test_data = data_folder+'/test_FD00'+self._dataset_number+'.txt'
 		self._file_rul = data_folder+'/RUL_FD00'+self._dataset_number+'.txt'
-		self._load_from_file = True
+		
+		self._load_data_from_origin = True
 
 
-	def load_data(self, verbose=0, cross_validation_ratio=0):
-		"""Load the data using the specified parameters"""
+	def create_dataFrames(self, verbose=0, cross_validation_ratio=0):
+		"""Load the data from the files and create the corresponding dataframes"""
 
 		if verbose == 1:
 			print("Loading data for dataset {} with window_size of {}, stride of {} and maxRUL of {}. Cros-Validation ratio {}".format(self._dataset_number, 
@@ -122,33 +123,55 @@ class CMAPSDataHandler(SequenceDataHandler):
 			print("Error, cross validation must be between 0 and 1")
 			return
 
-		if self._load_from_file == True:
-			print("Loading data from file")
-			self._df_train = self.load_csv_into_df(self._file_train_data)
-			self._df_test = self.load_csv_into_df(self._file_test_data)
-			self._df_train, num_units, trimmed_rul_train = self.generate_df_with_rul(self._df_train)
-		else:
-			print("Loading data from memmory")
+		self._df_train = self.load_csv_into_df(self._file_train_data)
+		self._df_test = self.load_csv_into_df(self._file_test_data)
+		self._df_train, num_units, trimmed_rul_train = self.generate_df_with_rul(self._df_train)
 
-		#Reset arrays
-		"""
-		self._X_train_list = list()
-		self._X_crossVal_list = list()
-		self._X_test_list = list()
-		self._y_train_list = list()
-		self._y_crossVal_list = list()
-		self._y_test_list = list()
-		"""
+		#Reescale data if data_scaler is available
+		if self._data_scaler != None:
+
+			df_cols = self._df_train.columns
+			#print(df_cols)
+			cols_normalize = self._df_train.columns.difference(['Unit Number', 'RUL'])
+			#print(cols_normalize)
+
+			#Reescale training data
+			norm_train_df = pd.DataFrame(self._data_scaler.fit_transform(self._df_train[cols_normalize]), columns=cols_normalize, index=self._df_train.index)
+			join_df = self._df_train[self._df_train.columns.difference(cols_normalize)].join(norm_train_df)
+			self._df_train = join_df.reindex(columns = df_cols)
+			#print(self._df_train.head())
+
+			#Rescale test data
+			norm_test_df = pd.DataFrame(self._data_scaler.transform(self._df_test[cols_normalize]), columns=cols_normalize, index=self._df_test.index)
+			join_df = self._df_test[self._df_test.columns.difference(cols_normalize)].join(norm_test_df)
+			self._df_test = join_df.reindex(columns = df_cols)
+			#print(self._df_test.head())
+
+
+	def create_lists(self, cross_validation_ratio=0):
+		"""From the dataframes create the lists containing the necessary data containing the samples"""
 
 		#Modify properties in the parent class, and let the parent class finish the data processing
 		self._X_train_list, self._y_train_list, self._X_crossVal_list, self._y_crossVal_list = self.generate_train_arrays(cross_validation_ratio)
 		self._X_test_list = self.generate_test_arrays()
 		self._y_test_list = np.loadtxt(self._file_rul)
-		#self.print_sequence_shapes()
-		self.create_sequenced_train_data()
-		self.create_sequenced_test_data()
 
-		self._load_from_file = False #As long as the dataframe doesnt change, there is no need to reload from file
+
+	def load_data(self, unroll=True, cross_validation_ratio=0, verbose=0):
+		"""Load the data using the specified parameters"""
+
+		if self._load_data_from_origin == True:
+			print("Loading data from file")
+			self.create_dataFrames(verbose = verbose, cross_validation_ratio = cross_validation_ratio)
+		else:
+			print("Loading data from memory")
+
+		self.create_lists(cross_validation_ratio)
+
+		self.generate_train_data(unroll)
+		self.generate_test_data(unroll)
+
+		self._load_data_from_origin = False #As long as the dataframe doesnt change, there is no need to reload from file
 
 
 	def generate_train_arrays(self, cross_validation_ratio=0):
@@ -335,9 +358,11 @@ class CMAPSDataHandler(SequenceDataHandler):
 	def file_rul(self):
 		return self._file_rul
 
+	"""	
 	@property
 	def load_from_file(self):
 		return self._load_from_file
+	"""
 
 	@property
 	def column_names(self):
