@@ -31,8 +31,6 @@ class SequenceDataHandler():
 		self._y_test_list = list()
 		self._load_data_from_origin = True
 
-		print("super init")
-
 
 	#def load_data():
 		"""This has to be implemented in the child class"""
