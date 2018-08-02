@@ -243,7 +243,7 @@ class SequenceTunableModelRegression(TunableModel):
 
 			#Implemented in the dataHandler instead due to problems with sequenced data.
 
-			self._data_scaler = None
+			#self._data_scaler = None
 			if self._data_scaler != None:
 				X_train = self._data_scaler.fit_transform(X_train)
 				X_test = self._data_scaler.transform(X_test)
