@@ -132,6 +132,22 @@ class SequenceDataHandler():
 			k = k + 1
 
 
+	"""def scale_data(self):
+		#Reescale the data using the specified data_scaler
+
+		if self._data_scaler != None:
+			X_train = self._data_scaler.fit_transform(X_train)
+			X_test = self._data_scaler.transform(X_test)
+
+			if cross_validation_ratio > 0:
+				X_crossVal = self._data_scaler.transform(X_crossVal)
+
+		self._X_train = X_train
+		self._X_crossVal = X_crossVal
+		self._X_test = X_test
+	"""
+
+
 	def print_sequence_shapes(self):
 		"""Print the shapes of the sequences"""
 
