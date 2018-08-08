@@ -8,7 +8,8 @@ import pandas as pd
 import time
 from math import sqrt
 
-from . import CMAPSAuxFunctions
+#from . import CMAPSAuxFunctions
+import CMAPSAuxFunctions
 import custom_scores
 
 from sklearn.model_selection import train_test_split
