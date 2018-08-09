@@ -88,17 +88,15 @@ class SequenceDataHandler():
 		else:
 			self._X_test, self._y_test = np.empty([num_samples, self._sequence_length, self._feature_size]), np.empty([num_samples, 1])
 
-		k = 0
 		for i in range(num_samples):
 			sequence_samples = self._X_test_list[i][-self._sequence_length:,:]
 
 			if unroll == True:
-				self._X_test[k,:] = np.squeeze(sequence_samples.reshape(1,-1))
+				self._X_test[i,:] = np.squeeze(sequence_samples.reshape(1,-1))
 			else:
-				self._X_test[k,:,:] = sequence_samples
+				self._X_test[i,:,:] = sequence_samples
 
-			self._y_test[k,:] = self._y_test_list[i]
-			k = k + 1
+			self._y_test[i,:] = self._y_test_list[i]
 
 		#In case cross validation is enabled
 		if len(self._X_crossVal_list) != 0:
@@ -119,17 +117,15 @@ class SequenceDataHandler():
 		else:
 			self._X_crossVal, self._y_crossVal = np.empty([num_samples, self._sequence_length, self._feature_size]), np.empty([num_samples, 1])
 
-		k = 0
 		for i in range(num_samples):
 			sequence_samples = self._X_crossVal_list[i][-self._sequence_length:,:]
 
-		if unroll == True:
-			self._X_crossVal[k,:] = np.squeeze(sequence_samples.reshape(1,-1))
-		else:
-			self._X_crossVal[k,:,:] = sequence_samples
+			if unroll == True:
+				self._X_crossVal[i,:] = np.squeeze(sequence_samples.reshape(1,-1))
+			else:
+				self._X_crossVal[i,:,:] = sequence_samples
 
-			self._y_crossVal[k,:] = self._y_crossVal_list[i]
-			k = k + 1
+			self._y_crossVal[i,:] = self._y_crossVal_list[i]
 
 
 	"""def scale_data(self):
