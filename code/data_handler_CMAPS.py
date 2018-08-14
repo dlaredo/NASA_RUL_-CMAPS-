@@ -152,15 +152,18 @@ class CMAPSDataHandler(SequenceDataHandler):
 				self._sequence_length, self._sequence_stride, self._max_rul, cross_validation_ratio))
 
 		if self._load_data_from_origin == True:
-			print("Loading data from file and computing dataframes")
+			if verbose == 1:
+				print("Loading data from file and computing dataframes")
 			self._df_train = self.load_csv_into_df(self._file_train_data)
 			self._df_test = self.load_csv_into_df(self._file_test_data)
 			self.create_dataFrames(verbose = verbose, cross_validation_ratio = cross_validation_ratio)
 		elif self._recompute_df == True:
-			print("Loading data from memory and recomputing dataframes")
+			if verbose == 1:
+				print("Loading data from memory and recomputing dataframes")
 			self.create_dataFrames(verbose = verbose, cross_validation_ratio = cross_validation_ratio)
 		else:
-			print("Loading data from memory without recomputing df")
+			if verbose == 1:
+				print("Loading data from memory without recomputing df")
 
 		self.create_lists(cross_validation_ratio)
 
