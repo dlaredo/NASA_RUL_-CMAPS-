@@ -116,6 +116,8 @@ def run_exhaustive_search():
 	min_max_scaler = MinMaxScaler(feature_range=(-1, 1))
 	tunable_model.data_scaler = min_max_scaler
 
+	tf.summary.FileWriter('./logs/tunable_model', K.get_session().graph)
+
 	for dataset_number in max_window_size:
 		
 		print("Results for dataset "+dataset_number)
