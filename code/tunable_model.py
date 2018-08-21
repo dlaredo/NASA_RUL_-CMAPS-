@@ -79,7 +79,7 @@ class TunableModel():
 		self._train_time = endTime - startTime
 
 
-	def predict_model(self, metrics=[], cross_validation = False):
+	def predict_model(self, cross_validation = False):
 		"""Evaluate the model using the metrics specified in metrics"""
 
 		i = 1
@@ -262,7 +262,7 @@ class SequenceTunableModelRegression(TunableModel):
 		def evaluate_model(self, metrics=[], cross_validation = False, round = 0):
 			"""Evaluate the performance of the model"""
 
-			self.predict_model(metrics = metrics, cross_validation = cross_validation)
+			self.predict_model(cross_validation = cross_validation)
 
 			self._y_predicted_rounded = self._y_predicted
 
@@ -278,8 +278,13 @@ class SequenceTunableModelRegression(TunableModel):
 				y_predicted = np.clip(self.__y_pred_rounded, setLimits[0], setLimits[1])
 			"""
 
+			if cross_validation == True:
+				y_true = self._y_crossVal
+			else:
+				y_true = self.y_test
+
 			for metric in metrics:
-				score = custom_scores.compute_score(metric, self._y_test, self._y_predicted_rounded)
+				score = custom_scores.compute_score(metric, y_true, self._y_predicted_rounded)
 				self._scores[metric] = score
 
 
