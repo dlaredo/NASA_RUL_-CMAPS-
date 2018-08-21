@@ -1,0 +1,20 @@
+%TCIDATA{LaTeXparent=0,0,RUL1.tex}
+
+\title{A Neural Network-Evolutionary Computation Framework for Remaining Useful Life Estimation\thanks{This work is supported by a grant (5~R21~HD040956-03) from the National Institute of Health.}}
+
+\author{David Laredo, Zhaoyin Chen, Oliver Sch\"utze\thanks{Department of Computer Science, CINVESTAV, Mexico City, Mexico} and J. Q. Sun\thanks{David Laredo, Zhaoyin Chen and J. Q. Sun are with the Department of Mechanical Engineering, University of California, Merced, CA 95343.}}%
+
+\markboth{IEEE Transactions on Industrial Informatics}{Shell \MakeLowercase{\textit{et al.}}: Bare Demo of IEEEtran.cls for Journals}
+
+\maketitle
+
+\begin{abstract}
+This paper presents a data-driven framework for estimating the remaining useful life (RUL) of mechanical systems. Two major components make up the framework: a multi-layer perceptron as base regressor and an evolutionary computation algorithm for the tuning of data-related parameters. On the data side, the framework makes use of a strided time window along with a piecewise linear model to estimate the RUL label for each time window within the training sets. Tuning the data-related parameters using the optimization framework here presented allows for the use of simple regressor models, e.g. neural networks with few hidden layers and few neurons at each layer, which can in turn be deployed in environments with very limited resources such as embedded systems. The proposed method is evaluated on the publicly available CMAPS dataset. The accuracy of the proposed method is compared against other state-of-the art methods available in the literature and it is shown to perform better while making use of a simpler, compact model.
+\end{abstract}
+
+
+\begin{keywords}
+artificial neural networks, moving time window, RUL estimation, CMAPS, prognostics, evolutionary algorithms
+\end{keywords}
+
+%\IEEEpeerreviewmaketitle
