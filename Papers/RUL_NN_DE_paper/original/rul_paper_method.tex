@@ -11,7 +11,7 @@ For this study we propose to use a rather simple \gls{mlp} architecture and the 
 
 The choice of the network architecture was made using an iterative process; comparing 6 different architectures, training each for $100$ iterations using a mini-batch size of $512$ and averaging their results over $10$ different runs. Two objectives were pursued: that the architecture was compact, e.g. in terms of layers and neurons within each layer and that the performance indicators were minimized. 
 
-The process for choosing the network architecture is as follows: First, chose a fixed $v$, for the next experiment let $v= (30, 1, 40)$. Next, six different \gls{ann} architectures are defined, details of the architectures are provided in Appendix \ref{sec:appendices}. For each of the six different architectures its performance is assessed using a cross-validation set from subset 1 of \gls{cmaps}. Table \ref{table:tested_architectures_100} summarizes the results for each tested architectures while Table \ref{table:proposed_nn} presents the architecture chosen for the remainder of this work. The chosen architecture provided the best compromise between compactness and performance among the rest of the tested architectures. 
+The process for choosing the network architecture is as follows: First, chose a fixed $v$, for the next experiment let $v= (30, 1, 140)$. Next, six different \gls{ann} architectures are defined, details of the architectures are provided in Appendix \ref{sec:appendices}. For each of the six different architectures its performance is assessed using a cross-validation set from subset 1 of \gls{cmaps}. Table \ref{table:tested_architectures_100} summarizes the results for each tested architectures while Table \ref{table:proposed_nn} presents the architecture chosen for the remainder of this work. The chosen architecture provided the best compromise between compactness and performance among the rest of the tested architectures. 
 
 \begin{table}[!htb]
 \centering
@@ -21,12 +21,12 @@ The process for choosing the network architecture is as follows: First, chose a 
 	& \multicolumn{4}{| c}{RMSE} & \multicolumn{4}{| c}{RHS} \\
 	Tested Architecture & Min. & Max. & Avg. & STD & Min. & Max. & Avg. & STD\\
   	\hline
-  	Architecture 1 & 15.86 & 17.26 & 16.47 & 0.43 & 5.98 & 10.06 & 7.33 & 1.11\\
-  	Architecture 2 & 15.56 & 17.15 & 16.35 & 0.65 & 6.52 & 20.11 & 4.50 & 4.50\\
-  	Architecture 3 & 16.07 & 19.18 & 17.67 & 1.12 & 6.91 & 19.18 & 12.78 & 4.72\\
-  	Architecture 4 & 15.32 & 19.99 & 17.63 & 1.48 & 5.93 & 24 & 13.54 & 6.28\\
-  	Architecture 5 & 15.70 & 17.24 & 16.37 & 0.49 & 4.84 & 8.57 & 6.35 & 1.25\\
-  	Architecture 6 & 15.58 & 16.92 & 15.95 & 0.39 & 5.44 & 7.65 & 6.38 & 0.68\\
+  	Architecture 1 & 15.51 & 17.15 & 16.22 & 0.49 & 4.60 & 7.66 & 5.98 & 0.91\\
+  	Architecture 2 & 15.24 & 16.46 & 15.87 & 0.47 & 4.07 & 6.26 & 5.29 & 0.82\\
+  	Architecture 3 & 15.77 & 17.27 & 16.15 & 0.45 & 5.11 & 8.25 & 5.93 & 0.94\\
+  	Architecture 4 & 15.13 & 17.01 & 15.97 & 0.47 & 3.90 & 7.54 & 5.65 & 1.2\\
+  	Architecture 5 & 16.39 & 17.14 & 16.81 & 0.23 & 5.19 & 6.58 & 5.98 & 0.42\\
+  	Architecture 6 & 16.42 & 17.36 & 16.87 & 0.30 & 5.15 & 7.09 & 6.12 & 0.62\\
   	\hline
 \end{tabular}
 
@@ -40,8 +40,9 @@ The process for choosing the network architecture is as follows: First, chose a 
 	\hline
 	Layer & Shape & Activation & Additional Information\\
   	\hline
-  	Fully connected & 20 & ReLU & L2 regularization factor = 0.2\\
-  	Fully connected & 1 & Linear & \\
+  	Fully connected & 20 & ReLU & L1 = 0.1, L2 = 0.2\\
+  	Fully connected & 20 & ReLU & L1 = 0.1, L2 = 0.2\\
+  	Fully connected & 1 & Linear &  L1 = 0.1, L2 = 0.2\\
   	\hline
 \end{tabular}
 \caption{Proposed Neural Network architecture}
@@ -64,7 +65,7 @@ In multivariate time-series based problems such as \gls{rul}, more information c
 
 \begin{figure}[!htb]
 \centering
-\includegraphics[width=0.9\textwidth]{img/time_window.png}
+\includegraphics[width=0.9\textwidth]{../img/time_window.png}
 \caption{Graphical depiction of the time window used in this framework.}
 \label{fig:time_window}
 \end{figure}
@@ -77,7 +78,7 @@ Different from common regression problems, the desired output value of the input
 
 \begin{figure}[!htb]
 \centering
-\includegraphics[width=0.7\textwidth]{img/test_engine.png}
+\includegraphics[width=0.7\textwidth]{../img/test_engine.png}
 \caption{Piecewise linear degradation for \gls{rul}.}
 \label{fig:piecewise_model}
 \end{figure}
@@ -124,8 +125,8 @@ The size of \gls{cmaps} dataset and the search space of $v$ allows for an exhaus
 	\hline
 	 Dataset & argmin $v$ & min $f(v)$ & argmax $v$ & max $f(v)$ & Function evals.\\
   	\hline
-  	FD001 & $\left[ 30, 1, 125 \right]$ & $17.43$ & $\left[ 19, 1, 97 \right]$ & $80.92$ & 7500\\
-  	FD002 & $\left[ 20, 1, 135 \right]$ & $36.89$ & $\left[ 19, 10, 109 \right]$ & $76.80$ & 2500\\
+  	FD001 & $\left[ 24, 1, 127 \right]$ & $15.11$ & $\left[ 25, 10, 94 \right]$ & $85.19$ & 8160\\
+  	FD002 & $\left[ 16, 1, 138 \right]$ & $30.93$ & $\left[ 17, 10, 99 \right]$ & $59.78$ & 3060\\
   	\hline
 \end{tabular}
 \caption{Exhaustive search results for subsets FD001 and F002.}
@@ -156,24 +157,6 @@ Furthermore, during the optimization process the \gls{mlp} is not trained for  $
 \label{table:de_hyperparams}
 \end{table}
 
-\begin{comment}
-\begin{table}[!htb]
-\centering
-\begin{tabular}{l l l l l}
-	\hline
-	 Dataset & Window Size $n_w$ & Window Stride $n_s$ & Early RUL $R_e$\\
-  	\hline
-  	FD001 & 26 & 2 & 100\\
-  	FD002 & 16 & 2 & 91\\
-  	FD003 & 30 & 2 & 97\\
-  	FD004 & 16 & 2 & 92\\
-  	\hline
-\end{tabular}
-\caption{Optimal data-related parameters for each subset.}
-\label{table:optimal_data_params}
-\end{table}
-\end{comment}
-
 The optimal data-related parameters for each of the subsets found by \gls{de} are shown in Table \ref{table:optimal_data_params}. As can be observed the results obtained by \gls{de} are in fact very close to the real optima (Table \ref{table:true_optimal_data_params}) in both datasets, nevertheless the computational burden is reduced by one order of magnitude when using \gls{de}. From the results in Table \ref{table:optimal_data_params} it can be observed that the maximum allowable time window is always preferred while, on the contrary, small window strides yield better results, for the case of early RUL it can be observed that larger $R_e$ are favored.
 
 \begin{table}[!htb]
@@ -182,8 +165,8 @@ The optimal data-related parameters for each of the subsets found by \gls{de} ar
 	\hline
 	 Dataset & argmin $v$ & min $f(v)$ & Function evals.\\
   	\hline
-  	FD001 & $\left[ 30, 1, 128 \right]$ & $17.78$ & 372\\
-  	FD002 & $\left[ 20, 2, 134 \right]$ & $37.65$ & 372\\
+  	FD001 & $\left[ 24, 1, 129 \right]$ & $15.24$ & 372\\
+  	FD002 & $\left[ 17, 1, 139 \right]$ & $30.95$ & 372\\
   	\hline
 \end{tabular}
 \caption{Data-related parameters for each subset obtained with Differential Evolution.}
