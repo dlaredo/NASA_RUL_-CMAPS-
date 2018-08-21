@@ -11,10 +11,10 @@ For the first experiment, the combinations of window size $n_w$, window stride $
 	\hline
 	 Dataset & $n_w$ &  $n_s$ & $R_e$\\
   	\hline
-  	FD001 & 30 & 1 & 128\\
-  	FD002 & 20 & 2 & 134\\
-  	FD003 & 30 & 1 & 128\\
-  	FD004 & 18 & 2 & 134\\
+  	FD001 & 24 & 1 & 129\\
+  	FD002 & 17 & 1 & 139\\
+  	FD003 & 24 & 1 & 129\\
+  	FD004 & 17 & 1 & 139\\
   	\hline
 \end{tabular}
 \caption{Data-related parameters for each subset as obtained by \gls{de}.}
@@ -30,18 +30,39 @@ The obtained results for $f(v)$ using the above setting are depicted in Table \r
 	& \multicolumn{4}{| c}{RMSE} & \multicolumn{4}{| c}{RHS} \\
 	Data Subset & min & max & avg & STD & min & max & avg & STD\\
   	\hline
-  	FD001 & 14.87 & 15.08 & 14.94 & 0.06 &3.65 & 3.99 & 3.86 & 0.10\\
-  	FD002 & 28.67 & 31.60 & 29.54 & 0.91 & 49.15 & 92.52 & 61 & 13.52\\
-  	FD003 & 14.55 & 16.21 & 15.05 & 0.52 & 3.88 & 4.54 & 4.17 & 0.22\\
-  	FD004 & 32.54 & 37.703 & 34.08 & 1.43 & 48.35 & 79.33 & 59.60 & 10.26\\
+  	FD001 & 14.24 & 14.57 & 14.39 & 0.11 & 3.25 & 3.58 & 3.37 & 0.11\\
+  	FD002 & 28.90 & 29.23 & 29.09 & 0.11 & 45.99 & 53.90 & 50.69 & 2.17\\
+  	FD003 & 14.74 & 16.18 & 15.42 & 0.50 & 4.36 & 6.85 & 5.33 & 0.95\\
+  	FD004 & 33.25 & 35.10 & 34.74 & 0.53 & 58.52 & 78.62 & 74.77 & 5.88\\
   	\hline
 \end{tabular}
 
-\caption{Scores for each dataset using the data-related parameters obtained by \gls{de}.}
+\caption{Scores for each dataset using the data-related parameters obtained by \gls{de} (Second architecture).}
 \label{table:results_ann_de}
 \end{table}
 
-Next, the possibility of using a single set of data-related parameters for all the subsets is explored. For this experiment the $n_w$ is fixed for all of the four datasets, given that the maximum allowable window size for all datasets is $18$. Hence, the data-related chosen parameters are $v=(18, 2, 18)$, the results obtained are shown in Table \ref{table:results_ann_1}. 
+\begin{comment}
+
+\begin{table}[!htb]
+\centering
+\begin{tabular}{l | r r r r | r r r r}
+	\hline	
+	& \multicolumn{4}{| c}{RMSE} & \multicolumn{4}{| c}{RHS} \\
+	Data Subset & min & max & avg & STD & min & max & avg & STD\\
+  	\hline
+  	FD001 & 13.57 & 15.79 & 14.71 & 0.66 & 3.17 & 4.86 & 4.01 & 0.53\\
+  	FD002 & 28.96 & 30.1 & 29.51 & 0.32 & 54.39 & 90.40 & 67.83 & 10.80\\
+  	FD003 & 13.88 & 15.89 & 14.68 & 0.81 & 3.14& 5.77 & 4.02 & 0.95\\
+  	FD004 & 29.47 & 31.18 & 30.65 & 0.49 & 32.77 & 42.40 & 37.58 & 2.78\\
+  	\hline
+\end{tabular}
+\caption{Scores for each dataset using two sets of data-related parameters (LSTM).}
+\label{table:results_lstm_1}
+\end{table}
+
+\end{comment}
+
+Next, the possibility of using a single set of data-related parameters for all the subsets is explored. For this experiment the $n_w$ is fixed for all of the four datasets, given that the maximum allowable window size for all datasets is $18$. Hence, the data-related chosen parameters are $v=(17, 1, 139)$, the results obtained are shown in Table \ref{table:results_ann_1}. 
 
 \begin{table}[!htb]
 \centering
@@ -64,14 +85,14 @@ As can be observed, performance is decreased for subsets FD001/FD003, this indic
 
 \begin{figure}[!htb]
 \centering
-\includegraphics[width=0.7\textwidth]{img/rmse_comparisson.png}
+\includegraphics[width=0.7\textwidth]{../img/rmse_comparisson.png}
 \caption{Comparison of \gls{rmse} results for different sets of data-related parameters.}
 \label{fig:scores_rmse}
 \end{figure}
 
 \begin{figure}[!htb]
 \centering
-\includegraphics[width=0.7\textwidth]{img/rhs_comparisson.png}
+\includegraphics[width=0.7\textwidth]{../img/rhs_comparisson.png}
 \caption{Comparison of \gls{rhs} results for different sets of data-related parameters.}
 \label{fig:scores_rhs}
 \end{figure}
