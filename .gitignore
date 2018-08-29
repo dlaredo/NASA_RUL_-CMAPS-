@@ -57,6 +57,9 @@ docs/_build/
 # PyBuilder
 target/
 
+#tensorflow logs
+tf_logs/
+
 code/\.ipynb_checkpoints/
 \.DS_Store
 

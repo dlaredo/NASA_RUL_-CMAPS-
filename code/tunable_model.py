@@ -63,7 +63,7 @@ class TunableModel():
 		if self._lib_type == 'keras':
 
 			if learningRate_scheduler != None:
-				self._model.fit(x = self._X_train, y = self._y_train, epochs = self._epochs, batch_size = self._batch_size, callbacks=[learningRate_scheduler], verbose=verbose)  
+				self._model.fit(x = self._X_train, y = self._y_train, epochs = self._epochs, batch_size = self._batch_size, callbacks=[learningRate_scheduler], verbose=verbose)
 			else:
 				self._model.fit(x = self._X_train, y = self._y_train, epochs = self._epochs, batch_size = self._batch_size, verbose=verbose)
 

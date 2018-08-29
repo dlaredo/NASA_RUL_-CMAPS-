@@ -12,17 +12,17 @@ class SequenceDataHandler():
 		self._sequence_length = sequence_length
 		self._sequence_stride = sequence_stride
 		self._data_scaler = data_scaler
-
-		#Read Only properties
-		self._feature_size = feature_size
-		self._df_train = None
-		self._df_test = None
 		self._X_train = None
 		self._X_crossVal = None
 		self._X_test = None
 		self._y_train = None
 		self._y_crossVal = None
 		self._y_test = None
+
+		#Read Only properties
+		self._feature_size = feature_size
+		self._df_train = None
+		self._df_test = None
 		self._X_train_list = list()
 		self._X_crossVal_list = list()
 		self._X_test_list = list()
@@ -266,6 +266,54 @@ class SequenceDataHandler():
 		self._data_scaler = data_scaler
 		self._load_data_from_origin = True
 
+	@property
+	def X_train(self):
+		return self._X_train
+
+	@X_train.setter
+	def X_train(self, X_train):
+		self._X_train = X_train
+
+	@property
+	def X_crossVal(self):
+		return self._X_crossVal
+
+	@X_crossVal.setter
+	def X_crossVal(self, X_crossVal):
+		self._X_crossVal = X_crossVal
+
+	@property
+	def X_test(self):
+		return self._X_test
+
+	@X_test.setter
+	def X_test(self, X_test):
+		self._X_test = X_test
+
+	@property
+	def y_train(self):
+		return self._y_train
+
+	@y_train.setter
+	def y_train(self, y_train):
+		self._y_train = y_train
+
+	@property
+	def y_crossVal(self):
+		return self._y_crossVal
+
+	@y_crossVal.setter
+	def y_crossVal(self, y_crossVal):
+		self._y_crossVal = y_crossVal
+
+	@property
+	def y_test(self):
+		return self._y_test
+
+	@y_test.setter
+	def y_test(self, y_test):
+		self._y_test = y_test
+
 	#ReadOnly Properties
 
 	@property
@@ -279,30 +327,6 @@ class SequenceDataHandler():
 	@property
 	def df_test(self):
 		return self._df_test
-
-	@property
-	def X_train(self):
-		return self._X_train
-
-	@property
-	def X_crossVal(self):
-		return self._X_crossVal
-
-	@property
-	def X_test(self):
-		return self._X_test
-
-	@property
-	def y_train(self):
-		return self._y_train
-
-	@property
-	def y_crossVal(self):
-		return self._y_crossVal
-
-	@property
-	def y_test(self):
-		return self._y_test
 
 	@property
 	def X_train_list(self):
