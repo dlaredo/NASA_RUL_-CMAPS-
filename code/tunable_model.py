@@ -35,7 +35,7 @@ class TunableModel():
 			self._y_predicted = None
 
 
-	
+
 	def change_model(self, model_name, model, lib_type):
 		"""Change the model"""
 
@@ -46,7 +46,7 @@ class TunableModel():
 
 	def get_model_description(self, plot_description = False):
 		"""Provide a description of the choosen model, if no name is provided then describe the current model"""
-		
+
 		print("Description for model: " + self.__modelName)
 
 		if self.__lib_type == 'keras':
@@ -80,7 +80,7 @@ class TunableModel():
 				print("A valid tensorflow session is needed to perform the training")
 			else:
 				self.train_tf(tf_session, verbose = verbose)
-		
+
 		else:
 			print('Library not supported')
 
@@ -136,7 +136,7 @@ class TunableModel():
 		total_cost = self._model['total_cost']
 		cost = self._model['cost']
 
-		
+
 		#To reset all variables
 		tf_session.run(tf.global_variables_initializer())
 		avg_cost = 0.0
@@ -148,25 +148,25 @@ class TunableModel():
 
 			cost_tot = 0.0
 			cost_reg_tot = 0.0
-			
+
 			X_batches, y_batches, total_batch = CMAPSAuxFunctions.get_minibatches(self.X_train, self.y_train, self._batch_size)
-			
+
 			#Train with the minibatches
 			for i in range(total_batch):
-				
+
 				batch_x, batch_y = X_batches[i], y_batches[i]
-				
+
 				_, c_reg, c = tf_session.run([optimizer, total_cost, cost], feed_dict={X:batch_x, y:batch_y})
 				cost_tot += c
 				cost_reg_tot += c_reg
-				
+
 			avg_cost = cost_tot/total_batch
 			avg_cost_reg = cost_reg_tot/total_batch
 
 			if verbose == 1:
 				print("Epoch:", '%04d' % (epoch+1), "cost_reg=", "{:.9f}".format(avg_cost_reg), "cost=", "{:.9f}".format(avg_cost))
 
-		print("Epoch:Final", "cost_reg=", "{:.9f}".format(avg_cost_reg), "cost=", "{:.9f}".format(avg_cost)) 
+		print("Epoch:Final", "cost_reg=", "{:.9f}".format(avg_cost_reg), "cost=", "{:.9f}".format(avg_cost))
 
 
 	def predict_tf(self, tf_session):
@@ -351,7 +351,7 @@ class SequenceTunableModelRegression(TunableModel):
 			self._y_predicted_rounded =  np.ravel(self._y_predicted_rounded)
 
 			"""
-			if setLimits:               
+			if setLimits:
 				y_predicted = np.clip(self.__y_pred_rounded, setLimits[0], setLimits[1])
 			"""
 
@@ -360,8 +360,8 @@ class SequenceTunableModelRegression(TunableModel):
 			else:
 				y_true = self.y_test
 
-			if self._lib_type == "tensorflow":
-				y_true = np.ravel(y_true)
+
+			y_true = np.ravel(y_true)
 
 			for metric in metrics:
 				score = custom_scores.compute_score(metric, y_true, self._y_predicted_rounded)
@@ -376,11 +376,11 @@ class SequenceTunableModelRegression(TunableModel):
 				return
 
 			print("Printing shapes\n")
-			
+
 			print("Training data (X, y)")
 			print(self._X_train.shape)
 			print(self._y_train.shape)
-			
+
 			if self._X_crossVal is not None:
 				print("Cross-Validation data (X, y)")
 				print(self._X_crossVal.shape)
@@ -392,7 +392,7 @@ class SequenceTunableModelRegression(TunableModel):
 
 			if print_top == True:
 				print("Printing first 5 elements\n")
-				
+
 				print("Training data (X, y)")
 				print(self._X_train[:5,:])
 				print(self._y_train[:5])
@@ -407,7 +407,7 @@ class SequenceTunableModelRegression(TunableModel):
 				print(self._y_test[:5])
 			else:
 				print("Printing last 5 elements\n")
-				
+
 				print("Training data (X, y)")
 				print(self._X_train[-5:,:])
 				print(self._y_train[-5:])
@@ -446,4 +446,3 @@ class SequenceTunableModelRegression(TunableModel):
 		@property
 		def y_predicted_rounded(self):
 			return self._y_predicted_rounded
-
