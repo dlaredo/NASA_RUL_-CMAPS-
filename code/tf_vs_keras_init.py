@@ -129,6 +129,9 @@ def train_ann_tf(tf_session, model, X_train, y_train, epochs, batch_size, displa
 	
 	#print("Model weights after variables initialization")
 	#print_tf_model_weights(sess)
+
+	print(X_train)
+	print(y_train)
 	
 	for epoch in range(epochs):
 	    
@@ -192,7 +195,7 @@ def evaluate_model(y_pred, y_true, metrics=[], round = 0):
 
 def main():
 
-	epochs = 200
+	epochs = 20
 	batch_size = 512
 	
 	#Set the seeds to 0
@@ -212,9 +215,9 @@ def main():
 	selected_features = list(features[i] for i in selected_indices-1)
 	data_folder = '../CMAPSSData'
 	
-	window_size = 24
+	window_size = 30
 	window_stride = 1
-	max_rul = 129
+	max_rul = 128
 	
 	min_max_scaler = MinMaxScaler(feature_range=(-1, 1))
 	
