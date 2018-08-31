@@ -141,8 +141,8 @@ class TunableModel():
 		tf_session.run(tf.global_variables_initializer())
 		avg_cost = 0.0
 
-		print(self.X_train)
-		print(self.y_train)
+		#print(self.X_train)
+		#print(self.y_train)
 
 		for epoch in range(self.epochs):
 
