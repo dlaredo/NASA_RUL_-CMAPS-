@@ -464,11 +464,11 @@ The obtained results for $f(v)$ using the above setting are depicted in Table \r
   	\hline
 \end{tabular}
 
-\caption{Scores for each dataset using the data-related parameters obtained by DE (Second architecture).}
+\caption{Scores for each dataset using the data-related parameters obtained by DE.}
 \label{table:results_ann_de}
 \end{table}
 
-%\begin{comment}
+\begin{comment}
 
 \begin{table}[!htb]
 \centering
@@ -487,7 +487,7 @@ The obtained results for $f(v)$ using the above setting are depicted in Table \r
 \label{table:results_lstm_1}
 \end{table}
 
-%\end{comment}
+\end{comment}
 
 Next, the possibility of using a single set of data-related parameters for all the subsets is explored. For this experiment the $n_w$ is fixed for all of the four datasets, given that the maximum allowable window size for all datasets is $18$. Hence, the data-related chosen parameters are $v=(17, 1, 139)$, the results obtained are shown in Table \ref{table:results_ann_1}. 
 
@@ -539,7 +539,7 @@ In this section the performance of the proposed method is compared against other
   	Time Window Neural Network \cite{Lim2016} & 15.16\\
   	Multi-objective deep belief networks ensemble \cite{Zhang2016} & 15.04\\
   	Deep Convolutional Neural Network \cite{Babu2016} & 18.45\\
-  	\textbf{Proposed method with $n_w = 30$, $n_s=1$ and $R_e = 128$} & 14.87\\
+  	\textbf{Proposed method with $n_w = 24$, $n_s=1$ and $R_e = 129$} & 14.24\\
   	\hline
 \end{tabular}
 \caption{Performance comparisons of the proposed method and the latest related papers on the CMAPS dataset.}
