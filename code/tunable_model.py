@@ -63,13 +63,20 @@ class TunableModel():
 		"""Train the current model using keras/scikit"""
 
 		startTime = time.clock()
+		training_callbacks = []
 
 		if self._lib_type == 'keras':
 
 			if learningRate_scheduler != None:
-				self._model.fit(x = self._X_train, y = self._y_train, epochs = self._epochs, batch_size = self._batch_size, callbacks=[learningRate_scheduler], verbose=verbose)
+				training_callbacks.append(learningRate_scheduler)
+			
+			if self._X_crossVal is not None:
+				print("training with cv")
+				val_data = (self._X_crossVal, self._y_crossVal)
+				self._model.fit(x = self._X_train, y = self._y_train, epochs = self._epochs, batch_size = self._batch_size, callbacks=training_callbacks, verbose=verbose, validation_data=val_data)
 			else:
-				self._model.fit(x = self._X_train, y = self._y_train, epochs = self._epochs, batch_size = self._batch_size, verbose=verbose)
+				print("training without cv")
+				self._model.fit(x = self._X_train, y = self._y_train, epochs = self._epochs, batch_size = self._batch_size, callbacks=training_callbacks, verbose=verbose)
 
 		elif self._lib_type == 'scikit':
 			y_train = np.ravel(self._y_train)
