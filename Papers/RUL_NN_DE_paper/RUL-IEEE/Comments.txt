@@ -1,0 +1,55 @@
+- My only main question is regarding the problem that is stated in
+ Eq. 4: is it true that ONE vector v has to be selected, or are
+ there some of them? In the first case, the problem is indeed
+ restricted to Z^3, in the latter case it will be Z^{3l} where
+ l is the number of v's that have to be chosen.
+ In the first case, the domain will consist of bx10x50 = 500b
+ elements. From Table IV I see that the max. value of b is
+ 30, leading to a domain consisting of 15,000 elements.
+ Instead of an exhaustive search, we will use 12 individuals for
+ 30 generations. Counting 3 times the number of the population size
+ to obtain the new population, we can roughly estimate the number
+ of function calls by 1,000 for a DE run. That is, we have a saving
+ of a factor of 15. Is that correct?
+ We may leave the text as it is, but will have to discuss that
+ in case one of the reviewers will ask for it.
+ Another issue is that reviewers might ask why we have chosen for
+ DE. In the worst case, they might ask for comparisons against
+ other EAs. Also here, we can wait for the comments and see what we
+ have to do. But we shall be prepared for this request, as we will
+ have little time for the preparation of the revision.
+
+In what follows are my comments on other issues, mainly typos and
+suggestion for rewording. All minor.
+
+- title: maybe it is better to write Aircraft EngineS (plural)
+
+- page 2, col. 2, line 12: "as follows:"
+
+- references to tables and figures are incomplete
+
+- page 4: we mention the Appendix. Not sure about the page limit of
+ this journal. We have a submission to another IEEE journal, and
+ there the limit is 11. That is, we have to put all this into
+ a supplementary file. Maybe we will have to do the same here.
+
+- page 4, col. 2, line 17: raging --> raNging
+
+- page 5, line 10 of Sec. III.C: maybe we change "the intervals are integer"
+ to "where all variables are restricted to integer values"
+
+- page 5, col. 1, line -4: "the optimization problem" --> "this
+optimization problem"
+
+- Algorithm 1: in the input, v is now defined as vector in Z^n, I think
+ this is a mistake
+
+- page 7, line 12: better write DE without brackets, as else the
+ reader could think that DE is the acronym for evolutionary algorithms.
+
+- page 9, my description: best to have it analog to the description of
+ JQ. Please add
+ He serves as Editor-in-Chief of Mathematical and Computational
+ Applications by MDPI. His research interests include the design
+ and analysis of numerical and evolutionary optimization algorithms.
+
