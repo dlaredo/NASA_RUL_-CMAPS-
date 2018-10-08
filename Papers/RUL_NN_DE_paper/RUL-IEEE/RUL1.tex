@@ -214,9 +214,9 @@ source code is publicly available at the git repository \url{https://github.com/
 The choice of the network architecture is made by following an iterative
 process: comparing 6 different architectures, training each for $100$
 iterations using a mini-batch size of $512$ and averaging their results over
-$10$ different runs. Two objectives are pursued during the iterations: 1) the
-architecture must be minimal in terms of layers and neurons in each layer and
-2) the performance indicators must be minimized.
+$10$ different runs. Also L1 (Lasso) and L2 regularization (Ridge) \cite{Buhlmann2011} are used to prevent overfitting. 
+Two objectives are pursued during the iterations: 1) the architecture must be minimal in 
+terms of layers and neurons in each layer and 2) the performance indicators must be minimized.
 
 The process for choosing the network architecture is as follows. First, choose
 a $v$ for the experiment, say $v= (30, 1, 140)$. Next, six different ANN
