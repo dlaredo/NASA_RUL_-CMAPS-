@@ -84,3 +84,5 @@ code/\.ipynb_checkpoints/
 *.out
 
 code/testFile\.txt
+
+*.DESKTOP-1HD7NSA

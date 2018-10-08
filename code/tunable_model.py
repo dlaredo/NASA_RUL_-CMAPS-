@@ -1,15 +1,16 @@
+import os
 import numpy as np
 import random
 import pandas as pd
 import time
 import tensorflow as tf
+from keras.callbacks import TensorBoard
 
 from math import sqrt
 
 import custom_scores
 
 import CMAPSAuxFunctions
-
 
 class TunableModel():
 
@@ -59,7 +60,7 @@ class TunableModel():
 				#SVG(model_to_dot(happyModel).create(prog='dot', format='svg'))
 
 
-	def train_model(self, verbose=0, learningRate_scheduler = None, tf_session=None):
+	def train_model(self, verbose=0, learningRate_scheduler = None, tf_session=None, tensorboard=None):
 		"""Train the current model using keras/scikit"""
 
 		startTime = time.clock()
@@ -69,6 +70,10 @@ class TunableModel():
 
 			if learningRate_scheduler != None:
 				training_callbacks.append(learningRate_scheduler)
+			#to visliaze tensorboard
+			if tensorboard != None:
+				training_callbacks.append(tensorboard)
+				#tf.summary.FileWriter(logdir = "logs/viv_log")
 			
 			if self._X_crossVal is not None:
 				print("training with cv")
@@ -346,6 +351,8 @@ class SequenceTunableModelRegression(TunableModel):
 		def evaluate_model(self, metrics=[], cross_validation = False, round = 0, tf_session=None):
 			"""Evaluate the performance of the model"""
 
+			#tf.summary.FileWriter(logdir = "logs/viv_log")
+            
 			self.predict_model(cross_validation = cross_validation, tf_session = tf_session)
 
 			self._y_predicted_rounded = self._y_predicted
