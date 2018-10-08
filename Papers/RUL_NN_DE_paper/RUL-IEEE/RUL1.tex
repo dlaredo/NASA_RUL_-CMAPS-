@@ -339,7 +339,9 @@ performed to find the true optimal values for $v$. As was the case when using
 the DE method, the MLP is only trained for $20$ epochs. Table
 \ref{table:true_optimal_data_params} shows the optimal as well as the worst
 combinations of data-related parameters and the total number of function
-evaluations used by the exhaustive search.
+evaluations used by the exhaustive search. It is important to notice that for 
+this experiment the window size was limited to be larger than or equal to $15$, 
+thus $n_w \leq 15$ for this experiment.
 
 \subsubsection{Evolutionary Algorithm for Optimal Data Parameters}
 
