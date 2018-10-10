@@ -3,16 +3,20 @@
  there some of them? In the first case, the problem is indeed
  restricted to Z^3, in the latter case it will be Z^{3l} where
  l is the number of v's that have to be chosen.
+ 
  In the first case, the domain will consist of bx10x50 = 500b
  elements. From Table IV I see that the max. value of b is
  30, leading to a domain consisting of 15,000 elements.
+
  Instead of an exhaustive search, we will use 12 individuals for
  30 generations. Counting 3 times the number of the population size
  to obtain the new population, we can roughly estimate the number
  of function calls by 1,000 for a DE run. That is, we have a saving
  of a factor of 15. Is that correct?
+
  We may leave the text as it is, but will have to discuss that
  in case one of the reviewers will ask for it.
+ 
  Another issue is that reviewers might ask why we have chosen for
  DE. In the worst case, they might ask for comparisons against
  other EAs. Also here, we can wait for the comments and see what we
