@@ -3,7 +3,7 @@
 \usepackage{cite}
 \usepackage{graphicx}
 \usepackage{graphics}
-\usepackage{geometry}
+%\usepackage{geometry}
 \usepackage{setspace}
 \usepackage{amsfonts}
 \usepackage{amssymb}
@@ -31,7 +31,7 @@
     urlcolor=black,
     citecolor=black
 }
-\geometry{left=1in,right=1in,top=1in,bottom=1in}
+%\geometry{left=1in,right=1in,top=1in,bottom=1in}
 \begin{document}
 %
 %TCIMACRO{\QSubDoc{Include IEEEHeading}{\input{IEEEHeading.tex}}}%
@@ -49,15 +49,15 @@ scheduling strategies. Such strategies are often costly and less capable of
 meeting the increasing demand of efficiency and reliability
 \cite{Gebraeel2005, Zaidan2013}. Condition based maintenance (CBM) also known
 as intelligent prognostics and health management (PHM) allows for maintenance
-based on the current health of the system, thus cutting costs and increasing
+based on the current health of the system, thus cutting down the costs and increasing
 the reliability of the system \cite{Zhao2017}. Here, we refer to prognostics
-as the estimation of remaining useful life. The remaining useful life (RUL) of
-a system can be estimated based on its historical data. This data-driven
+as the estimation of remaining useful life of a system. The remaining useful life (RUL) of
+the system can be estimated based on the historical data. This data-driven
 approach can help optimize maintenance schedules to avoid engineering failures
-and to save costs \cite{Lee2014}.
+and to save the costs \cite{Lee2014}.
 
 The existing PHM methods can be grouped into three different categories:
-model-based \cite{Yu2001} , data-driven \cite{Liu2009, Mosallam2013} and
+model-based \cite{Yu2001}, data-driven \cite{Liu2009, Mosallam2013} and
 hybrid approaches \cite{Pecht2010, Liu2012}. Model-based approaches attempt to
 incorporate physical models of the system into the estimation of the RUL. If
 the system degradation is modeled precisely, model-based approaches usually
@@ -67,9 +67,9 @@ system and having a fine-grained model of the system, which can involve
 expensive computations. On the other hand, data-driven approaches use pattern
 recognition to detect changes in system states. Data-driven approaches are
 appropriate when the understanding of the first principles of the system
-operation is not comprehensive or when the system is sufficiently complex such
-jet engines, car engines and complex machinery so that developing an accurate
-model is prohibitively difficult.
+dynamics is not comprehensive or when the system is sufficiently complex such as
+jet engines, car engines and complex machineries, for which it is prohibitively difficult 
+to develop an accurate model.
 
 Common disadvantages for the data-driven approaches are that they usually
 exhibit wider confidence intervals than model-based approaches and that a fair
@@ -87,7 +87,7 @@ confidence limits for the RUL predictions cannot be analytically provided
 \cite{Sikorska2011}, the neural network approaches are promising for
 prognostic problems.
 
-Neural networks for estimating the RUL of jet engines has been previously
+Neural networks for estimating the RUL of jet engines have been previously
 explored in \cite{Lim2016} where the authors propose a multi-layer perceptron
 (MLP) coupled with a feature extraction (FE) method and a time window for the
 generation of the features for the MLP. In the publication, the authors
@@ -96,7 +96,7 @@ can improve the RUL prediction as compared with the studies with other similar
 methods in the literature. In \cite{Li2018}, the authors explore a deep
 learning ANN architecture, the so-called convolutional neural networks (CNNs),
 where they demonstrate that by using a CNN without any pooling layers coupled
-with a time window the predicted RUL is further improved.
+with a time window, the predicted RUL is further improved.
 
 In this paper we propose a novel framework for estimating the RUL of complex
 mechanical systems. The framework consists of a MLP to estimate the RUL of the
@@ -104,7 +104,7 @@ system, coupled with an evolutionary algorithm for the fine tuning of
 data-related parameters, i.e. parameters that define the shape and quality of
 the features used by the MLP. The publicly available NASA CMAPS dataset
 \cite{CMAPS2008} is used to assess the efficiency and reliability of the
-proposed framework. This approach allows for simple and small MLP to obtain
+proposed framework. This approach allows for a simple and small MLP to obtain
 better results than those reported in the current literature while using less
 computing power.
 
@@ -125,7 +125,7 @@ model based simulation program developed by NASA. The dataset is further
 divided into 4 subsets composed of multi-variate temporal data obtained from
 21 sensors.
 
-For each of the 4 subsets a training and a test set are provided. The training
+For each of the 4 subsets, a training and a test set are provided. The training
 sets include run-to-failure sensor records of multiple aero-engines collected
 under different operational conditions and fault modes as described in Table
 \ref{TabCMAPSS}.
@@ -149,11 +149,11 @@ actual RUL values of test trajectories are also included in the dataset for
 verification. Further discussions of the dataset and details on how the data
 is generated can be found in \cite{Saxena2008}.
 
-\subsection{Performance Evaluation}
+\subsection{Performance Metrics}
 
 \label{sec:rul_metrics}
 
-To evaluate the performance of the proposed approach on the CMAPS dataset we
+To evaluate the performance of the proposed approach on the CMAPS dataset, we
 make use of two scoring indicators, namely the Root Mean Squared Error (RMSE)
 denoted as $e_{rms}(d)$ and a score proposed in \cite{Saxena2008} which we
 refer as the RUL Health Score (RHS) denoted as $s_{rh}(d)$. The two scores are
@@ -174,7 +174,7 @@ e^{\frac{d_{i}}{10}} - 1, & d_{i} \geq0,
 \end{align}
 where $N$ is the total number of samples in the test set and $d = \hat{y} - y$
 is the error between the estimated RUL values $\hat{y}$, and the actual RUL
-values $y$ for each engine within the test set. It is important to notice that
+values $y$ for each engine within the test set. It is important to note that
 $s_{rh}(d)$ penalizes late predictions more than early predictions since
 usually late predictions lead to more severe consequences in fields such as aerospace.
 
@@ -191,20 +191,20 @@ constant RUL for the early cycles of the simulation, and becomes a linearly
 decreasing function of the cycle in the remaining cycles. This is the
 so-called piecewise linear degradation model \cite{Ramasso2014}. For the test
 set, a time window is taken from the last sensor readings of the engine. The
-data is used to predict the RUL of the engine.
+data of the test set is used to predict the RUL of the engine.
 
 The window-size $n_{w}$, window-stride $n_{s}$, and early-RUL $R_{e}$ are
 data-related parameters, which for the sake of clarity and formalism in this
-study form a vector $v \in\mathbb{Z}^{3}$ such that $v = (n_{w}, n_{s},
+study, form a vector $v \in\mathbb{Z}^{3}$ such that $v = (n_{w}, n_{s},
 R_{e})$. The vector $v$ has a considerable impact on the quality of the
 predictions by the regressor. It is computationally intensive to find the best
 parameters of $v$ given the search space inherent to these parameters. In this
-paper, we propose an evolutionary algorithm to fine tune the data-related
+paper, we propose an evolutionary algorithm to optimize the data-related
 parameters $v$. The optimized parameter set $v$ allows the use of a simple
 neural network architecture while attaining better results in terms of the
 quality of the predictions compared with the results by other methods in the literature.
 
-\subsection{The Neural Network Architecture}
+\subsection{The Network Architecture}
 
 After careful examinations of the CMAPS dataset, we propose to use a rather
 simple MLP architecture for all the four subsets of the data. The
@@ -214,14 +214,17 @@ source code is publicly available at the git repository \url{https://github.com/
 The choice of the network architecture is made by following an iterative
 process: comparing 6 different architectures, training each for $100$
 iterations using a mini-batch size of $512$ and averaging their results over
-$10$ different runs. Also L1 (Lasso) and L2 regularization (Ridge) \cite{Buhlmann2011} are used to prevent overfitting. 
+$10$ different runs. Also, L1 (Lasso) and L2 regularization (Ridge) 
+\cite{Buhlmann2011} are used to prevent overfitting. L1 regularization 
+penalizes the sum of the absolute value of the weights and biases of the networks, 
+while L2 regularization penalizes the sum of the squared value of the weights and biases. 
 Two objectives are pursued during the iterations: 1) the architecture must be minimal in 
-terms of layers and neurons in each layer and 2) the performance indicators must be minimized.
+terms of layers and neurons in each layer; and 2) the performance indicators must be minimized.
 
 The process for choosing the network architecture is as follows. First, choose
 a $v$ for the experiment, say $v= (30, 1, 140)$. Next, six different ANN
-architectures are defined, details of the architectures are provided in
-Appendix \ref{sec:appendices}. For each of the six different architectures,
+architectures are defined. These architectures are provided in
+the appendix. For each of the six different architectures,
 its performance is assessed using a cross-validation set from subset 1 of
 CMAPS. Table \ref{table:tested_architectures_100} summarizes the results for
 each tested architecture, while Table \ref{table:proposed_nn} presents the
@@ -240,7 +243,7 @@ indices are $\left\lbrace 2, 3, 4, 7, 8, 9, 11, 12, 13, 14, 15, 17, 20, 21
 \right\rbrace $. The raw measurements are then used to create the strided time
 windows with window size $n_{w}$ and window stride $n_{s}$. For the training
 labels, $R_{e}$ is used at the early stages and then the RUL is linearly
-decreased. The data is also normalized to be within the range $\left[  -1,1
+decreased. The data is normalized to be within the range $\left[  -1,1
 \right]  $ using the min-max normalization.
 \begin{equation}
 \hat{x}_{i} = 2* \frac{x_{i} - min(x_{i})}{max(x_{i}) - min(x_{i})} - 1,
@@ -267,8 +270,8 @@ The use of a strided time window allows for the regressor to take advantage
 not only of the previous information, but also to control the ratio at which
 the algorithm is fed with new information. With the usual time window
 approach, only one point is updated for every new time window. The strided
-time window considered in this study allows for updating more than one points
-at the time for the algorithm to make new information with less iterations. It
+time window considered in this study allows for updating more than one point
+at the time for the algorithm to make use of the new information with less iterations. It
 is believed that the information contained in the time window with stride size
 $n_{s}>1$ is likely richer than the one contained in a time window with stride
 size $n_{s}=1$.
@@ -284,7 +287,10 @@ popular dataset, a piece-wise linear degradation model has been proposed in
 label in the early cycles, and then the RUL starts degrading linearly until it
 reaches 0 as shown in Figure \ref{FigRULinear}. The piecewise linear
 degradation assumption is used in this work. We denote the value of the RUL in
-the early cycles as $R_{e}$.
+the early cycles as $R_{e}$. Initially,  $R_{e}$ is randomly chosen between 95 and 140 
+cycles. When the difference between the cycle count in the time window and the terminating cycle 
+of the training data is less than the initial value of $R_{e}$, $R_{e}$ begins the linear 
+descent toward the terminating cycle.
 
 \subsection{Optimal Data Parameters}
 
@@ -305,10 +311,10 @@ each subset.
 
 Let $X(v)$ be the training/cross-validate/test sets parametrized by $v$ and
 used by the MLP to perform the RUL estimation. Finally, let $f(v)=e_{rms}%
-(X(v))$, recall from Equation (\ref{eq:rmse}) that $d = \hat{y} - y$ and that
+(X(v))$. Recall from Equation (\ref{eq:rmse}) that $d = \hat{y} - y$ and that
 $\hat{y}$ depends on $X(v)$. Note that one function evaluation of $f(v)$
 implies training the MLP and computing the result of Equation (\ref{eq:rmse}).
-Here we propose to fine tune $v$ as
+Here we propose to optimize $v$ such that
 \begin{equation}
 \underset{v \in\mathbb{Z}^{3}}{\mathrm{min}} f(v)
 \label{eq:optimization_problem}%
@@ -321,7 +327,8 @@ algorithm is the natural choice for this optimization problem.
 
 \subsubsection{True Optimal Data Parameters}
 
-The size of CMAPS dataset and the search space of $v$ allows for an exhaustive
+The finite size of CMAPS dataset and finite search space 
+of $v$ allow an exhaustive
 search to be performed in order to find the true optimal data-related
 parameters. We would like to emphasize that although exhaustive search is a
 possibility for CMAPS dataset, it is in no way a possibility in a more general
@@ -335,13 +342,12 @@ We should note that the subsets of the data FD001 and FD003 have similar
 features and that the subsets FD002 and FD004 have similar features. Because
 of this, we have decided to just optimize the data-related parameters by
 considering the subsets FD001 and FD002 only. An exhaustive search is
-performed to find the true optimal values for $v$. As was the case when using
-the DE method, the MLP is only trained for $20$ epochs. Table
+performed to find the true optimal values for $v$. 
+The MLP is only trained for $20$ epochs. Table
 \ref{table:true_optimal_data_params} shows the optimal as well as the worst
 combinations of data-related parameters and the total number of function
 evaluations used by the exhaustive search. It is important to notice that for 
-this experiment the window size was limited to be larger than or equal to $15$, 
-thus $n_w \leq 15$ for this experiment.
+this experiment the window size is limited to be larger than or equal to $15$.
 
 \subsubsection{Evolutionary Algorithm for Optimal Data Parameters}
 
@@ -375,77 +381,81 @@ size of $12$, which seems reasonable given the size of the search space of $v$.
 
 During the optimization, the MLP is trained only $20$ epochs. The small number
 of epochs of training the MLP is reasonable in this case because a small batch
-of data is used in the training, which allows for fast convergence.
+of data is used in the training, because we only look for the trend of the scoring indicators.
 Furthermore, it is common to observe that the parameters leading to lower
 score values in the early stages of the training are more likely to provide
-better performance after more epochs of trainings. Details about the use of
+better performance after more epochs of trainings. The settings of
 the DE algorithm to find the optimal data-related parameters are listed in
 Table \ref{table:de_hyperparams}.
 
 The optimal data-related parameters for the subsets FD001 and FD002 found by
-the DE algorithm are shown in Table \ref{table:optimal_data_params}. As can be
-observed, the results are in fact very close to the true optimal ones listed
+the DE algorithm are listed in Table \ref{table:optimal_data_params}. As can be
+observed, the results are in fact very close to the true optimal ones 
 in Table \ref{table:true_optimal_data_params} for both the subsets of the
-data. The computational burden is reduced by one order of magnitude when using
+data. The computational effort is reduced by one order of magnitude when using
 the DE method as compared to the exhaustive search for the true optimal
 parameters. From the results in Table \ref{table:optimal_data_params}, it can
 be observed that the maximum allowable time window is always preferred while,
 on the other hand, small window strides yield better results. For the case of
 early RUL, it can be observed that larger values of $R_{e}$ are favored.
 
-\subsection{The ANN-EA RUL Estimation Framework}
+\subsection{The Estimation Algorithm}
 
 Having described the major building blocks of the proposed method, we now
-introduce the complete framework in Algorithm \ref{alg:rul_framework}.
+introduce the complete framework in the form of Algorithm \ref{alg:rul_framework}.
 
-\setcounter{algorithm}{0} \begin{algorithm}[H]
-\caption{ANN-EA RUL estimation Framework}\label{alg:rul_framework}
-\textbf{Input:} Initial set of data-related parameters $v \in \mathbb{Z}^n$, Raw training/testing data $X$ and training labels $y$\\
+\setcounter{algorithm}{0} 
+\begin{algorithm}[H]
+\caption{\newline ANN-EA RUL Estimation Framework}\label{alg:rul_framework}
+\textbf{Input:} Initial set of data-related parameters $v \in \mathbb{Z}^n$, 
+Raw training/testing data $X$ and training labels $y$\\
 \textbf{Output:} Optimal set of data-related parameters $v^*$
 \begin{algorithmic}[1]
 \State Choose regressor architecture (ANN, SVM, linear/logistic regression, etc).
 \State Define $f(v)$ as in Section\ref{sec:otimal_data_params}.
-\State Optimize $f(v)$ using the preferred evolutionary algorithm, i.e. differential evolution, evolutionary strategies, genetic algorithm, etc, using the proposed guidelines from Section \ref{sec:ea_optimization_process}.
+\State Optimize $f(v)$ using the preferred evolutionary algorithm, i.e. 
+differential evolution, evolutionary strategies, genetic algorithm, etc, using the proposed 
+guidelines from Section \ref{sec:ea_optimization_process}.
 \State Use $v^*$ to train the regressor for as many epochs as needed.
 \end{algorithmic}
 \end{algorithm}
 
 
-\section{Performance Evaluation of the Proposed Method}
+\section{Evaluation of the Proposed Method}
 
 \label{sec:rul_eval}
 
-In this section we evaluate the performance of the proposed method. The
-architecture of the MLP is described in Table \ref{table:proposed_nn} and will
-be used throughout this section. The MLP was trained $10$ times for $200$
+In this section, we evaluate the performance of the proposed method. The
+architecture of the MLP is described in Table \ref{table:proposed_nn}. 
+The MLP was trained $10$ times for $200$
 epochs each and tested in each subset of the CMAPS dataset.
-
-For the first experiment, the combinations of window size $n_{w}$, window
+The combinations of the optimal window size $n_{w}$, window
 stride $n_{s}$ and early RUL $R_{e}$ are presented in Table
 \ref{table:data_params_de}.
 
-The obtained results for $f(v)$ using the above setting are depicted in Table
+The obtained results for $f(v)$ using the above setting are presented in Table
 \ref{table:results_ann_de}. Notice that the performances obtained for datasets
-FD001 and FD002 are improved. This is due to the fact that the MLP is trained
+FD001 and FD002 are improved as compared with the results 
+in Table \ref{table:optimal_data_params}. This is due to the fact that the MLP is trained
 for more epochs, thus obtaining better results.
 
-Next, the possibility of using a single set of data-related parameters for all
-the subsets is explored. For this experiment, the $n_{w}$ is fixed for all of
-the four datasets, given that the maximum allowable window size for all
-datasets is $18$. Hence, the data-related parameters are chosen as $v=(17, 1,
-139)$. The results of predictions are shown in Table \ref{table:results_ann_1}.
+%Next, the possibility of using a single set of data-related parameters for all
+%the subsets is explored. For this experiment, the $n_{w}$ is fixed for all of
+%the four datasets, given that the maximum allowable window size for all
+%datasets is $18$. Hence, the data-related parameters are chosen as $v=(17, 1,
+%139)$. The results of predictions are shown in Table \ref{table:results_ann_1}.
 
-As can be observed, the performance is decreased for the subsets FD001 and
-FD003. This indicates that larger window sizes are beneficial for this
-regression problem. Figures \ref{FigRMSEcomparison} and \ref{FigRHScomparison}
-show a comparison of the scores for each dataset by changing the data-related
-parameters.
+%As can be observed, the performance is decreased for the subsets FD001 and
+%FD003. This indicates that larger window sizes are beneficial for this
+%regression problem. Figures \ref{FigRMSEcomparison} and \ref{FigRHScomparison}
+%show a comparison of the scores for each dataset by changing the data-related
+%parameters.
 
-\subsection{Comparison with Published Works}
+%\subsection{Comparison with Published Works}
 
-In this section, the performance of the proposed method is compared against
-other state-of-the-art methods. Most of the methods chosen to compare in this
-section have only reported the results on the test set FD001 in terms of
+The performance of the proposed method is compared against
+other state-of-the-art methods. Most of the methods chosen to compare here 
+have only reported the results on the test set FD001 in terms of
 $e_{rms}$. The results are shown in Table \ref{table:results_comparison}. The
 $e_{rms}$ value of the proposed method in Table \ref{table:results_comparison}
 is the mean value of 10 independent runs. The values of other methods are
@@ -457,10 +467,10 @@ when taking into consideration the whole dataset FD001. Two existing methods
 come close to the performance of the proposed approach in this paper, namely
 the time window ANN \cite{Lim2016} and the Networks Ensemble \cite{Zhang2016}.
 While the performance of these two methods comes close to the results of the
-proposed method in this paper, the proposed method is computationally more
-efficient. Furthermore, the framework proposed in here is simple to understand
-and implement, robust, generic and light-weight. These are the features that
-are important to highlight when comparing the proposed method against other
+proposed method in this paper, the proposed method is more computationally
+efficient. Furthermore, the framework proposed herein is simple to understand
+and implement, robust, generic and light-weight. These are the features 
+important to highlight when comparing the proposed method against other
 state-of-the-art approaches.
 
 \section{Conclusions}
@@ -468,22 +478,22 @@ state-of-the-art approaches.
 \label{sec:conclusions}
 
 We have presented a novel framework for predicting the RUL of mechanical
-components. While the method was tested on the jet-engine specific dataset
+components. While the method has been tested on the jet-engine dataset
 CMAPS, the method is general enough that it can be applied to other similar
 systems. The framework makes use of a strided moving time window to generate
-the training and test sets. A shallow MLP to make the predictions of the RUL
+the training and test records. A shallow MLP to make the predictions of the RUL
 has been found to be sufficient for the current dataset. The evolutionary
 algorithm DE needs to be run just once to find the best data-related
 parameters that optimize the scoring functions. The results presented in this
 paper demonstrate that the proposed framework is accurate and computationally
 efficient, which makes this framework suitable for applications that have
-limited computational resources such as embedded systems. Furthermore, a
+limited computational resources such as embedded systems. Furthermore, the
 comparison with other state-of-the-art methods has shown that the proposed
 method is the best overall performer.
 
 Two major features of the proposed framework are its generality and
-scalability. While for this study, very specific regressors and evolutionary
-algorithms were chosen, many other combinations are possible and may be more
+scalability. While for this study, specific regressors and evolutionary
+algorithms are chosen, many other combinations are possible and may be more
 suitable for different applications. Furthermore, the framework can, in
 principle, be used for model-construction, i.e. generating the best possible
 neural network architecture tailored to a specific application.
@@ -494,7 +504,7 @@ neural network architecture tailored to a specific application.
 
 %TCIMACRO{\QSubDoc{Include IEEE Bio}{\input{IEEEBios.tex}}}%
 %BeginExpansion
-\input{IEEEBios.tex}
+%\input{IEEEBios.tex}
 %EndExpansion
 
 
@@ -769,35 +779,35 @@ FD004 & 33.25 & 35.10 & 34.74 & 0.53 & 58.52 & 78.62 & 74.77 & 5.88\\\hline
 %EndExpansion
 %
 
-%TCIMACRO{\TeXButton{Begin+Table+Center+Cap}{\begin{table}
+%%TCIMACRO{\TeXButton{Begin+Table+Center+Cap}{\begin{table}
+%%\begin{center}
+%%\caption
+%%{Scores for each dataset using the single set of data-related parameters.}}}%
+%%BeginExpansion
+%\begin{table}
 %\begin{center}
 %\caption
-%{Scores for each dataset using the single set of data-related parameters.}}}%
-%BeginExpansion
-\begin{table}
-\begin{center}
-\caption
-{Scores for each dataset using the single set of data-related parameters.}%
-%EndExpansion
+%{Scores for each dataset using the single set of data-related parameters.}%
+%%EndExpansion
+%%
 %
-
-\begin{tabular}
-[c]{l|rrrr|rrrr}\hline
-& \multicolumn{4}{|c}{RMSE} & \multicolumn{4}{|c}{RHS}\\
-Data Subset & min & max & avg & STD & min & max & avg & STD\\\hline\hline
-FD001 & 16.74 & 17.23 & 17.06 & 0.18 & 8.08 & 9.26 & 8.64 & 0.45\\
-FD002 & 29.77 & 30.12 & 29.94 & 0.11 & 54.90 & 63.53 & 58.82 & 2.39\\
-FD003 & 16.94 & 18.52 & 17.77 & 0.39 & 6.02 & 10.18 & 7.64 & 1.37\\
-FD004 & 33.95 & 35.46 & 35.14 & 0.44 & 58.71 & 67.91 & 65.78 & 2.64\\\hline
-\end{tabular}
-\label{table:results_ann_1}%
-%TCIMACRO{\TeXButton{End+Center+Table}{\end{center}
-%\end{table}}}%
-%BeginExpansion
-\end{center}
-\end{table}%
-%EndExpansion
-%
+%\begin{tabular}
+%[c]{l|rrrr|rrrr}\hline
+%& \multicolumn{4}{|c}{RMSE} & \multicolumn{4}{|c}{RHS}\\
+%Data Subset & min & max & avg & STD & min & max & avg & STD\\\hline\hline
+%FD001 & 16.74 & 17.23 & 17.06 & 0.18 & 8.08 & 9.26 & 8.64 & 0.45\\
+%FD002 & 29.77 & 30.12 & 29.94 & 0.11 & 54.90 & 63.53 & 58.82 & 2.39\\
+%FD003 & 16.94 & 18.52 & 17.77 & 0.39 & 6.02 & 10.18 & 7.64 & 1.37\\
+%FD004 & 33.95 & 35.46 & 35.14 & 0.44 & 58.71 & 67.91 & 65.78 & 2.64\\\hline
+%\end{tabular}
+%\label{table:results_ann_1}%
+%%TCIMACRO{\TeXButton{End+Center+Table}{\end{center}
+%%\end{table}}}%
+%%BeginExpansion
+%\end{center}
+%\end{table}%
+%%EndExpansion
+%%
 
 %TCIMACRO{\TeXButton{Begin+Table+Center+Cap}{\begin{table}
 %\begin{center}
@@ -821,7 +831,7 @@ Time Window Neural Network \cite{Lim2016} & 15.16\\
 Multi-objective deep belief networks ensemble \cite{Zhang2016} & 15.04\\
 Deep Convolutional Neural Network \cite{Babu2016} & 18.45\\
 \textbf{Proposed method with $n_{w}=30$, $n_{s}=1$ and $R_{e}=128$} &
-14.87\\\hline
+14.39\\\hline
 \end{tabular}
 \label{table:results_comparison}%
 
@@ -893,61 +903,61 @@ width=3.2897in
 %EndExpansion
 %
 
-%TCIMACRO{\FRAME{ftbpFU}{3.5405in}{2.2995in}{0pt}{\Qcb{Comparison of RMSE
-%results for different sets of data-related parameters.}}%
-%{\Qlb{FigRMSEcomparison}}{rmse_comparisson.png}%
-%{\special{ language "Scientific Word";  type "GRAPHIC";
-%maintain-aspect-ratio TRUE;  display "USEDEF";  valid_file "F";
-%width 3.5405in;  height 2.2995in;  depth 0pt;  original-width 5.6593in;
-%original-height 3.6599in;  cropleft "0";  croptop "1";  cropright "1";
-%cropbottom "0";
-%filename 'Figures/rmse_comparisson.png';file-properties "XNPEU";}} }%
-%BeginExpansion
-\begin{figure}
-[ptb]
-\begin{center}
-\includegraphics[
-natheight=3.659900in,
-natwidth=5.659300in,
-height=2.2995in,
-width=3.5405in
-]%
-{Figures/rmse_comparisson.png}%
-\caption{Comparison of RMSE results for different sets of data-related
-parameters.}%
-\label{FigRMSEcomparison}%
-\end{center}
-\end{figure}
-%EndExpansion
+%%TCIMACRO{\FRAME{ftbpFU}{3.5405in}{2.2995in}{0pt}{\Qcb{Comparison of RMSE
+%%results for different sets of data-related parameters.}}%
+%%{\Qlb{FigRMSEcomparison}}{rmse_comparisson.png}%
+%%{\special{ language "Scientific Word";  type "GRAPHIC";
+%%maintain-aspect-ratio TRUE;  display "USEDEF";  valid_file "F";
+%%width 3.5405in;  height 2.2995in;  depth 0pt;  original-width 5.6593in;
+%%original-height 3.6599in;  cropleft "0";  croptop "1";  cropright "1";
+%%cropbottom "0";
+%%filename 'Figures/rmse_comparisson.png';file-properties "XNPEU";}} }%
+%%BeginExpansion
+%\begin{figure}
+%[ptb]
+%\begin{center}
+%\includegraphics[
+%natheight=3.659900in,
+%natwidth=5.659300in,
+%height=2.2995in,
+%width=3.5405in
+%]%
+%{Figures/rmse_comparisson.png}%
+%\caption{Comparison of RMSE results for different sets of data-related
+%parameters.}%
+%\label{FigRMSEcomparison}%
+%\end{center}
+%\end{figure}
+%%EndExpansion
+%%
 %
-
-%TCIMACRO{\FRAME{ftbpFU}{3.5405in}{2.3013in}{0pt}{\Qcb{Comparison of RHS
-%results for different sets of data-related parameters.}}%
-%{\Qlb{FigRHScomparison}}{rhs_comparisson.png}%
-%{\special{ language "Scientific Word";  type "GRAPHIC";
-%maintain-aspect-ratio TRUE;  display "USEDEF";  valid_file "F";
-%width 3.5405in;  height 2.3013in;  depth 0pt;  original-width 5.6559in;
-%original-height 3.6599in;  cropleft "0";  croptop "1";  cropright "1";
-%cropbottom "0";
-%filename 'Figures/rhs_comparisson.png';file-properties "XNPEU";}} }%
-%BeginExpansion
-\begin{figure}
-[ptb]
-\begin{center}
-\includegraphics[
-natheight=3.659900in,
-natwidth=5.655900in,
-height=2.3013in,
-width=3.5405in
-]%
-{Figures/rhs_comparisson.png}%
-\caption{Comparison of RHS results for different sets of data-related
-parameters.}%
-\label{FigRHScomparison}%
-\end{center}
-\end{figure}
-%EndExpansion
-
+%%TCIMACRO{\FRAME{ftbpFU}{3.5405in}{2.3013in}{0pt}{\Qcb{Comparison of RHS
+%%results for different sets of data-related parameters.}}%
+%%{\Qlb{FigRHScomparison}}{rhs_comparisson.png}%
+%%{\special{ language "Scientific Word";  type "GRAPHIC";
+%%maintain-aspect-ratio TRUE;  display "USEDEF";  valid_file "F";
+%%width 3.5405in;  height 2.3013in;  depth 0pt;  original-width 5.6559in;
+%%original-height 3.6599in;  cropleft "0";  croptop "1";  cropright "1";
+%%cropbottom "0";
+%%filename 'Figures/rhs_comparisson.png';file-properties "XNPEU";}} }%
+%%BeginExpansion
+%\begin{figure}
+%[ptb]
+%\begin{center}
+%\includegraphics[
+%natheight=3.659900in,
+%natwidth=5.655900in,
+%height=2.3013in,
+%width=3.5405in
+%]%
+%{Figures/rhs_comparisson.png}%
+%\caption{Comparison of RHS results for different sets of data-related
+%parameters.}%
+%\label{FigRHScomparison}%
+%\end{center}
+%\end{figure}
+%%EndExpansion
+%
 
 \clearpage
 
@@ -957,10 +967,12 @@ parameters.}%
 
 \section*{Tested Neural Network Architectures}
 
-\label{sec:appendices}
+%\label{sec:appendices}
+\bigskip
 
 \begin{table}[tbh]
 \centering
+\caption{Proposed Neural Network architecture 1.}%
 \begin{tabular}
 [c]{llll}\hline
 Layer & Shape & Activation & Additional Information\\\hline\hline
@@ -968,12 +980,12 @@ Fully connected & 20 & ReLU & L1 = 0.1, L2 = 0.2\\
 Fully connected & 20 & ReLU & L1 = 0.1, L2 = 0.2\\
 Fully connected & 1 & Linear & L1 = 0.1, L2 = 0.2\\\hline
 \end{tabular}
-\caption{Proposed Neural Network architecture 1.}%
 \label{table:proposed_nn_1}%
 \end{table}
 
 \begin{table}[tbh]
 \centering
+\caption{Proposed Neural Network architecture 2.}%
 \begin{tabular}
 [c]{llll}\hline
 Layer & Shape & Activation & Additional Information\\\hline\hline
@@ -981,12 +993,12 @@ Fully connected & 50 & ReLU & L1 = 0.1, L2 = 0.2\\
 Fully connected & 20 & ReLU & L1 = 0.1, L2 = 0.2\\
 Fully connected & 1 & Linear & L1 = 0.1, L2 = 0.2\\\hline
 \end{tabular}
-\caption{Proposed Neural Network architecture 2.}%
 \label{table:proposed_nn_2}%
 \end{table}
 
 \begin{table}[tbh]
 \centering
+\caption{Proposed Neural Network architecture 3.}%
 \begin{tabular}
 [c]{llll}\hline
 Layer & Shape & Activation & Additional Information\\\hline
@@ -994,12 +1006,12 @@ Fully connected & 100 & ReLU & L1 = 0.1, L2 = 0.2\\
 Fully connected & 50 & ReLU & L1 = 0.1, L2 = 0.2\\
 Fully connected & 1 & Linear & L1 = 0.1, L2 = 0.2\\\hline
 \end{tabular}
-\caption{Proposed Neural Network architecture 3.}%
 \label{table:proposed_nn_3}%
 \end{table}
 
 \begin{table}[tbh]
 \centering
+\caption{Proposed Neural Network architecture 4.}%
 \begin{tabular}
 [c]{llll}\hline
 Layer & Shape & Activation & Additional Information\\\hline
@@ -1007,31 +1019,30 @@ Fully connected & 250 & ReLU & L1 = 0.1, L2 = 0.2\\
 Fully connected & 50 & ReLU & L1 = 0.1, L2 = 0.2\\
 Fully connected & 1 & Linear & L1 = 0.1, L2 = 0.2\\\hline
 \end{tabular}
-\caption{Proposed Neural Network architecture 4.}%
 \label{table:proposed_nn_4}%
 \end{table}
 
 \begin{table}[tbh]
 \centering
+\caption{Proposed Neural Network architecture 5.}%
 \begin{tabular}
 [c]{llll}\hline
 Layer & Shape & Activation & Additional Information\\\hline\hline
 Fully connected & 20 & ReLU & L1 = 0.1, L2 = 0.2\\
 Fully connected & 1 & Linear & L1 = 0.1, L2 = 0.2\\\hline
 \end{tabular}
-\caption{Proposed Neural Network architecture 5.}%
 \label{table:proposed_nn_5}%
 \end{table}
 
 \begin{table}[tbh]
 \centering
+\caption{Proposed Neural Network architecture 6.}%
 \begin{tabular}
 [c]{llll}\hline
 Layer & Shape & Activation & Additional Information\\\hline\hline
 Fully connected & 10 & ReLU & L1 = 0.1, L2 = 0.2\\
 Fully connected & 1 & Linear & L1 = 0.1, L2 = 0.2\\\hline
 \end{tabular}
-\caption{Proposed Neural Network architecture 6.}%
 \label{table:proposed_nn_6}%
 \end{table}
 \end{document}
