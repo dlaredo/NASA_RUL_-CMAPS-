@@ -7,6 +7,7 @@
 \usepackage{amssymb}
 \usepackage{geometry}%
 \usepackage{algorithm}
+\usepackage{comment}
 \usepackage{algpseudocode}%
 \setcounter{MaxMatrixCols}{30}
 %TCIDATA{OutputFilter=latex2.dll}
@@ -34,6 +35,7 @@
 \input{ElsevierHeader.tex}
 %EndExpansion
 
+%\begin{comment}
 
 \section{Introduction}
 
@@ -960,8 +962,9 @@ width=3.2897in
 \appendix
 
 
-\section*{Tested Neural Network Architectures}
+\section{Tested Neural Network Architectures}
 
+\setcounter{table}{0}
 %\label{sec:appendices}
 \bigskip
 
@@ -1041,7 +1044,6 @@ Fully connected & 1 & Linear & L1 = 0.1, L2 = 0.2\\\hline
 \label{table:proposed_nn_6}%
 \end{table}
 
-
-
+%\end{comment}
 
 \end{document}
