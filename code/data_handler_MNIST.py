@@ -8,14 +8,14 @@ from keras import layers
 from keras.datasets import mnist
 from keras.utils import np_utils
 
-from sequenced_data_handler import SequenceDataHandler
+from sklearn.model_selection import train_test_split
 
 # IP Address: 169.236.181.40
 # User: dbAdmin
 # Password: dbAdmin
 # Database: damadics
 
-class MNISTDataHandler(SequenceDataHandler):
+class MNISTDataHandler():
 
 	'''
 	TODO: column information here
@@ -24,19 +24,12 @@ class MNISTDataHandler(SequenceDataHandler):
 
 	#Method definition
 
-	def __init__(self,selected_features, sequence_length = 1, sequence_stride = 1, data_scaler = None):
+	def __init__(self):
 
 		#Public properties
 		
-		# Entire Dataset
-		self._df = None
-		self._X = None
-		self._y = None
 
 		# Splitting. This is what is used to train
-		self._df_train = None
-		self._df_test = None
-        
 		self._X_train = None
 		self._X_crossVal = None
 		self._X_test = None
@@ -45,101 +38,45 @@ class MNISTDataHandler(SequenceDataHandler):
 		self._y_test = None
 
 
-		print("init")
-
-		#super init
-		super().__init__(sequence_length=sequence_length, sequence_stride=sequence_stride, feature_size=selected_features, data_scaler=data_scaler)
-
-
 
 	# Public
-	def load_data(self, verbose = 0, cross_validation_ratio = 0, unroll = True):
+	def load_data(self, verbose = 0, cross_validation_ratio = 0, unroll=False):
+		"""Unroll just to keep compatibility with the API"""
 
 
 		# dataPoints = self._sqlsession.query(ValveReading)
 
 		if verbose == 1:
-			print("Loading data window_size of {}, stride of {}. Cros-Validation ratio {}".format(
-				self._sequence_length, self._sequence_stride, cross_validation_ratio))
+			print("Loading data. Cros-Validation ratio {}".format(cross_validation_ratio))
 
 		if cross_validation_ratio < 0 or cross_validation_ratio > 1:
 			print("Error, cross validation must be between 0 and 1")
 			return
 
-        
-        #self.train_cv_test_split(cross_validation_ratio)
-		
+		(self._X_train, self._y_train), (self._X_test, self._y_test) = mnist.load_data()
 
-		#Reset arrays
-		"""
-		self._X_train_list = list()
-		self._X_crossVal_list = list()
-		self._X_test_list = list()
-		self._y_train_list = list()
-		self._y_crossVal_list = list()
-		self._y_test_list = list()
-		"""
-#        self.create_lists(cross_validation_ratio)
-#        self.generate_train_data(unroll)
-#        self.generate_crossValidation_data(unroll)
-#        self.generate_test_data(unroll)
-
-		(self._X_train,self._y_train),(self._X_test,self._y_test) = mnist.load_data()
+		train_samples = self._X_train.shape[0]
+		test_samples = self._X_test.shape[0]
         
-		self._X_train = self._X_train.reshape(60000,784)
-		self._X_test = self._X_test.reshape(10000,784)
+		self._X_train = self._X_train.reshape(train_samples,-1)
+		self._X_test = self._X_test.reshape(test_samples,-1)
         
 		self._X_train = self._X_train.astype('float32')
 		self._X_test = self._X_test.astype('float32')
             
-		self._X_train /= 255
+		self._X_train /= 255  #scaling the features
 		self._X_test /= 255
         
 		self._y_train = np_utils.to_categorical(self._y_train,10)
 		self._y_test = np_utils.to_categorical(self._y_test,10)
 
-        
-        
-    
-#    def create_lists(self, cross_validation_ratio=0):
-#        """From the dataframes create the lists containing the necessary data containing the samples"""
-#        
-#        #Modify properties in the parent class, and let the parent class finish the data processing
-#        self._X_train_list, self._y_train_list, self._X_crossVal_list, self._y_crossVal_list = self.generate_train_arrays(cross_validation_ratio)
-#        self._X_test_list = self.generate_test_arrays()
-#        self._y_test_list = np.loadtxt(self._file_rul)
-
-
-
+		#Create cross-validation
+		if cross_validation_ratio != 0:
+			self._X_train, self._X_crossVal, self._y_train, self._y_crossVal = train_test_split(self._X_train, self._y_train, train_size=1-cross_validation_ratio)
 
         
-    
-        
-
-
 
 	#Property definition
-
-	@property
-	def df(self):
-		return self._df
-	@df.setter
-	def df(self, df):
-		self._df = df
-
-	@property
-	def X(self):
-		return self.X
-	@X.setter
-	def X(self, X):
-		self.X = X
-
-	@property
-	def y(self):
-		return self._y
-	@y.setter
-	def df(self, y):
-		self._y = y
 
 	@property
 	def X_train(self):
