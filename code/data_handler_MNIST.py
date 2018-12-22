@@ -6,6 +6,7 @@ import keras
 from keras import backend as K
 from keras import layers
 from keras.datasets import mnist
+from keras.datasets import cifar10
 from keras.utils import np_utils
 
 from sklearn.model_selection import train_test_split
@@ -53,7 +54,7 @@ class MNISTDataHandler():
 			print("Error, cross validation must be between 0 and 1")
 			return
 
-		(self._X_train, self._y_train), (self._X_test, self._y_test) = mnist.load_data()
+		(self._X_train, self._y_train), (self._X_test, self._y_test) = cifar10.load_data()
 
 		train_samples = self._X_train.shape[0]
 		test_samples = self._X_test.shape[0]
