@@ -176,7 +176,6 @@ class CMAPSDataHandler(SequenceDataHandler):
 
 		self.generate_train_data(unroll)
 		self.generate_test_data(unroll)
-		self.generate_crossValidation_data(unroll)
 
 		self._load_data_from_origin = False #As long as the dataframe nor the scaler change, there is no need to reload from file
 		self._recompute_df = False #As long as the max_rul doesnt change, there is no need to recompute the dataframes
@@ -249,8 +248,6 @@ class CMAPSDataHandler(SequenceDataHandler):
 
 		crossVal_engines = shuffled_engines[:i]
 		train_engines = shuffled_engines[i:]
-		print("cv number")        
-		print(crossVal_engines)        
 
 		df_train = df[df['Unit Number'].isin(train_engines)]
 		df_crossVal = df[df['Unit Number'].isin(crossVal_engines)]
