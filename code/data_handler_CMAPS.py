@@ -77,11 +77,10 @@ class CMAPSDataHandler(SequenceDataHandler):
 		gruoped_by_unit = df.groupby('Unit Number')
 		rul_vector = gruoped_by_unit.size().values
 		num_units = len(gruoped_by_unit)
+		trimmed_rul = rul_vector[:]
 
 		if self._max_rul > 0:
 			trimmed_rul = rul_vector - self._max_rul
-
-		#print(trimmed_rul)
 
 		df['RUL'] = df.apply(compute_training_rul, axis = 1, args = (rul_vector, self._max_rul, None))
 		#selected_features_rul = self._selected_features[:]
@@ -117,22 +116,30 @@ class CMAPSDataHandler(SequenceDataHandler):
 			return
 
 		self._df_train, num_units, trimmed_rul_train = self.generate_df_with_rul(self._df_train)
+		
+		#print(self._data_scaler)
+		#print(self._df_train.head())
 
 		#Reescale data if data_scaler is available
 		if self._data_scaler != None:
 
 			df_cols = self._df_train.columns
-			cols_normalize = self._df_train.columns.difference(['Unit Number', 'RUL'])
+			cols_normalize = self._df_train.columns.difference(['Unit Number', 'Cycle', 'RUL'])
 
 			#Reescale training data
 			norm_train_df = pd.DataFrame(self._data_scaler.fit_transform(self._df_train[cols_normalize]), columns=cols_normalize, index=self._df_train.index)
 			join_df = self._df_train[self._df_train.columns.difference(cols_normalize)].join(norm_train_df)
 			self._df_train = join_df.reindex(columns = df_cols)
 
+			print(self._df_train.head())
+
 			#Rescale test data
 			norm_test_df = pd.DataFrame(self._data_scaler.transform(self._df_test[cols_normalize]), columns=cols_normalize, index=self._df_test.index)
 			join_df = self._df_test[self._df_test.columns.difference(cols_normalize)].join(norm_test_df)
 			self._df_test = join_df.reindex(columns = df_cols)
+			self._df_test.drop(['RUL'], axis=1, inplace=True)
+
+			print(self._df_test.head())
 
 
 	def create_lists(self, cross_validation_ratio=0):
