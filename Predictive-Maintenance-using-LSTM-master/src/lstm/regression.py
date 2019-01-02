@@ -16,7 +16,7 @@ import keras
 import keras.backend as K
 from keras.layers.core import Activation
 from keras.models import Sequential,load_model
-from keras.layers import Dense, Dropout, LSTM
+from keras.layers import Dense, Dropout, CuDNNLSTM
 
 import pandas as pd
 import numpy as np
@@ -237,18 +237,18 @@ nb_features = seq_array.shape[2]
 nb_out = label_array.shape[1]
 
 model = Sequential()
-model.add(LSTM(
+model.add(CuDNNLSTM(
          input_shape=(sequence_length, nb_features),
          units=100,
          return_sequences=True))
 model.add(Dropout(0.2))
-model.add(LSTM(
+model.add(CuDNNLSTM(
           units=50,
           return_sequences=False))
 model.add(Dropout(0.2))
 model.add(Dense(units=nb_out))
 model.add(Activation("linear"))
-model.compile(loss='mean_squared_error', optimizer='rmsprop',metrics=['mae',r2_keras])
+model.compile(loss='mean_squared_error', optimizer='rmsprop',metrics=['mse','mae',r2_keras])
 
 print(model.summary())
 
@@ -333,8 +333,9 @@ if os.path.isfile(model_path):
 
     # test metrics
     scores_test = estimator.evaluate(seq_array_test_last, label_array_test_last, verbose=2)
-    print('\nMAE: {}'.format(scores_test[1]))
-    print('\nR^2: {}'.format(scores_test[2]))
+    print('\nMSE: {}'.format(scores_test[1]))
+    print('\nMAE: {}'.format(scores_test[2]))
+    print('\nR^2: {}'.format(scores_test[3]))
 
     y_pred_test = estimator.predict(seq_array_test_last)
     y_true_test = label_array_test_last
