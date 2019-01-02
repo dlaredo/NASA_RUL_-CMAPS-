@@ -48,11 +48,11 @@ class TunableModel():
 	def get_model_description(self, plot_description = False):
 		"""Provide a description of the choosen model, if no name is provided then describe the current model"""
 
-		print("Description for model: " + self.__modelName)
+		print("Description for model: " + self._model_name)
 
-		if self.__lib_type == 'keras':
+		if self._lib_type == 'keras':
 
-			self.__model.summary()
+			self._model.summary()
 
 			if plot_description == True:
 				pass
