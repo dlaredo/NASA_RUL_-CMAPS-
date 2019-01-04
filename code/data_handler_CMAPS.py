@@ -131,15 +131,11 @@ class CMAPSDataHandler(SequenceDataHandler):
 			join_df = self._df_train[self._df_train.columns.difference(cols_normalize)].join(norm_train_df)
 			self._df_train = join_df.reindex(columns = df_cols)
 
-			print(self._df_train.head())
-
 			#Rescale test data
 			norm_test_df = pd.DataFrame(self._data_scaler.transform(self._df_test[cols_normalize]), columns=cols_normalize, index=self._df_test.index)
 			join_df = self._df_test[self._df_test.columns.difference(cols_normalize)].join(norm_test_df)
 			self._df_test = join_df.reindex(columns = df_cols)
 			self._df_test.drop(['RUL'], axis=1, inplace=True)
-
-			print(self._df_test.head())
 
 
 	def create_lists(self, cross_validation_ratio=0):
