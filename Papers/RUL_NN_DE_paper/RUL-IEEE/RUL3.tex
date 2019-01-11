@@ -258,7 +258,7 @@ the \ref{appendix:tested_architectures}. For each of the six different architect
 its performance is assessed using a cross-validation set from subset 1 of
 C-MAPSS. Table \ref{table:tested_architectures_100} summarizes the results for
 each tested architecture, while Table \ref{table:proposed_nn} presents the
-architecture chosen for the remainder of this work. The chosen architecture
+architecture chosen for the remainder of this work. Each row in the table represents a neural network layer while each column describes each one of the key parameters of the layer such as the type of layer, number of neurons in the layer, activation function of the layer and whether regularization is used, where L1 denotes the L1 regularization factor and L2 denotes the L2 regularization factor, the order in which the layers are appended from the table is top-bottom. The chosen architecture
 provides the best compromise between compactness and performance among the
 tested architectures. Definitions for the used activation functions are presented in \ref{appendix:activation_definitions}.
 
@@ -266,7 +266,7 @@ tested architectures. Definitions for the used activation functions are presente
 \begin{center}
 \begin{tabular}
 [c]{llll}\hline
-Layer & Shape & Activation & Additional Information\\\hline
+Layer & Neurons & Activation & Additional Information\\\hline
 Fully connected & \multicolumn{1}{c}{20} & \multicolumn{1}{c}{ReLU} &
 $L1=0.1,L2=0.2$\\
 Fully connected & \multicolumn{1}{c}{20} & \multicolumn{1}{c}{ReLU} &
@@ -283,7 +283,7 @@ $L1=0.1,L2=0.2$\\\hline
 
 \subsection{Shaping the Data}
 
-This section covers the data preprocessing applied to the raw sensor readings in each of the datasets. Although the original datasets contain $21$ different sensor readings, some of the sensors do not present much variance or convey redundant information, our choice of the sensors is based on previous studies such as \cite{Lim2016, Li2018}. These sensors are therefore discarded. In the end, only $14$ sensor readings out of the $21$ are considered for this study. Their indices are $\left\lbrace 2, 3, 4, 7, 8, 9, 11, 12, 13, 14, 15, 17, 20, 21 \right\rbrace $. The raw measurements are then used to create the strided time windows with window-size $n_{w}$ and window-stride $n_{s}$. For the training labels, $R_{e}$ is used at the early stages and then the RUL is linearlydecreased. The data is normalized to be within the range $\left[  -1,1 \right]  $ using the min-max normalization.
+This section covers the data preprocessing applied to the raw sensor readings in each of the datasets. Although the original datasets contain $21$ different sensor readings, some of the sensors do not present much variance or convey redundant information, our choice of the sensors is based on previous studies such as \cite{Lim2016, Li2018} where it was discovered that some sensor values do not vary at all throughout the entire engine life cycle while some others are redundant according to PCA or clustering analysis. These sensors are therefore discarded. In the end, only $14$ sensor readings out of the $21$ are considered for this study. Their indices are $\left\lbrace 2, 3, 4, 7, 8, 9, 11, 12, 13, 14, 15, 17, 20, 21 \right\rbrace $. The raw measurements are then used to create the strided time windows with window-size $n_{w}$ and window-stride $n_{s}$. For the training labels, $R_{e}$ is used at the early stages and then the RUL is linearlydecreased. The data is normalized to be within the range $\left[  -1,1 \right]  $ using the min-max normalization.
 
 \begin{equation}
 \hat{x}_{i} = 2* \frac{x_{i} - min(x_{i})}{max(x_{i}) - min(x_{i})} - 1,
@@ -543,8 +543,7 @@ guidelines from Section \ref{sec:ea_optimization_process}.
 
 \subsection{Experimental settings}
 
-In this section, we evaluate the performance of the proposed method. The architecture of the MLP is described in Table \ref{table:proposed_nn}. 
-The MLP was trained $10$ times for $200$ epochs each and tested in each subset of the C-MAPSS dataset, statistics for the $10$ runs were computed.
+In this section, we evaluate the performance of the proposed method. The architecture of the MLP is described in Table \ref{table:proposed_nn}. Let us define an experiment as the process of training the MLP on any of the subsets (FD001 to FD004) and evaluate its performance using the subset's test set. We perform $10$ different experiments for each data subset, the MLP is trained for 200 epochs using the train set for the corresponding data subset and evaluated using the subset's test set. The results for each dataset subset are averaged and presented in Table \ref{table:results_ann_de}. Furthermore, the best model is saved and later used to generate the results presented in Section \ref{sec:experimental_results}.
 The combinations of the optimal window size $n_{w}$, window stride $n_{s}$ and early RUL $R_{e}$ are presented in Table \ref{table:data_params_de}. All of the experiments were run using the Keras/Tensorflow framework, an NVIDIA GeForce 1080Ti GPU was used to speed up the training process.
 
 \begin{table}[!htb]
@@ -562,6 +561,7 @@ FD004 & 17 & 1 & 139 & 238\\\hline
 \end{table}
 
 \subsection{Experimental results}
+\label{sec:experimental_results}
 
 The obtained results for $f(v)$ using the above setting are presented in Table \ref{table:results_ann_de}. Notice that the performances obtained for datasets FD001 and FD002 are improved as compared with the results in Table \ref{table:optimal_data_params}. This is due to the fact that the MLP is trained for more epochs, thus obtaining better results.
 
@@ -655,7 +655,7 @@ Two conclusions can be drawn for the previous discussion, first it can be observ
 \subsection{Comparison with other approaches}
 
 The performance of the proposed method is also compared against
-other state-of-the-art methods. Most of the methods chosen to compare here 
+other state-of-the-art methods. The methods chosen for the comparisson obey to two criteria: 1) that the method used is a machine learning (or statistical) method and 2) that the method is recent (6 years old at most). Most of the methods chosen to compare here 
 have only reported the results on the test set FD001 in terms of
 $e_{rms}$. The results are shown in Table \ref{table:results_comparison}. The
 $e_{rms}$ value of the proposed method in Table \ref{table:results_comparison}
@@ -843,12 +843,14 @@ neural network architecture tailored to a specific application.
 %\label{sec:appendices}
 \bigskip
 
+In this appendix we present the tested neural network architectures. Each table represents a neural network model. Each row in the table represents a neural network layer while each column describes each one of the key parameters of the layer such as the type of layer, number of neurons in the layer, activation function of the layer and whether regularization is used, where L1 denotes the L1 regularization factor and L2 denotes the L2 regularization factor, the order in which the layers are appended from the table is top-bottom.
+
 \begin{table}[!htb]
 \centering
 \caption{Proposed Neural Network architecture 1.}%
 \begin{tabular}
 [c]{llll}\hline
-Layer & Shape & Activation & Additional Information\\\hline\hline
+Layer & Neurons & Activation & Additional Information\\\hline\hline
 Fully connected & 20 & ReLU & L1 = 0.1, L2 = 0.2\\
 Fully connected & 20 & ReLU & L1 = 0.1, L2 = 0.2\\
 Fully connected & 1 & Linear & L1 = 0.1, L2 = 0.2\\\hline
@@ -861,7 +863,7 @@ Fully connected & 1 & Linear & L1 = 0.1, L2 = 0.2\\\hline
 \caption{Proposed Neural Network architecture 2.}%
 \begin{tabular}
 [c]{llll}\hline
-Layer & Shape & Activation & Additional Information\\\hline\hline
+Layer & Neurons & Activation & Additional Information\\\hline\hline
 Fully connected & 50 & ReLU & L1 = 0.1, L2 = 0.2\\
 Fully connected & 20 & ReLU & L1 = 0.1, L2 = 0.2\\
 Fully connected & 1 & Linear & L1 = 0.1, L2 = 0.2\\\hline
@@ -874,7 +876,7 @@ Fully connected & 1 & Linear & L1 = 0.1, L2 = 0.2\\\hline
 \caption{Proposed Neural Network architecture 3.}%
 \begin{tabular}
 [c]{llll}\hline
-Layer & Shape & Activation & Additional Information\\\hline
+Layer & Neurons & Activation & Additional Information\\\hline
 Fully connected & 100 & ReLU & L1 = 0.1, L2 = 0.2\\
 Fully connected & 50 & ReLU & L1 = 0.1, L2 = 0.2\\
 Fully connected & 1 & Linear & L1 = 0.1, L2 = 0.2\\\hline
@@ -887,7 +889,7 @@ Fully connected & 1 & Linear & L1 = 0.1, L2 = 0.2\\\hline
 \caption{Proposed Neural Network architecture 4.}%
 \begin{tabular}
 [c]{llll}\hline
-Layer & Shape & Activation & Additional Information\\\hline
+Layer & Neurons & Activation & Additional Information\\\hline
 Fully connected & 250 & ReLU & L1 = 0.1, L2 = 0.2\\
 Fully connected & 50 & ReLU & L1 = 0.1, L2 = 0.2\\
 Fully connected & 1 & Linear & L1 = 0.1, L2 = 0.2\\\hline
@@ -900,7 +902,7 @@ Fully connected & 1 & Linear & L1 = 0.1, L2 = 0.2\\\hline
 \caption{Proposed Neural Network architecture 5.}%
 \begin{tabular}
 [c]{llll}\hline
-Layer & Shape & Activation & Additional Information\\\hline\hline
+Layer & Neurons & Activation & Additional Information\\\hline\hline
 Fully connected & 20 & ReLU & L1 = 0.1, L2 = 0.2\\
 Fully connected & 1 & Linear & L1 = 0.1, L2 = 0.2\\\hline
 \end{tabular}
@@ -912,7 +914,7 @@ Fully connected & 1 & Linear & L1 = 0.1, L2 = 0.2\\\hline
 \caption{Proposed Neural Network architecture 6.}%
 \begin{tabular}
 [c]{llll}\hline
-Layer & Shape & Activation & Additional Information\\\hline\hline
+Layer & Neurons & Activation & Additional Information\\\hline\hline
 Fully connected & 10 & ReLU & L1 = 0.1, L2 = 0.2\\
 Fully connected & 1 & Linear & L1 = 0.1, L2 = 0.2\\\hline
 \end{tabular}
@@ -926,7 +928,7 @@ Fully connected & 1 & Linear & L1 = 0.1, L2 = 0.2\\\hline
 \section{Activation functions definitions}
 \label{appendix:activation_definitions}
 
-For the following definitions assume a vector $x \in \mathbb{R}^n$.
+Here we define some of the activation functions used in our neural network models. For the following definitions assume a vector $x \in \mathbb{R}^n$.
 
 \subsection{ReLU activation function}
 
