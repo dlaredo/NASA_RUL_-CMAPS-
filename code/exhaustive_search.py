@@ -2,13 +2,19 @@ import math
 import numpy as np
 import csv
 import time as tim
+import sys
+
+sys.path.append('/Users/davidlaredorazo/Documents/University_of_California/Research/Projects')
+
+import custom_scores
+#from data_handler_CMAPS import CMAPSDataHandler
+#from tunable_model import SequenceTunableModelRegression
+import CMAPSAuxFunctions
 
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
-import custom_scores
-from data_handler_CMAPS import CMAPSDataHandler
-from tunable_model import SequenceTunableModelRegression
-import CMAPSAuxFunctions
+from ann_framework.data_handlers.data_handler_CMAPS import CMAPSDataHandler
+from ann_framework.tunable_model.tunable_model import SequenceTunableModelRegression
 
 from keras.models import Sequential, Model
 from keras.layers import Dense, Input, Dropout, Reshape, Conv2D, Flatten, MaxPooling2D
@@ -121,7 +127,7 @@ def run_exhaustive_search():
 	for dataset_number in max_window_size:
 		
 		print("Results for dataset "+dataset_number)
-		file = open("results/MLP/exhauxtive_search_"+dataset_number+".csv", "w")
+		file = open("results/MLP/exhaustive_search_test_"+dataset_number+".csv", "w")
 		start_time = tim.clock()
 		
 		tunable_model.data_handler.change_dataset(dataset_number)
