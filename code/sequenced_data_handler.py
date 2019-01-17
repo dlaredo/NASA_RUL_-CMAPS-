@@ -101,7 +101,7 @@ class SequenceDataHandler():
 
 		#In case cross validation is enabled
 		if len(self._X_crossVal_list) != 0:
-			self.generate_crossValidation_data()
+			self.generate_crossValidation_data(unroll)
 			
 
 	def generate_crossValidation_data(self, unroll=True):
