@@ -323,10 +323,7 @@ not only of the previous information, but also to control the ratio at which
 the algorithm is fed with new information. With the usual time window
 approach, only one point is updated for every new time window. The strided
 time window considered in this study allows for updating more than one point
-at the time for the algorithm to make use of the new information with less iterations. It
-is believed that the information contained in the time window with stride size
-$n_{s}>1$ is likely richer than the one contained in a time window with stride
-size $n_{s}=1$.
+at the time for the algorithm to make use of the new information with less iterations. Our approach is inspired by the use of strided convolutions in Convolutional Neural Networks \cite{Kong2017}.
 
 \subsubsection{Piecewise Linear Degradation Model}
 
@@ -346,8 +343,7 @@ descent toward the terminating cycle.
 
 \begin{figure}[!htb]
 \begin{center}
-\includegraphics[height=2.3in, width=3.5in]
-{Figures/test_engine.png}
+\includegraphics[scale=0.5]{Figures/test_engine.png}
 \caption{Piecewise linear degradation for RUL.}
 \label{FigRULinear}
 \end{center}
@@ -433,6 +429,8 @@ FD002 & $\left[  16,1,138\right]  $ & \multicolumn{1}{c}{$30.93$} & $\left[17,10
 \end{center}
 \end{table}
 
+Contrary to our belief the best window stride for two of CMAPSS dataset subsets is 1. Although the reasons for this are not evident it seems that, at least for CMAPSS dataset, the window size plays the bigger role when it comes to capturing meaningful information that can be used by the MLP, futhermore, overlapping in the generated time windows seems to benefit the generated sequences of sensors.
+
 \subsubsection{Evolutionary Algorithm for Optimal Data Parameters}
 
 \label{sec:ea_optimization_process}
@@ -507,8 +505,6 @@ FD002 & $\left[  17,1,139\right]  $ & \multicolumn{1}{c}{$30.95$} & \multicolumn
 \end{center}
 \end{table}
 
-\pagebreak
-
 \subsection{The Estimation Algorithm}
 
 Having described the major building blocks of the proposed method, we now
@@ -537,8 +533,7 @@ guidelines from Section \ref{sec:ea_optimization_process}.
 
 \subsection{Experimental settings}
 
-In this section, we evaluate the performance of the proposed method. The architecture of the MLP is described in Table \ref{table:proposed_nn}. We define an experiment as the process of training the MLP on any of the subsets (FD001 to FD004) and evaluate its performance using the subset's test set. We perform $10$ different experiments for each data subset, the MLP is trained for 200 epochs using the train set for the corresponding data subset and evaluated using the subset's test set. The results for each dataset subset are averaged and presented in Table \ref{table:results_ann_de}. Furthermore, the best model is saved and later used to generate the results presented in Section \ref{sec:experimental_results}.
-The combinations of the optimal window size $n_{w}$, window stride $n_{s}$ and early RUL $R_{e}$ are presented in Table \ref{table:data_params_de}. All of the experiments were run using the Keras/Tensorflow framework, an NVIDIA GeForce 1080Ti GPU was used to speed up the training process.
+In this section, we evaluate the performance of the proposed method. The architecture of the MLP is described in Table \ref{table:proposed_nn}. We define an experiment as the process of training the MLP on any of the subsets (FD001 to FD004) and evaluate its performance using the subset's test set. The combinations of the optimal window size $n_{w}$, window stride $n_{s}$ and early RUL $R_{e}$ are presented in Table \ref{table:data_params_de}. We perform $10$ different experiments for each data subset, the MLP is trained for 200 epochs using the train set for the corresponding data subset and evaluated using the subset's test set. The results for each dataset subset are averaged and presented in Table \ref{table:results_ann_de}. Furthermore, the best model is saved and later used to generate the results presented in Section \ref{sec:experimental_results}. All of the experiments were run using the Keras/Tensorflow framework, an NVIDIA GeForce 1080Ti GPU was used to speed up the training process.
 
 \begin{table}[!htb]
 \begin{center}
@@ -574,8 +569,11 @@ FD004 & 33.25 & 35.10 & 34.74 & 0.53 & 58.52 & 78.62 & 74.77 & 5.88\\\hline
 \end{center}
 \end{table}
 
-We now compare the predicted RUL values versus the real RUL values for each of the datasets. In Table \ref{table:rul_vs_results} we present some basic statistics for each of the subsets. For Figures \ref{Fig:rul_plots_dataset_1} to \ref{Fig:rul_plots_dataset_4} we plot on the top subfigure the predicted RUL values (red lines) vs the real RUL values (green lines) while on the bottom subfigure we plot the error between real RUL and predicted RUL.
+We now compare the predicted RUL values versus the real RUL values for each of the datasets. For Figures \ref{Fig:rul_plots_dataset_1} to \ref{Fig:rul_plots_dataset_4} we plot on the top subfigure the predicted RUL values (red lines) vs the real RUL values (green lines) while on the bottom subfigure we plot the error between real RUL and predicted RUL.
 
+\begin{comment}
+
+In Table \ref{table:rul_vs_results} we present error statistics for each of the subsets.
 \begin{table}[!htb]
 \begin{center}
 \begin{tabular}[c]{l | c c c c c}\hline
@@ -590,47 +588,57 @@ FD004 & 0 & 97 & 12 & 25 & 44 \\\hline
 \end{center}
 \end{table}
 
-Figure \ref{Fig:rul_plots_dataset_1} shows the comparison for subset FD001, it can be observed that the predicted RUL values closely follow the real RUL values with the exception of a pair of engines, on the other hand, the error remains small for most of the engines with the maximum error being $41$ but the error for more than $50\%$ of the engines being smaller than $6$. 
+\end{comment}
 
-\begin{figure}[!htb]
+Figure \ref{Fig:rul_plots_dataset_1} shows the comparison for subset FD001, it can be observed that the predicted RUL values closely follow the real RUL values with the exception of a pair of engines, therefore the error remains small for most of the engines. Meanwhile, for FD002 it can be observed in Figure \ref{Fig:rul_plots_dataset_2} that the regressor overshooted several of the RUL predictions, especially in the possitive spectrum, that is, the method predicted a possitive RUL when in reality the real RUL was less than the predicted value, this is more evident in second subplot where the maximum error is $138$ (the magenta peak shown at the leftmost part of the plot).
+
+\begin{figure}[!h]
 \begin{center}
-\includegraphics[height=2.7in,width=4in]{Figures/rul_plots_dataset_1.png}
+\includegraphics[scale=0.70]{Figures/rul_plots_dataset_1.png}
 \caption{Comparisson of predicted RUL values vs real RUL values for dataset FD001}
 \label{Fig:rul_plots_dataset_1}
 \end{center}
 \end{figure}
 
-For FD002 we can observe in Figure \ref{Fig:rul_plots_dataset_2} that the regressor overshooted several of the RUL predictions, especially in the possitive spectrum, that is, the method predicted a possitive RUL when in reality the real RUL was less than the predicted value, this is further shown in the second subplot where the maximum error is $138$ (the magenta peak shown at the leftmost part of the plot), nevertheless, statiscally speaking the predictions are still acceptable with the error of first quartile being lower than $6$ and the error for more than $50\%$ of the predicted engines is less than $19$ cycles. 
-
-\begin{figure}[!htb]
+\begin{figure}[!h]
 \begin{center}
-\includegraphics[height=2.7in, width=4in]{Figures/rul_plots_dataset_2.png}
+\includegraphics[scale=0.70]{Figures/rul_plots_dataset_2.png}
 \caption{Comparisson of predicted RUL values vs real RUL values for dataset FD002}
 \label{Fig:rul_plots_dataset_2}
 \end{center}
 \end{figure}
 
-The case for FD003 is similar to the case for FD001, the prediction error is small, lower than $10$ for at least half of the engines, and the predicted RUL values follows closely the real RUL values, this can be observed in Figure \ref{Fig:rul_plots_dataset_3}. 
+\pagebreak
 
-\begin{figure}[!htb]
+Figure \ref{Fig:rul_plots_dataset_3} shows that for FD003 the RUL predictions RUL follows closely the real RUL values. The behavior for FD004 is similar to FD002 as depicted in Figure \ref{Fig:rul_plots_dataset_4}, with most of the error being for predictions of larger RUL than the real RUL.
+
+\begin{figure}[!h]
 \begin{center}
-\includegraphics[height=2.7in, width=4in]{Figures/rul_plots_dataset_3.png}
+\includegraphics[scale=0.70]{Figures/rul_plots_dataset_3.png}
 \caption{Comparisson of predicted RUL values vs real RUL values for dataset FD003}
 \label{Fig:rul_plots_dataset_3}
 \end{center}
 \end{figure}
 
-Finally, for FD004 we can observer in Figure \ref{Fig:rul_plots_dataset_4} a behavior similar to that of FD002 with most of the error being for predictions of larger RUL than the real RUL.
-
-\begin{figure}[!htb]
+\begin{figure}[!h]
 \begin{center}
-\includegraphics[height=2.7in, width=4in]{Figures/rul_plots_dataset_4.png}
+\includegraphics[scale=0.70]{Figures/rul_plots_dataset_4.png}
 \caption{Comparisson of predicted RUL values vs real RUL values for dataset FD004}
 \label{Fig:rul_plots_dataset_4}
 \end{center}
 \end{figure}
 
 \pagebreak
+
+Finally, in Figure \ref{Fig:rul_plots_boxplot} we can observe that most of the predictions donde by the method are highly accurate. In the case of FD001 the error remains small where the predictions for $50\%$ of the engines is smaller than $6$. In the case of FD002 the predictions are acceptable with the error of first quartile being lower than $6$ and the error for $50\%$ of the predicted engines being less than $19$ cycles. The cases for FD003 and FD004 are analogous to FD001 and FD002 respectively.
+
+\begin{figure}[!h]
+\begin{center}
+\includegraphics[scale=0.70]{Figures/error_stats_boxplot.png}
+\caption{Prediction error of the MLP for each dataset.}
+\label{Fig:rul_plots_boxplot}
+\end{center}
+\end{figure}
 
 Two conclusions can be drawn from the previous discussion, first it can be observed that the number of operating conditions has a larger impact on the complexity of the data than the number of fault modes. This is presumed from the fact that subsets FD002 and FD004 exhibit larger errors than subsets FD001 and FD003, furthermore the behavior of such prediction errors is similar among those two groups. Second, for the case of FD002 and FD004 most of the error is due to the MLP predicting larger RULs than the real RUL, this could be due to the smaller window sizes used on both datasets, one important observation  derived from this behavior is that larger window sizes usually lead to better predictions.
 
@@ -711,7 +719,7 @@ scalability. While for this study, specific regressors and evolutionary
 algorithms are chosen, many other combinations are possible and may be more
 suitable for different applications. Furthermore, the framework can, in
 principle, be used for model-construction, i.e. generating the best possible
-neural network architecture tailored to a specific application.
+neural network architecture tailored to a specific application. Thus, future work will consider extensions to the framework to make it applicable to tasks such as model selection, an analysis of the influence of the window stride parameter $n_s$ is also considered for future work.
 
 \bibliographystyle{elsarticle-num}
 \bibliography{reference_rul_paper}
