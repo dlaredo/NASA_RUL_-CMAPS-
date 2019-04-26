@@ -323,7 +323,10 @@ not only of the previous information, but also to control the ratio at which
 the algorithm is fed with new information. With the usual time window
 approach, only one point is updated for every new time window. The strided
 time window considered in this study allows for updating more than one point
-at the time for the algorithm to make use of the new information with less iterations. Our approach is inspired by the use of strided convolutions in Convolutional Neural Networks \cite{Kong2017}.
+at the time for the algorithm to make use of the new information with less iterations. 
+Our choice of the strided time window is inspired by the use of strided convolutions in 
+Convolutional Neural Networks \cite{Kong2017}. Further studies of the impact of 
+the stride on the prediction should be done in the future.
 
 \subsubsection{Piecewise Linear Degradation Model}
 
@@ -429,7 +432,8 @@ FD002 & $\left[  16,1,138\right]  $ & \multicolumn{1}{c}{$30.93$} & $\left[17,10
 \end{center}
 \end{table}
 
-Contrary to our belief the best window stride for two of CMAPSS dataset subsets is 1. Although the reasons for this are not evident it seems that, at least for CMAPSS dataset, the window size plays the bigger role when it comes to capturing meaningful information that can be used by the MLP, futhermore, overlapping in the generated time windows seems to benefit the generated sequences of sensors.
+Numerical experiments seem to suggest that, at least for CMAPSS dataset, the window size plays a big role in terms of the meaningful information used for prediction by the MLP. It also reflects the history-dependent nature of the aircraft engine degradation process. 
+Furthermore, overlapping in the generated time windows seems to benefit the generated sequences of sensors.
 
 \subsubsection{Evolutionary Algorithm for Optimal Data Parameters}
 
@@ -590,7 +594,7 @@ FD004 & 0 & 97 & 12 & 25 & 44 \\\hline
 
 \end{comment}
 
-Figure \ref{Fig:rul_plots_dataset_1} shows the comparison for subset FD001, it can be observed that the predicted RUL values closely follow the real RUL values with the exception of a pair of engines, therefore the error remains small for most of the engines. Meanwhile, for FD002 it can be observed in Figure \ref{Fig:rul_plots_dataset_2} that the regressor overshooted several of the RUL predictions, especially in the possitive spectrum, that is, the method predicted a possitive RUL when in reality the real RUL was less than the predicted value, this is more evident in second subplot where the maximum error is $138$ (the magenta peak shown at the leftmost part of the plot).
+Figure \ref{Fig:rul_plots_dataset_1} shows the comparison for subset FD001, it can be observed that the predicted RUL values closely follow the real RUL values with the exception of a pair of engines. The error remains small for most of the engines. Meanwhile, for FD002 it can be observed in Figure \ref{Fig:rul_plots_dataset_2} that the regressor overshoots several of the RUL predictions, especially in the positive spectrum. That is, the method predicts a RUL when in reality the real RUL is less than the predicted value. This is more evident in the second subplot where the maximum error is $138$ at the magenta peak in the leftmost part of the plot.
 
 \begin{figure}[!h]
 \begin{center}
@@ -610,7 +614,7 @@ Figure \ref{Fig:rul_plots_dataset_1} shows the comparison for subset FD001, it c
 
 \pagebreak
 
-Figure \ref{Fig:rul_plots_dataset_3} shows that for FD003 the RUL predictions RUL follows closely the real RUL values. The behavior for FD004 is similar to FD002 as depicted in Figure \ref{Fig:rul_plots_dataset_4}, with most of the error being for predictions of larger RUL than the real RUL.
+Figure \ref{Fig:rul_plots_dataset_3} shows that for FD003 the predictions follow closely the real RUL values. The behavior for FD004 is similar to FD002 as depicted in Figure \ref{Fig:rul_plots_dataset_4}, with most of the error such that the predictions of the RUL are larger than the real value.
 
 \begin{figure}[!h]
 \begin{center}
@@ -630,7 +634,7 @@ Figure \ref{Fig:rul_plots_dataset_3} shows that for FD003 the RUL predictions RU
 
 \pagebreak
 
-Finally, in Figure \ref{Fig:rul_plots_boxplot} we can observe that most of the predictions donde by the method are highly accurate. In the case of FD001 the error remains small where the predictions for $50\%$ of the engines is smaller than $6$. In the case of FD002 the predictions are acceptable with the error of first quartile being lower than $6$ and the error for $50\%$ of the predicted engines being less than $19$ cycles. The cases for FD003 and FD004 are analogous to FD001 and FD002 respectively.
+Finally, Figure \ref{Fig:rul_plots_boxplot} shows that most of the RUL predictions by the method are highly accurate. In the case of FD001, the predictions of $50\%$ of the engines is smaller than $6$ cycles. In the case of FD002, the predictions are acceptable with the error of first quartile being lower than $6$ cycles and the error for $50\%$ of the engines being less than $19$ cycles. The cases for FD003 and FD004 are similar to FD001 and FD002, respectively.
 
 \begin{figure}[!h]
 \begin{center}
@@ -640,7 +644,7 @@ Finally, in Figure \ref{Fig:rul_plots_boxplot} we can observe that most of the p
 \end{center}
 \end{figure}
 
-Two conclusions can be drawn from the previous discussion, first it can be observed that the number of operating conditions has a larger impact on the complexity of the data than the number of fault modes. This is presumed from the fact that subsets FD002 and FD004 exhibit larger errors than subsets FD001 and FD003, furthermore the behavior of such prediction errors is similar among those two groups. Second, for the case of FD002 and FD004 most of the error is due to the MLP predicting larger RULs than the real RUL, this could be due to the smaller window sizes used on both datasets, one important observation  derived from this behavior is that larger window sizes usually lead to better predictions.
+Two conclusions can be drawn from the previous discussions. First, it can be observed that the number of operating conditions has a larger impact on the complexity of the data than the number of fault modes. This is because the subsets FD002 and FD004 exhibit larger errors than the subsets FD001 and FD003, although the general trend of prediction errors is similar among those two groups of data sets. Second, for the subsets FD002 and FD004, most of the error is related to the predictions larger than the real RUL values. Another observation is that larger window sizes usually lead to better predictions. This may be related to the history-dependent nature of the physical problem.
 
 %Next, the possibility of using a single set of data-related parameters for all
 %the subsets is explored. For this experiment, the $n_{w}$ is fixed for all of
@@ -657,7 +661,7 @@ Two conclusions can be drawn from the previous discussion, first it can be obser
 \subsection{Comparison with other approaches}
 
 The performance of the proposed method is also compared against
-other state-of-the-art methods. The methods chosen for the comparisson obey to two criteria: 1) that the method used is a machine learning (or statistical) method and 2) that the method is recent (6 years old at most). Most of the methods chosen here 
+other state-of-the-art methods. The methods chosen for the comparison obey to two criteria: 1) that the method used is a machine learning (or statistical) method and 2) that the method is recent (6 years old at most). Most of the methods chosen here 
 have only reported results on the test set FD001 in terms of
 $e_{rms}$. The results are shown in Table \ref{table:results_comparison}. The
 $e_{rms}$ value of the proposed method in Table \ref{table:results_comparison}
@@ -685,14 +689,14 @@ RNN-Encoder-Decoder \cite{Malhorta2016}. & 12.93\\
 \end{center}
 \end{table}
 
-From the comparison studies of the prediction results, we can conclude that
+From the comparison studies, we can conclude that
 the proposed method performs better than the majority of the chosen methods
 when taking into consideration the whole dataset FD001. Two existing methods
 come close to the performance of the proposed approach in this paper, namely
 the time window ANN \cite{Lim2016} and the Networks Ensemble \cite{Zhang2016}.
 While the performance of these two methods comes close to the results of the
-proposed method in this paper, the proposed method is more computationally
-efficient. Here we believe that the use of the time window along with a proper size for such window makes the difference. Notice though that three of the presented methods in Table \ref{table:results_comparison} perform better than the method presented here, namely the Convolutional Neural Network \cite{Li2018}, the RNN-Encoder-Decoder \cite{Malhorta2016} and the modified ESN \cite{Peng2012}. Nevertheless in the case of \cite{Peng2012} the method can only predict 80 out of the 100 total engines while the deep CNN \cite{Li2018} and RNN \cite{Malhorta2016} approaches are much more computationally expensive than the MLP used in this work. In the case of the method proposed in \cite{Li2018} the neural network model has four layers of convolutions and two more layers of fully connected layers, in that sense the convolutional layers provide nearly no benefit to the inference process. On the other hand, the RNN-Encoder-Decoder \cite{Malhorta2016} makes use of a much more complicated scheme of two RNNs (one for encoding the sequences and one for decoding them). While specialized libraries such as TensorFlow or Keras make RNNs easier to use, they still remain up to date as some of the most computationally expensive architecture to train given their sequential nature. Finally, we would like to emphasize that the used MLP for this approach is one of the simplest ones in the reviewed literature. Furthermore, the framework proposed is simple to understand and implement, robust, generic and light-weight. These are the features 
+proposed method in this paper, the proposed method is computationally more 
+efficient. We believe that the use of the time window  with a proper size makes the difference. Notice that three of the methods presented in Table \ref{table:results_comparison} perform better than the proposed method, namely, the Convolutional Neural Network \cite{Li2018}, the RNN-Encoder-Decoder \cite{Malhorta2016} and the modified ESN \cite{Peng2012}. Nevertheless in the case of \cite{Peng2012}, the method can only predict 80 out of the 100 total engines while the deep CNN \cite{Li2018} and RNN \cite{Malhorta2016} approaches are much more computationally expensive than the MLP used in this work. In the case of the method proposed in \cite{Li2018}, the neural network model has four layers of convolutions and two more layers of fully connected layers. On the other hand, the RNN-Encoder-Decoder \cite{Malhorta2016} makes use of a much more complicated scheme of two RNNs, one for encoding the sequences and one for decoding them. While specialized libraries such as TensorFlow or Keras make RNNs easier to use, they still remain up to date as some of the most computationally expensive architecture to train given their sequential nature. Finally, we would like to emphasize that the used MLP for this approach is one of the simplest ones in the reviewed literature. Furthermore, the framework proposed is simple to understand and implement, robust, generic and light-weight. These are the features 
 important to highlight when comparing the proposed method against other
 state-of-the-art approaches.
 
@@ -719,7 +723,12 @@ scalability. While for this study, specific regressors and evolutionary
 algorithms are chosen, many other combinations are possible and may be more
 suitable for different applications. Furthermore, the framework can, in
 principle, be used for model-construction, i.e. generating the best possible
-neural network architecture tailored to a specific application. Thus, future work will consider extensions to the framework to make it applicable to tasks such as model selection, an analysis of the influence of the window stride parameter $n_s$ is also considered for future work.
+neural network architecture tailored to a specific application. Thus, future work will consider extensions to the framework to make it applicable to tasks such as model selection. An analysis of the influence of the window stride parameter $n_s$ will also be considered for future work.
+
+\section*{Acknowledgement}
+The authors acknowledge the funding from Conacyt Project No. 285599 and a grant (11572215) from the National Natural Science Foundation of China.
+
+\section*{References}
 
 \bibliographystyle{elsarticle-num}
 \bibliography{reference_rul_paper}
